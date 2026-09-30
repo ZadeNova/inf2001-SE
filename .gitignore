@@ -1,0 +1,11 @@
+# Source PDFs are not committed; brief/ holds the markdown conversions
+*.pdf
+
+# Rendered diagram output (regenerate from .puml)
+diagrams/out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
