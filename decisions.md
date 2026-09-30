@@ -955,6 +955,8 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7], [Clarification Q4 follow-up]; chosen by the team
 
+**Confirmed** 2026-09-30 by the team (review round 2, ZadeNova): whole-Van hours for every Crew member (Option 1).
+
 ### DEC-40: Actual Hours, Travel Allowance and completion evidence
 
 | Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
@@ -979,6 +981,8 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 **Decision:** Actual Hours = (actual end − actual start) + the 30-minute Travel Allowance. Only a Technician on the Crew can mark a Job completed. The signed-invoice photo is **mandatory**. Cancelled and Unassigned Jobs count zero hours.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7], [Process Q1 follow-up: completion]; INT-DCT [Process Q1 follow-up: completion]; travel on actuals chosen by the team
+
+**Confirmed** 2026-09-30 by the team (review round 2, ZadeNova): Actual Hours include the Travel Allowance.
 
 ### DEC-41: Email 2FA vs simplicity and field use
 
