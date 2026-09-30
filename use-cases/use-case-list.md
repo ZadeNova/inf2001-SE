@@ -1,7 +1,7 @@
 # Use-case list (M1)
 
-> **Status:** proposed baseline, derived from the team's whiteboard session (30 Sep) and checked against SRS v3.0 (`srs-v3.0`).
-> **IDs are fixed once the team confirms this list.** Each use case gets its own file: `use-cases/UC-nn-<slug>.md`, from [UC-TEMPLATE.md](UC-TEMPLATE.md).
+> **Status: FINAL v1.0 (2026-09-30).** Derived from the team's whiteboard session (30 Sep) and checked against SRS v3.0 (`srs-v3.0`).
+> **IDs are fixed.** Any change needs a DEC entry. Never renumber: mark a dropped use case `Withdrawn`. Each use case gets its own file: `use-cases/UC-nn-<slug>.md`, from [UC-TEMPLATE.md](UC-TEMPLATE.md).
 > **Totals:** 28 use cases = 23 main + 3 extensions + 2 included. By type: 16 are not CRUD, 8 are CRUD with rules, 4 are read-only.
 
 ## Actors
@@ -14,6 +14,7 @@
 | **Driver** | Primary | Has only the Staff use cases |
 | **Manager** | Primary | — |
 | **IT Administrator** | Primary | — |
+| **Email Service** | Secondary (external system) | Delivers emails for Reset Password (UC-02), 2FA in Log In (UC-01) and Notify Staff (UC-28) |
 
 ## Use cases
 
@@ -55,6 +56,7 @@ Every active FR (FR-01 to FR-71, except the withdrawn FR-68) is covered by at le
 ## Relationships for the use-case diagram
 
 - **Generalisation:** Driver → Staff; Technician → Staff; Staff, Manager and IT Administrator → User.
+- **Secondary actor:** Email Service is associated with Log In (2FA), Reset Password and Notify Staff.
 - **`<<extend>>`:**
   - Reset Password → Log In
   - Compare Staff → Allocate Jobs
@@ -80,3 +82,16 @@ Every active FR (FR-01 to FR-71, except the withdrawn FR-68) is covered by at le
 | **Extended** job rejection to Drivers | Any crew member can submit a rejection request (DEC-42) |
 | **Added** Set Job Preference, Form Van Crew, Name Standby Staff, Mark Staff Unavailable, Maintain Certifications, Load Public Holidays, Suggest Replacement Staff, Validate Roster Rules, Notify Staff | They are required by the SRS. Set Job Preference is required by the brief itself (R9) |
 | **Replaced** arrows from Technician to Driver with actor generalisation | This is the correct UML way to share use cases between actors |
+| **Added** Email Service as a secondary actor | The system sends emails for notifications (FR-64), password reset (FR-06) and 2FA (NFR-10). The rubric requires "all actors" |
+
+## Open check before drawing
+
+- Confirm with the lecture slides that included use cases without an actor (UC-27, UC-28) are acceptable, and whether Log In should be a precondition or an `<<include>>`. If the slides discourage system-only use cases, withdraw UC-27 and UC-28 and write their rules into the flows instead.
+
+## How to write each use case
+
+1. Copy [UC-TEMPLATE.md](UC-TEMPLATE.md) to `UC-nn-<slug>.md`, e.g. `UC-25-submit-job-rejection-request.md`.
+2. Use the name, actor and requirements from the table above exactly as written, with glossary terms from [AGENTS.md](../AGENTS.md).
+3. Main flow: numbered actor and system steps. Each alternative or exception flow names the step it branches from.
+4. The blocks and warnings in FR-44 and FR-45 become exception and alternative flows.
+5. Fill in [traceability.md](../traceability.md) as you go (requirement → use case).
