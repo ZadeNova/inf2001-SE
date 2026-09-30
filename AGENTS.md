@@ -22,6 +22,7 @@ Late work loses 20% per day, and anything more than 4 days late gets zero. See [
 2. **Everything traces to a source.** Every FR, NFR, UC and CL, and every diagram element, must cite at least one of these:
    - `Brief R<n>` (initial requirement n), or `Brief §<section> ¶<n>` (narrative paragraph)
    - `MTG-<nn>` (a meeting note in `elicitation/`)
+   - `INT-MGR|DCT|DRV|ITA [<question>]` (an interview transcript in `elicitation/interviews/`; format in `requirements.md` §1.4)
    - `DEC-<nn>` (a logged team decision in `decisions.md`)
 
    Items without a source are flagged, not merged.

@@ -8,34 +8,34 @@
 **Ask whom:** `Stakeholder` (via an elicitation meeting) · `Lecturer` (course admin/rubric) · `Team` (internal design choice)
 
 Quotes are verbatim from [brief/project-description.md](brief/project-description.md) ("Brief") and [brief/rubric-m1.md](brief/rubric-m1.md) / [brief/rubric-m2.md](brief/rubric-m2.md) / [brief/assessment-overview.md](brief/assessment-overview.md).
-DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. The index shows which entries have since been decided.
+DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. The index shows which entries have since been decided. DEC-02 to DEC-41 (except the rubric entries DEC-21, DEC-23 to DEC-29) were decided on 2026-09-30 for SRS v2: the Manager's interview answer was adopted where one exists, and the simplest option consistent with the brief was chosen otherwise. Each decision says which parts were chosen by the team. They are open to change at team review.
 
 ## Index
 
 | ID | Topic | Category | Ask whom | Status |
 |---|---|---|---|---|
 | DEC-01 | Availability horizon: one month vs 5 weeks | Contradiction | Lecturer | **Decided**: 1 month in advance |
-| DEC-02 | Availability Deadline mechanics (Wed / Thu / Mon) | Ambiguity | Stakeholder | Open |
-| DEC-03 | Availability granularity, default and deletion | Missing definition | Stakeholder | Open |
-| DEC-04 | Workload unit and the period behind the 40-hour highlight | Ambiguity | Stakeholder | Open |
-| DEC-05 | "Top three staff with the lowest workload" | Ambiguity | Stakeholder | Open |
-| DEC-06 | "Up to three staff" on the allocation page | Ambiguity | Stakeholder | Open |
-| DEC-07 | What a Job Preference is | Missing definition | Stakeholder | Open |
-| DEC-08 | "Staff's location at a particular date" | Missing definition | Stakeholder | Open |
-| DEC-09 | Van crew composition and capacity | Ambiguity | Stakeholder | Open |
-| DEC-10 | Unit of assignment: Staff or Van crew | Ambiguity | Stakeholder | Open |
-| DEC-11 | What a Job contains and who creates Jobs | Missing definition | Stakeholder | Open |
-| DEC-12 | Working days: Saturday, Sunday, public holidays | Ambiguity | Stakeholder | Open |
-| DEC-13 | How Leave is handled | Missing definition | Stakeholder | Open |
-| DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | Open |
-| DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | Open |
-| DEC-16 | Allocate one week vs visualise one month | Ambiguity | Stakeholder | Open |
-| DEC-17 | IT Administrator: distinct actor and scope | Missing definition | Stakeholder | Open |
-| DEC-18 | Roles: Staff vs Manager vs "administrative staff" | Ambiguity | Stakeholder | Open |
-| DEC-19 | Does the system enforce the business rules? | Missing definition | Stakeholder | Open |
-| DEC-20 | "Working hours engaged/assigned" | Ambiguity | Stakeholder | Open |
+| DEC-02 | Availability Deadline mechanics (Wed / Thu / Mon) | Ambiguity | Stakeholder | **Decided** |
+| DEC-03 | Availability granularity, default and deletion | Missing definition | Stakeholder | **Decided** |
+| DEC-04 | Workload unit and the period behind the 40-hour highlight | Ambiguity | Stakeholder | **Decided** |
+| DEC-05 | "Top three staff with the lowest workload" | Ambiguity | Stakeholder | **Decided** |
+| DEC-06 | "Up to three staff" on the allocation page | Ambiguity | Stakeholder | **Decided** |
+| DEC-07 | What a Job Preference is | Missing definition | Stakeholder | **Decided** |
+| DEC-08 | "Staff's location at a particular date" | Missing definition | Stakeholder | **Decided** |
+| DEC-09 | Van crew composition and capacity | Ambiguity | Stakeholder | **Decided** |
+| DEC-10 | Unit of assignment: Staff or Van crew | Ambiguity | Stakeholder | **Decided** |
+| DEC-11 | What a Job contains and who creates Jobs | Missing definition | Stakeholder | **Decided** |
+| DEC-12 | Working days: Saturday, Sunday, public holidays | Ambiguity | Stakeholder | **Decided** |
+| DEC-13 | How Leave is handled | Missing definition | Stakeholder | **Decided** |
+| DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | **Decided** |
+| DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | **Decided** |
+| DEC-16 | Allocate one week vs visualise one month | Ambiguity | Stakeholder | **Decided** |
+| DEC-17 | IT Administrator: distinct actor and scope | Missing definition | Stakeholder | **Decided** |
+| DEC-18 | Roles: Staff vs Manager vs "administrative staff" | Ambiguity | Stakeholder | **Decided** |
+| DEC-19 | Does the system enforce the business rules? | Missing definition | Stakeholder | **Decided** |
+| DEC-20 | "Working hours engaged/assigned" | Ambiguity | Stakeholder | **Decided** |
 | DEC-21 | Deliverable scope: working web app vs wireframe | Rubric | Lecturer | Open |
-| DEC-22 | Job volume and duration vs crew capacity | Missing definition | Stakeholder | Open |
+| DEC-22 | Job volume and duration vs crew capacity | Missing definition | Stakeholder | **Decided** |
 | DEC-23 | M1 activity diagram examples ("subscription, announcement, notification") | Rubric | Lecturer | Open |
 | DEC-24 | M1 Formatting rubric lists M2 artefacts and a "required template" | Rubric | Lecturer | Open |
 | DEC-25 | Appendix C subsections labelled B.1–B.4 | Rubric | Lecturer | Open |
@@ -43,18 +43,18 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-27 | Week numbering and M1 presentation timing | Rubric | Lecturer | Open |
 | DEC-28 | Stakeholder rule: "same project" restriction | Rubric | Lecturer | Open |
 | DEC-29 | Weighting labels and unweighted Introduction items | Rubric | Lecturer | Open |
-| DEC-30 | How "1 month in advance" is measured | Ambiguity | Team | Open |
-| DEC-31 | Travel time: fixed allowance vs estimated driving time | Contradiction (interviews) | Stakeholder | Open |
-| DEC-32 | Overtime: approval step or warning only? | Contradiction (interviews) | Stakeholder | Open |
-| DEC-33 | Real-time delay reporting by the Crew | Scope (interviews) | Stakeholder | Open |
-| DEC-34 | Leavers: delete accounts vs retain records | Contradiction (interviews) | Stakeholder | Open |
-| DEC-35 | Who maintains Certifications and staff details | Contradiction (interviews) | Stakeholder | Open |
-| DEC-36 | Account and schedule import vs manual entry | Contradiction (interviews) | Stakeholder | Open |
-| DEC-37 | What Staff may see about colleagues | Ambiguity (interviews) | Stakeholder | Open |
-| DEC-38 | IT Administrator's Thursday peak vs the weekly cycle | Contradiction (interviews) | Stakeholder | Open |
-| DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | Open |
-| DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | Open |
-| DEC-41 | Email 2FA vs simplicity and field use | Tension (interviews) | Stakeholder / Team | Open |
+| DEC-30 | How "1 month in advance" is measured | Ambiguity | Team | **Decided** |
+| DEC-31 | Travel time: fixed allowance vs estimated driving time | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-32 | Overtime: approval step or warning only? | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-33 | Real-time delay reporting by the Crew | Scope (interviews) | Stakeholder | **Decided** |
+| DEC-34 | Leavers: delete accounts vs retain records | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-35 | Who maintains Certifications and staff details | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-36 | Account and schedule import vs manual entry | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-37 | What Staff may see about colleagues | Ambiguity (interviews) | Stakeholder | **Decided** |
+| DEC-38 | IT Administrator's Thursday peak vs the weekly cycle | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | **Decided** |
+| DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | **Decided** |
+| DEC-41 | Email 2FA vs simplicity and field use | Tension (interviews) | Stakeholder / Team | **Decided** |
 
 ---
 
@@ -88,7 +88,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 ### DEC-02: Availability Deadline mechanics (Wed / Thu / Mon)
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶1: "work allocation is assigned weekly every Monday. The workload allocation planning will start every Thursday of the week. Hence, all employee's availabilities must be informed in the system every Wednesday to be considered in the planning. If employees miss the weekly deadline, requests would be dealt with on a case-by-case basis."
@@ -107,11 +107,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Hard lock plus an in-system late-change request that the Manager approves or rejects.
 3. Soft deadline: edits are allowed but flagged as late to the Manager.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Hard lock plus in-system late-change request (Option 2). Availability for a Planning Week locks at **18:00 on the Wednesday 12 days before** that week's Monday; the Manager plans from Thursday and publishes on the Monday 7 days before the week. After the lock, Staff submit a Late Availability Change Request with a reason; the Manager approves or rejects it.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q1], [Clarification Q6 follow-up], [Conflicts Q2]; INT-DCT [Process Q1 follow-up: deadline]
 
 ### DEC-03: Availability granularity, default and deletion
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief R8: "Staff can add and edit their availabilities up to 5 weeks ahead of time." Brief R5: "...and availabilities for the week should be shown"
@@ -125,11 +127,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Half-day slots, defaulting to available.
 3. Explicit time ranges, defaulting to unavailable.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Half-day Slots: Morning 09:00–13:00, Afternoon 14:00–18:00. Each Slot is `Available` or `Unavailable`; a Slot with no entry is **Not submitted** and is treated as unavailable for allocation. Staff may change or clear any Slot until the lock.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2]; default and clearing chosen by the team
 
 ### DEC-16: Allocate one week at a time vs visualise one month
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -145,13 +149,15 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Any single week within the horizon can be allocated.
 3. The next week is allocated normally, and the current week is editable for reassignments only.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 3: the Manager allocates one Planning Week at a time (the next unpublished week) and may view up to 1 month ahead. Each week's roster is Draft until published; Staff see Published weeks only. After publication the Manager may still change Assignments; affected Staff are notified.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R3; INT-MGR [Clarification Q6], [Conflicts Q5]; Draft/Published states chosen by the team
 
 ## B. Workload and the Manager's views
 
 ### DEC-04: Workload unit and the period behind the 40-hour highlight
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -172,11 +178,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Weekly, upcoming planning week, >40.
 3. A configurable period and threshold.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Workload is measured in hours per **Planning Week (Monday–Saturday)**; **strictly above 40 hours** is Overtime and is highlighted. "The month" in R7 is the **calendar month**. Travel is counted per DEC-31.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R6; INT-MGR [Clarification Q7]; calendar month chosen by the team
 
 ### DEC-05: "Top three staff with the lowest workload"
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief R6: "On the manager'slanding page, the top three staff with the lowest workload should be shown"
@@ -194,11 +202,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. The top three per role (Driver / Technician).
 3. The top three among Staff available in the period.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Two lists: the three **Technicians** and the three **Drivers** with the lowest Workload in the displayed week. Staff with **any approved Leave day in that week** are excluded. Ties are broken by name (A–Z). If fewer than three are eligible, show those who are.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [added follow-up: lowest three]; tie-break and partial-Leave rule chosen by the team
 
 ### DEC-06: "Up to three staff" on the allocation page
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -214,11 +224,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. The system suggests three candidate Staff for a Job.
 3. The allocation page shows one Van crew (up to three people) at a time.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: the Manager selects up to three Staff and compares them side by side while allocating.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [System Q3]
 
 ### DEC-20: "Working hours engaged/assigned"
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Intro ¶3: "an interactive and visual way for the employee to see their job assignments, working hours engaged/assigned"
@@ -231,13 +243,15 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 1. Assigned hours only, with no completion tracking.
 2. Staff or the Manager mark Jobs completed and actual hours are recorded.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 2: a Technician on the Crew marks Jobs completed with actual start and end times; Actual Hours replace Planned Hours (see DEC-40).
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7], [Process Q1 follow-up: completion]; INT-DCT [Process Q1 follow-up: completion]
 
 ## C. Staff inputs
 
 ### DEC-07: What a Job Preference is
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief R9: "Staff can indicate their job preference for the week". Brief R5: "staff's job preference"
@@ -252,11 +266,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 3. Free text shown to the Manager.
 4. A structured set of fields to be agreed with stakeholders.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Job Preference = preferred area, preferred days, preferred Slot and preferred Job Type, all optional. It is advisory (a tie-breaker that raises only a warning) and locks together with that week's Availability.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q1 follow-up: ordering]; INT-DCT [Clarification Q4]; INT-DRV [Q10]; deadline chosen by the team
 
 ### DEC-08: "Staff's location at a particular date"
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief R5: "When displaying the staff availability, the workload assigned, staff's job preference, staff's location at a particular date, and availabilities for the week should be shown"
@@ -271,11 +287,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 3. A fixed home or base region stored on the Staff profile.
 4. Live device location (out of scope?).
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: location = the areas (postal districts) of the Staff member's other Jobs on that date; "No Jobs" if none. No GPS.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [System Q3]
 
 ### DEC-15: What happens after a Job Rejection
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -298,13 +316,15 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. A rejection request that the Manager approves or denies.
 3. Rejection allowed only until a cut-off, after which the Staff member must contact the Manager.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: any Crew member may reject a Job assigned to their Van. Warning first, reason required (comment required for "Other"). No approval: the Job is removed from the Van and becomes Unassigned; the whole Crew and the Manager are notified; the rejecter gets a confirmation. If the Job starts within 48 hours the warning also states the Manager's 48-hour-notice expectation (not a block). "Indicating ahead of time" is the same function.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R10; INT-MGR [Conflicts Q3], [added follow-up: early rejection]; INT-DCT [Process Q2], [Process Q2 follow-up: after reject]; crew-wide effect chosen by the team
 
 ## D. Domain: Vans, Jobs, Leave, calendar
 
 ### DEC-09: Van crew composition and capacity
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶3–4: "Currently, there are six vans. Each van is made up of one driver and a qualified technician for each brand. Unless the van is servicing or installing only a particular brand, then one driver and a qualified technician for the brand." / "The team consist of 6 drivers and 11 technicians. Currently, only 2 technicians are qualified to service for both brands. There are five technicians qualified only to work on M Electric aircons and four technicians only for Dicon. The minimum manpower for a van is two and the maximum is three."
@@ -326,11 +346,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 3. Drivers are fixed to Vans, and Technicians are assigned to a Van each day.
 4. Crews are fully flexible each day.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** A Crew is exactly one Driver plus one or two Technicians. One dual-Brand Technician can cover both Brands. Technicians never drive. Crews are formed per Van per day and stay fixed for the day except for Manager emergency changes.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief §Company ¶3–4; INT-MGR [Process Q1 follow-up: ordering], [Clarification Q3], [Clarification Q4 follow-up]; INT-DCT [Clarification Q1], [Conflicts Q1 follow-up]
 
 ### DEC-10: Unit of assignment: Staff or Van crew
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -347,11 +369,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Staff → Van per day, then Job → Van, with each crew member inheriting the Job hours.
 3. Job → Van crew as an explicit entity (a DailyCrew or similar).
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 2: the Manager first forms each Van's Crew for the day, then assigns Jobs to the Van on that date. Every Crew member inherits the Van's Jobs (see DEC-39).
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q1]
 
 ### DEC-11: What a Job contains and who creates Jobs
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶2: "Only certified technicians for the brand are qualified to do the installation or servicing." ¶5: "On average, there are more than 20 jobs for aircon installation and servicing daily." The brief never says how Jobs enter the system.
@@ -368,11 +392,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Jobs are imported from an external sales system, which is out of scope and treated as an external actor.
 3. Jobs are pre-loaded (seeded) for the prototype.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: the Manager creates Jobs manually. Required fields: customer name, customer phone, address, postal code, Brand, Job Type, number of units (≥1), preferred date, preferred Slot. Optional: unit number, aircon model, notes. One Brand per Job; a two-Brand customer is recorded as two linked Jobs that must go on the same Van and date.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info]
 
 ### DEC-12: Working days: Saturday, Sunday, public holidays
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶4: "there should be at least three vans can be on service daily except for Sunday and public holidays."
@@ -390,11 +416,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Mon–Sat working, with Sunday and public holiday work allowed but no minimum.
 3. A configurable working calendar maintained by the Manager or IT Administrator.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: working days are Monday–Saturday, 09:00–18:00 with lunch 13:00–14:00; closed on Sundays and public holidays (no Jobs, no Crews). The IT Administrator loads the public holiday list yearly.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q4], [Clarification Q8]
 
 ### DEC-13: How Leave is handled
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶4: "All staff are given 7 days annual leave."
@@ -412,11 +440,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. A Leave type of unavailability, with the balance tracked but no approval.
 3. A full leave request and approval flow.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 3: full-day Leave Requests on working days, with optional note; Manager approves or rejects (reason required on rejection). Balance: 7 days per calendar year, no carry-over, deducted on approval; a request may not exceed the remaining balance. Sick leave is recorded by the Manager as unavailability, not Leave. Managers do not use Leave in this system.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief §Company ¶4; INT-MGR [Process Q4], [Process Q4 follow-up], [Clarification Q1]; full-day and balance cap chosen by the team
 
 ### DEC-14: Van Workshop Servicing in the system
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶5: "A van will be sent to the workshop for servicing every two months."
@@ -430,11 +460,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Van unavailability dates entered by the Manager.
 3. The system auto-schedules servicing every two months.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** The system **generates** Workshop Servicing dates from the fixed rotation (odd months Vans 1–3, even months Vans 4–6, on the 1st/11th/21st), moving a date forward day by day while it falls on a Sunday or public holiday. The Manager can adjust a generated date and can mark ad-hoc unavailability (breakdowns).
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q3], [Conflicts Q4]; generation chosen by the team
 
 ### DEC-22: Job volume and duration vs crew capacity
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief §Company ¶5: "On average, there are more than 20 jobs for aircon installation and servicing daily." ¶4: "at least three vans can be on service daily"
@@ -447,13 +479,15 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 1. Stakeholders provide standard durations per Job Type.
 2. Duration is entered per Job.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: Standard Durations of 1 h per unit for Servicing and 3 h per unit for Installation, pre-filled and editable per Job. Customers usually book 1–2 weeks ahead, rarely beyond 4 weeks; no booking limit.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q2 follow-up: hours], [Process Q2 follow-up: advance]; INT-DCT [Clarification Q3 follow-up]
 
 ## E. Actors and system rules
 
 ### DEC-17: IT Administrator: distinct actor and scope
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Brief R11: "The company's IT administrators will oversee adding new staff and managers to the system"
@@ -470,11 +504,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. A distinct actor with full user CRUD, including Certifications.
 3. Not a system actor; accounts are provisioned outside the system.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** A distinct actor. The IT Administrator creates accounts, imports employees once at go-live (DEC-36), changes roles and permissions, unlocks accounts, deactivates leavers (DEC-34), loads public holidays and views the audit log. Role changes take effect at the user's next login.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R11; INT-ITA [Q: Onboarding], [Q: Permissions], [Q: Role change/leaver], [Q: Passwords], [Q: Audit]; INT-MGR [Clarification Q8]; session rule and audit viewer chosen by the team
 
 ### DEC-18: Roles: Staff vs Manager vs "administrative staff"
 
-| Category | Ambiguity | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -495,11 +531,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Add an "Administrative Staff" actor that the Manager specialises.
 3. A single User with roles.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: three roles (Staff, Manager, IT Administrator); Driver and Technician are Staff subtypes. There may be more than one Manager account, all with identical permissions. No other administrative role. Managers are not Staff: no Availability, Leave or Workload.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q1]; multiple-Manager rule chosen by the team
 
 ### DEC-19: Does the system enforce the business rules?
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -520,7 +558,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Hard-block Certification, warn on the rest.
 3. Warnings only, leaving the Manager to decide.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** The Manager's split. **Block:** uncertified or expired Certification, double booking, Staff unavailable/not submitted/on Leave, invalid Crew, unavailable Van, Sunday/public holiday. **Warn (overridable, override logged):** Workload over 40 hours, Job Preference not met, fewer than 3 Vans on service on a working day, Job start outside the customer's preferred Slot. A Van is *on service* when it has a valid Crew and at least one Job. When a later event (Leave approval, marking unavailable, Certification expiry, holiday added) invalidates a Crew, the affected person is removed from that Crew and the Van-day is flagged *Needs attention* for the Manager.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief §Company ¶2–4; INT-MGR [System Q4], [Conflicts Q1]; expiry, preferred-Slot warning, 'on service' and invalidation handling chosen by the team
 
 ### DEC-21: Deliverable scope: working web app vs wireframe prototype
 
@@ -676,7 +716,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 ### DEC-30: How "1 month in advance" is measured
 
-| Category | Ambiguity | Ask whom | Team | Status | Open |
+| Category | Ambiguity | Ask whom | Team | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Raised:** 2026-09-30, as a follow-up to DEC-01
@@ -692,7 +732,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Fixed 30 days from today.
 3. Whole planning weeks (Mon–Sun) that start within one calendar month from today.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: the allowed range is **today through the same calendar date next month, inclusive**, clamped to that month's last day (e.g. from 31 Jan the last date is 28/29 Feb). The same rule is used for the Certification reminder.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** DEC-01; chosen by the team
 
 ## H. Conflicts between interview transcripts
 
@@ -700,7 +742,7 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 
 ### DEC-31: Travel time: fixed allowance vs estimated driving time
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -716,11 +758,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 2. Estimated driving time between Job locations.
 3. The fixed allowance for planning, with mileage-based actuals after the day.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: a fixed 30-minute Travel Allowance per Job. The system holds no route or mileage data.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7] (process owner)
 
 ### DEC-32: Overtime: approval step or warning only?
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -736,11 +780,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Highlight and overridable warning only (the Manager's statements).
 2. Add an Overtime approval request that the Manager approves.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: no approval step. Overtime (over 40 h) is highlighted and raises an overridable warning.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [System Q4], [Conflicts Q5] (process owner)
 
 ### DEC-33: Real-time delay reporting by the Crew
 
-| Category | Scope (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Scope (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -756,11 +802,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Out of scope: phone call, then actual time recorded on completion.
 2. Add a "report delay" action that notifies the Manager.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: out of scope. Delays are reported by phone; the actual time is recorded on completion.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Conflicts Q5]; INT-DCT [Conflicts Q3]
 
 ### DEC-34: Leavers: delete accounts vs retain records
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** all from INT-ITA.
@@ -776,11 +824,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 2. Delete the account, remove future Assignments, and anonymise past records.
 3. Delete the account after the 1-year retention period.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: leavers' accounts are **deactivated**, not deleted: they cannot log in, their future Assignments are removed (those Jobs become Unassigned), and past records are kept. Schedule records are kept for **12 months** from their date and may be purged after that. Past and in-progress records cannot be deleted by any user; Jobs are cancelled, not deleted.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-ITA [Q: Role change/leaver], [Q: Retention]; deactivation chosen by the team to satisfy both statements
 
 ### DEC-35: Who maintains Certifications and staff details
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -797,11 +847,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. The IT Administrator enters everything at account creation, and the Manager maintains Certifications afterwards.
 2. The IT Administrator maintains everything, and the Manager only receives reminders.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: the IT Administrator records Certifications when creating a Technician's account; afterwards the Manager maintains them and receives expiry reminders.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q2], [Clarification Q2 follow-up]; INT-ITA [Q: Account info]
 
 ### DEC-36: Account and schedule import vs manual entry
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -821,11 +873,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 2. Manual creation only.
 3. Import both employees and the existing spreadsheet schedules.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: a one-off CSV import of employees at go-live, then manual account creation. No schedule import (FR-68 withdrawn).
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-ITA [Q: Onboarding], [Q: Existing systems]; INT-MGR [Process Q2]
 
 ### DEC-37: What Staff may see about colleagues
 
-| Category | Ambiguity (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Ambiguity (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** INT-ITA [Q: Safeguards]: "On the scheduler the only things that should be displayed are the names and emails of who put their schedule in that timeslot." By contrast, INT-MGR [System Q3] wants to compare "their availability that day, their hours so far this week, their brand certifications, their preferences, and where they'll be that day".
@@ -838,11 +892,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Staff see only colleagues' names (and emails) and the Manager sees everything.
 2. Staff see no colleague information beyond Crew names.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: Staff see only the names and contact numbers of their own Crew-mates for their own Assignments, and nothing of other Staff's Availability, Leave or Workload. Managers see all Staff schedules.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-ITA [Q: Safeguards], [Q: Permissions]; INT-MGR [System Q3]; INT-DRV [Q2]
 
 ### DEC-38: IT Administrator's Thursday peak vs the weekly cycle
 
-| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -857,11 +913,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Treat Thursday as the Manager's planning peak only.
 2. Confirm with the IT Administrator.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: Thursday is the Manager's planning peak; nothing opens to Staff on Thursday. Peak periods for NFRs: Monday early morning and Thursday.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q1]; INT-ITA [Q: Hours]
 
 ### DEC-39: Technician Workload on mixed or 3-person Vans
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -878,11 +936,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Each Technician is credited with the whole Van day, the same as the Driver.
 2. Each Job is assigned to specific Technician(s), who get only those hours.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: every Crew member (Driver and Technicians) is credited with the hours of all Jobs on their Van that day, since the Crew stays together all day. Completed Jobs stay credited to whoever was on the Crew when the Job was completed.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7], [Clarification Q4 follow-up]; chosen by the team
 
 ### DEC-40: Actual Hours, Travel Allowance and completion evidence
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -901,11 +961,13 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 1. Actual Hours = end − start + 30 min. Technicians complete Jobs. The photo is optional.
 2. Actual Hours = end − start. Any Crew member completes Jobs. The photo is mandatory.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Actual Hours = (actual end − actual start) + the 30-minute Travel Allowance. Only a Technician on the Crew can mark a Job completed. The signed-invoice photo is **mandatory**. Cancelled and Unassigned Jobs count zero hours.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q7], [Process Q1 follow-up: completion]; INT-DCT [Process Q1 follow-up: completion]; travel on actuals chosen by the team
 
 ### DEC-41: Email 2FA vs simplicity and field use
 
-| Category | Tension (interviews) | Ask whom | Stakeholder / Team | Status | Open |
+| Category | Tension (interviews) | Ask whom | Stakeholder / Team | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -922,7 +984,9 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 2. 2FA on new devices only, with a remembered-device session.
 3. 2FA for the Manager and IT Administrator only.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 2: email 2FA when a user logs in from a new device, for all roles; the device is then remembered for 30 days.
+
+**Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-ITA [Q: Safeguards]; INT-MGR [Closing]; 30-day period chosen by the team
 
 ---
 

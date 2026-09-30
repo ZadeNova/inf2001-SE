@@ -1,11 +1,10 @@
 # Software Requirements Specification: Aircon Service Workload Management System
 
-> **Status: DRAFT for team review.** This draft was AI-assisted (Claude Code, 2026-09-30) from the brief, the lecturer's clarification and the four interview transcripts. See [ai-usage-log.md](ai-usage-log.md).
-> Every row cites its source. Nothing is agreed until the team has reviewed it. Rows marked `Blocked` depend on a conflict between sources that the team must resolve first (§7).
-> Priorities are **proposed** (MoSCoW). The team confirms them. Brief R1–R11 are the minimum deliverable, so they are always `Must`.
-> Thresholds marked **†** were **not stated by any stakeholder**. They are placeholders the team must confirm with a stakeholder or replace.
-
-**Status values:** `Draft` → `Agreed` (confirmed by the team or a stakeholder) → `Withdrawn`, or `Blocked` (waiting on a DEC).
+> **Version 2 (2026-09-30).** This is an AI-assisted draft (Claude Code), built from the brief, the lecturer's clarification, the four interview transcripts and the team decisions in [decisions.md](decisions.md). v2 applies the resolutions of DEC-02 to DEC-41 and the fixes from [requirements-review.md](requirements-review.md). See [ai-usage-log.md](ai-usage-log.md).
+> Every row cites its source. Where the interviews were silent, the row cites the DEC entry that records the team's choice.
+> All rows are `Draft` until the team reviews them and marks them `Agreed`. IDs are stable: FR-68 is withdrawn, and FR-69 and FR-70 are new in v2.
+> Priorities use MoSCoW. Brief R1–R11 are the minimum deliverable, so they are always `Must`.
+> **†** marks a numeric threshold chosen by the team rather than stated by a stakeholder.
 
 ---
 
@@ -13,51 +12,58 @@
 
 ### 1.1 Purpose
 
-This SRS specifies the functional and non-functional requirements of a web-based workload management system for the aircon service team of an aircon retailer. It is the input to the Milestone 1 use cases, class diagram and sequence diagrams.
+This SRS specifies the functional and non-functional requirements of a web-based workload management system for the aircon service team of an aircon retailer. It is the baseline for the Milestone 1 use cases, class diagram, activity diagrams and sequence diagrams.
 
 ### 1.2 Scope
 
 The system lets the **Manager**:
 - record Jobs
-- form daily Van Crews and allocate Jobs one Planning Week at a time
+- form a daily Crew for each Van, allocate Jobs one Planning Week at a time and publish the Weekly Roster
 - see Availability and Workload at a glance up to 1 month in advance
-- handle Leave, late Availability changes and Job Rejections.
+- handle Leave Requests, Late Availability Change Requests and Job Rejections.
 
 It lets **Staff** (Drivers and Technicians):
-- enter Availability, Job Preferences and Leave
-- see their Assignments and Workload
-- record Job completion
+- enter Availability, Job Preferences and Leave Requests
+- see their published Assignments and Workload
+- record Job completion (Technicians)
 - reject Jobs.
 
-It lets the **IT Administrator** manage accounts, permissions and the public holiday calendar.
+It lets the **IT Administrator** manage accounts, roles, the public holiday list and the audit log.
 
 **Out of scope**, with the source for each exclusion:
 
 | Excluded | Source |
 |---|---|
-| Wages, job costs and payroll ("handled by our accounts department") | INT-MGR [System Q1] |
-| Live GPS tracking of Staff ("I don't need live GPS tracking") | INT-MGR [System Q3] |
-| Customer self-booking. Customers call or message the office and the Manager enters the Job | INT-MGR [Process Q2] |
-| Sunday or public holiday emergency jobs ("I handle that outside the system") | INT-MGR [Clarification Q8] |
-| Same-day changes by phone call. The phone call itself happens outside the system, but the system records the change (FR-50) | INT-MGR [added follow-up: notifications]; INT-DCT [Process Q1 follow-up: updates] |
-| Automatic route optimisation. Job order is set by the Manager (FR-42) | INT-DRV [Q5] |
+| Wages, job costs and payroll | INT-MGR [System Q1] |
+| Live GPS tracking | INT-MGR [System Q3]; DEC-08 |
+| Customer self-booking | INT-MGR [Process Q2] |
+| Sunday and public holiday emergency jobs | INT-MGR [Clarification Q8] |
+| Route optimisation. Job order is set by the Manager | INT-DRV [Q5] |
+| In-app delay reporting. Delays are reported by phone | DEC-33 |
+| Overtime approval workflow | DEC-32 |
+| Importing existing schedules | DEC-36 |
+| Real-time phone calls. The system only records the resulting change | INT-MGR [added follow-up: notifications] |
 
 ### 1.3 Definitions
 
-The canonical terms are in the [AGENTS.md glossary](AGENTS.md#glossary-canonical-terms). This SRS uses the terms below, which are **not yet in the glossary**. They are proposed for addition once the team agrees them.
+The canonical terms are in the [AGENTS.md glossary](AGENTS.md#glossary-canonical-terms). This SRS also uses these terms:
 
-| Proposed term | Meaning | Source |
+| Term | Meaning | Source |
 |---|---|---|
-| **Crew** | The Driver and 1–2 Technicians assigned to one Van for one working day | INT-MGR [Clarification Q4 follow-up]; Brief §Company ¶3–4 |
-| **Planning Week** | The Monday–Saturday week being planned and published | INT-MGR [Process Q1], [Clarification Q7] |
-| **Slot** | A half-day unit of Availability: `Morning` (09:00–13:00) or `Afternoon` (14:00–18:00) | INT-MGR [Clarification Q4] |
-| **Late Availability Change Request** | A Staff request to change Availability after the Availability Deadline | INT-MGR [Conflicts Q2] |
-| **Leave Request** | A Staff application for annual Leave, approved or rejected by the Manager | INT-MGR [Process Q4] |
-| **Standard Duration** | Default Job duration: Servicing 1 h per unit, Installation 3 h per unit | INT-MGR [Process Q2 follow-up: hours] |
-| **Travel Allowance** | A fixed 30 minutes added to each Job's hours | INT-MGR [Clarification Q7] |
-| **Planned Hours / Actual Hours** | A Job's hours before and after completion is recorded | INT-MGR [Clarification Q7] |
-| **Overtime** | Workload above 40 hours in a Planning Week | INT-MGR [Clarification Q7]; Brief R6 |
-| **Unassigned Job** | A Job that is not assigned to any Van on any date | INT-MGR [Conflicts Q1], [Conflicts Q3] |
+| **Crew** | The Driver and one or two Technicians assigned to one Van for one working day | DEC-09 |
+| **Planning Week** | A Monday–Saturday week. "The Planning Week" is the next week not yet published | DEC-04, DEC-16 |
+| **Slot** | A half-day unit: `Morning` (09:00–13:00) or `Afternoon` (14:00–18:00). Lunch is 13:00–14:00 | DEC-03, DEC-12 |
+| **Availability Lock** | 18:00 on the Wednesday 12 days before a Planning Week's Monday | DEC-02 |
+| **Late Availability Change Request** | A Staff request to set or change Availability for a locked week | DEC-02 |
+| **Leave Request** | A request for full days of annual Leave, which the Manager approves or rejects | DEC-13 |
+| **Standard Duration** | Servicing 1 h per unit, Installation 3 h per unit | DEC-22 |
+| **Travel Allowance** | A fixed 0.5 h added to each Job's hours | DEC-31 |
+| **Planned Hours / Actual Hours** | Planned Hours = duration + Travel Allowance. Actual Hours = (actual end − actual start) + Travel Allowance | DEC-31, DEC-40 |
+| **Overtime** | Workload strictly above 40 h in a Planning Week | DEC-04 |
+| **On service** | A Van with a valid Crew and at least one Job on that day | DEC-19 |
+| **Needs attention** | A Van-day whose Crew became invalid after publication and is waiting for the Manager | DEC-19 |
+| **Draft / Published** | The two states of a Weekly Roster. Staff see Published weeks only | DEC-16 |
+| **Linked Jobs** | Jobs of different Brands at the same address, which must go on the same Van and date | DEC-11 |
 
 ### 1.4 Sources and citation format
 
@@ -65,12 +71,11 @@ The canonical terms are in the [AGENTS.md glossary](AGENTS.md#glossary-canonical
 |---|---|
 | `Brief R<n>` / `Brief §<section> ¶<n>` | [brief/project-description.md](brief/project-description.md), including its Lecturer clarifications |
 | `DEC-nn` | [decisions.md](decisions.md) |
-| `INT-MGR [<label>]` | [elicitation/interviews/manager.md](elicitation/interviews/manager.md). The label is the question tag in the transcript. Where a tag repeats, a topic follows the colon |
-| `INT-DCT [<label>]` | [elicitation/interviews/dct.md](elicitation/interviews/dct.md) |
-| `INT-DRV [Q<n>]` | [elicitation/interviews/driver.md](elicitation/interviews/driver.md), numbered questions |
-| `INT-ITA [Q: <topic>]` | [elicitation/interviews/ita.md](elicitation/interviews/ita.md). This file has no question tags, so it is cited by the question's topic |
+| `INT-MGR [<label>]`, `INT-DCT [<label>]` | Interview transcripts in [elicitation/interviews/](elicitation/interviews/). The label is the transcript's question tag. Where a tag repeats, a topic follows the colon |
+| `INT-DRV [Q<n>]` | Driver transcript, numbered questions |
+| `INT-ITA [Q: <topic>]` | IT Administrator transcript, cited by question topic |
 
-The `INT-` citations are **proposed**. AGENTS.md currently allows only `Brief`, `MTG-nn` and `DEC-nn` as sources. The team should either add `INT-` to that list or give each interview an MTG ID and replace these citations. Answer-key rows (AK-nn) are **not** cited, because they are team summaries.
+`INT-` is added to the allowed source list in AGENTS.md in the same commit as this version.
 
 ---
 
@@ -80,33 +85,38 @@ The `INT-` citations are **proposed**. AGENTS.md currently allows only `Brief`, 
 
 | User class | Description | Source |
 |---|---|---|
-| **Manager** | Full-time and office-based. Enters Jobs, builds Crews, allocates and publishes the Weekly Roster, and approves Leave and late changes. Has no Availability, and their hours are not counted in Workload | Brief §Intro ¶4; INT-MGR [Clarification Q1] |
-| **Driver** (Staff) | 6 in total. Drives the Van. Only Drivers are covered by the vehicle insurance. Uses a phone or the van tablet | Brief §Company ¶4; INT-MGR [Clarification Q3]; INT-DRV [Q1], [Q14] |
-| **Technician** (Staff) | 11 in total: 2 dual-Brand, 5 M Electric only, 4 Dicon only. A Brand Certification covers both installation and servicing. Never drives. Uses their own Android phone | Brief §Company ¶4; INT-MGR [Clarification Q5]; INT-DCT [Clarification Q1], [System Q3] |
-| **IT Administrator** | Creates accounts and manages permissions, account problems and the public holiday list | Brief R11; INT-ITA; INT-MGR [Clarification Q2], [Clarification Q8] |
-
-The Manager says "Most of my staff aren't very technical" (INT-MGR [Closing]).
+| **Manager** | Office-based. May be more than one account, all with identical permissions. Has no Availability, Leave or Workload in the system | INT-MGR [Clarification Q1]; DEC-18 |
+| **Driver** (Staff) | 6 in total. The only role allowed to drive. Uses a phone or the van tablet | Brief §Company ¶4; INT-MGR [Clarification Q3]; INT-DRV [Q14] |
+| **Technician** (Staff) | 11 in total: 2 dual-Brand, 5 M Electric only, 4 Dicon only. A Brand Certification covers both Installation and Servicing. Uses their own Android phone | Brief §Company ¶4; INT-MGR [Clarification Q5]; INT-DCT [System Q3] |
+| **IT Administrator** | Manages accounts, roles, lockouts, the public holiday list and the audit log | Brief R11; INT-ITA; DEC-17 |
 
 ### 2.2 Operating environment
 
-- The system is a web application (Brief R1).
-- Browsers: Chrome is the most important, plus Edge, Firefox and DuckDuckGo (INT-ITA [Q: Devices]).
-- Devices: company laptops and tablets, and modern phones, including Android (INT-ITA [Q: Devices]; INT-DCT [System Q3]).
-- Staff use it in the field. Mobile data is usually fine, but there is no signal in some basements and car parks (INT-DCT [System Q3]).
+- Browsers: Chrome is the priority; Edge, Firefox and DuckDuckGo must also work.
+- Devices: company laptops and tablets, and modern phones.
+- Field use has patchy signal in basements and car parks.
+
+Sources: INT-ITA [Q: Devices]; INT-DCT [System Q3].
 
 ### 2.3 Constraints
 
-- The system is web-based, in a language of the team's choosing (Brief R1).
-- Operations run Monday to Saturday. The company is closed on Sundays and public holidays, with no Jobs and no roster (INT-MGR [Clarification Q8]; Brief §Company ¶4).
-- Fleet and headcount: 6 Vans, 6 Drivers and 11 Technicians (Brief §Company ¶3–4).
+- The system is a web application (Brief R1).
+- Operations run Monday–Saturday, 09:00–18:00. The company is closed on Sundays and public holidays (DEC-12).
+- Current fleet and headcount: 6 Vans, 6 Drivers and 11 Technicians (Brief §Company ¶3–4). The fleet size is data, not a hard limit.
 
-### 2.4 Weekly planning cycle (as described by the Manager)
+### 2.4 Weekly cycle
 
-1. Staff enter Availability until **18:00 on Wednesday**.
-2. The Manager plans from Thursday: vans first, then crews, then Jobs.
-3. The Manager publishes on **Monday** for the **following** Monday–Saturday week.
+Example for the Planning Week starting Monday the 19th:
 
-The Manager's example: "for the week starting Monday the 19th, availability is due by 6pm on Wednesday the 7th, I plan from Thursday the 8th, and I publish on Monday the 12th." Sources: INT-MGR [Process Q1], [Clarification Q6 follow-up]; Brief §Company ¶1.
+| Step | When |
+|---|---|
+| Staff enter Availability and Job Preference | Any time within the 1-month window |
+| Availability Lock | Wednesday the 7th, 18:00 |
+| Manager plans: Crews first, then Jobs | From Thursday the 8th (the roster is Draft) |
+| Manager publishes | Monday the 12th (Staff are notified) |
+| The week runs | Monday the 19th to Saturday the 24th |
+
+Sources: INT-MGR [Clarification Q6 follow-up]; DEC-02; DEC-16.
 
 ---
 
@@ -116,129 +126,131 @@ The Manager's example: "for the week starting Monday the 19th, availability is d
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-01 | The system shall support three roles, each with its own Landing Page and permissions: **Staff** (Driver or Technician), **Manager** and **IT Administrator** | Brief R2, R7, R11; INT-ITA [Q: Onboarding], [Q: Permissions] | Must | Draft | Log in as each role and confirm the role-specific Landing Page and menu |
-| FR-02 | The IT Administrator shall be able to create Staff and Manager accounts, recording name, email, contact number, role and an initial password that the user can change later | Brief R11; INT-ITA [Q: Account info]; INT-MGR [Clarification Q2] | Must | Draft | Create one account of each role and log in with the initial password. Confirm the user can change it |
-| FR-03 | Only the IT Administrator shall be able to assign or change a user's role and permissions | INT-ITA [Q: Permissions], [Q: Onboarding] | Must | Draft | Attempt a role change as a Manager and as Staff. It must be refused |
-| FR-04 | The IT Administrator shall be able to change an existing user's role, and the user's permissions shall update to match | INT-ITA [Q: Role change/leaver] | Must | Draft | Change a Driver to a Manager and confirm the permissions change on the next login |
-| FR-05 | The IT Administrator shall be able to remove the account of a user who leaves the company | INT-ITA [Q: Role change/leaver] | Should | **Blocked** (DEC-34) | Delete vs deactivate, and what happens to that user's records, must be decided first |
-| FR-06 | A user shall be able to reset a forgotten password through a forgot-password link that sends a confirmation to their company email | INT-ITA [Q: Passwords] | Should | Draft | Request a reset, follow the email link and log in with the new password |
-| FR-07 | An account shall be locked after repeated failed login attempts, and only the IT Administrator shall be able to unlock it | INT-ITA [Q: Passwords] | Should | Draft | Failed-attempt threshold **†TBC**. Exceed it, then confirm the account is locked and that only the IT Administrator can unlock it |
-| FR-08 | The IT Administrator shall be able to import existing employee records from a CSV export of the current employee portal | INT-ITA [Q: Existing systems], [Q: Priorities] | Should | Draft (see DEC-36) | Import a sample CSV and confirm the accounts are created with the correct fields |
-| FR-09 | The IT Administrator shall be able to load the year's public holiday list. The system shall then block Crews and Assignments on those dates | INT-MGR [Clarification Q8] | Must | Draft | Load the list, then try to assign a Job on a listed date. It must be blocked |
+| FR-01 | The system shall support three roles, each with its own Landing Page: **Staff** (subtypes Driver and Technician), **Manager** and **IT Administrator** | Brief R2, R7, R11; INT-ITA [Q: Permissions]; DEC-18 | Must | Draft | Log in as each role and check that the correct Landing Page appears |
+| FR-02 | The IT Administrator shall create Staff and Manager accounts. Required fields: name, email, contact number and role. Technician accounts also record their Certifications (FR-10). The account starts with an initial password that the user can change | Brief R11; INT-ITA [Q: Account info]; INT-MGR [Clarification Q2]; DEC-35 | Must | Draft | Missing required field → refused. Duplicate email → refused. Valid → the user can log in and change the password |
+| FR-03 | Only the IT Administrator shall be able to assign or change roles and permissions | INT-ITA [Q: Permissions] | Must | Draft | Manager or Staff attempt → refused |
+| FR-04 | The IT Administrator shall be able to change a user's role, effective from the user's next login. If a Staff member becomes a Manager, their future Assignments are removed and those Jobs become Unassigned | INT-ITA [Q: Role change/leaver]; DEC-17 | Must | Draft | Change a Driver with a future Assignment into a Manager. On next login they see the Manager page, and the Job is Unassigned |
+| FR-05 | The IT Administrator shall be able to **deactivate** the account of a leaver. The user can no longer log in, their future Assignments are removed (those Jobs become Unassigned), and their past records are kept | INT-ITA [Q: Role change/leaver], [Q: Retention]; DEC-34 | Must | Draft | Deactivate a user. Login fails, the future Job is Unassigned, and last month's Assignments are still visible to the Manager |
+| FR-06 | A user shall be able to reset a forgotten password through a link sent to their company email | INT-ITA [Q: Passwords] | Should | Draft | Request a reset, follow the link, set a new password and log in |
+| FR-07 | An account shall lock after **5†** consecutive failed logins within **15 minutes†**. Only the IT Administrator can unlock it | INT-ITA [Q: Passwords]; DEC-17 | Should | Draft | 4 failures → still usable. 5th failure → locked. IT Administrator unlocks → login works |
+| FR-08 | The IT Administrator shall be able to import employees once from a CSV export of the current employee portal. Rows with a missing required field or a duplicate email are rejected and listed in an import report | INT-ITA [Q: Existing systems], [Q: Priorities]; DEC-36 | Should | Draft | Import a file with 3 valid rows, 1 missing email and 1 duplicate: 3 accounts are created and 2 rows are reported |
+| FR-09 | The IT Administrator shall load each year's public holiday list. Those dates then cannot have Crews or Jobs | INT-MGR [Clarification Q8]; DEC-12 | Must | Draft | Load the list, then try to form a Crew on a listed date → blocked. For adding a holiday after a roster exists, see FR-70 |
 
 ### 3.2 Technician Certifications
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-10 | The system shall record each Technician's Certifications: Brand, certificate number and expiry date. A Technician may hold one or both Brands | Brief §Company ¶2, ¶4; INT-MGR [Clarification Q2 follow-up], [Clarification Q5] | Must | Draft (who maintains it: DEC-35) | Record a dual-Brand Technician. Both Brands must appear in the allocation comparison |
-| FR-11 | The system shall remind the Manager one month before a Technician's Certification expires | INT-MGR [Clarification Q2 follow-up] | Should | Draft | Set an expiry 30 days ahead and confirm the reminder appears. Whether "one month" means 30 days or a calendar month is **†TBC** |
-| FR-12 | The system shall allow a scanned copy of a Certification to be uploaded | INT-MGR [Clarification Q2 follow-up] ("nice, but it isn't essential") | Could | Draft | Upload a PDF or image and view it |
+| FR-10 | The system shall record each Technician's Certifications: Brand, certificate number and expiry date. A Technician may hold one or both Brands. The IT Administrator enters them at account creation, and the Manager maintains them afterwards. A Certification is **valid for a Job** when its expiry date is on or after the Job's date | Brief §Company ¶2, ¶4; INT-MGR [Clarification Q2 follow-up], [Clarification Q5]; DEC-35; DEC-19 | Must | Draft | Expiry equal to the Job date → valid. Expiry the day before → invalid (FR-44 blocks it) |
+| FR-11 | The Manager's Landing Page shall show a reminder for each Certification that expires within 1 month. The window uses the DEC-30 rule | INT-MGR [Clarification Q2 follow-up]; DEC-30 | Should | Draft | From 15 Mar: expiry on 15 Apr → shown; expiry on 16 Apr → not shown |
+| FR-12 | The Manager may attach a scanned copy (PDF/JPG/PNG) to a Certification | INT-MGR [Clarification Q2 follow-up] | Could | Draft | Upload a file and view it |
 
 ### 3.3 Availability
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-13 | Staff shall be able to add and edit their Availability per Slot (Morning 09:00–13:00, Afternoon 14:00–18:00) for each working day from Monday to Saturday, excluding public holidays | Brief R8; INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2] | Must | Draft | Enter Morning-only for a day and confirm it is stored and shown. Sunday and public holiday Slots must not be offered |
-| FR-14 | Staff shall be able to enter and edit Availability for dates up to 1 month in advance, and no further | Brief R8, §Intro ¶3 + Lecturer clarification; DEC-01 | Must | Draft (exact boundary: DEC-30) | Boundary test on the last allowed date and the day after it, once DEC-30 fixes the rule |
-| FR-15 | The Manager shall be able to view the Availability of all Staff up to 1 month in advance as a calendar grid, with Staff down the side and days across. Cells are colour-coded as available, morning only, afternoon only, or on Leave | Brief §Intro ¶4 + Lecturer clarification; DEC-01; INT-MGR [System Q2], [Clarification Q6] | Must | Draft | Seed each of the four states and confirm each has a distinct colour. Scroll to +1 month |
-| FR-16 | Availability for a Planning Week shall lock at 18:00 on the Wednesday 12 days before that week's Monday | Brief §Company ¶1; INT-MGR [Process Q1], [Clarification Q6 follow-up] | Must | Draft | Using the Manager's example, week of Monday 19th: an edit at 17:59 on Wednesday 7th is accepted, and an edit at 18:00 is refused |
-| FR-17 | After the lock, Staff shall be able to submit a Late Availability Change Request with a reason. The Manager shall approve or reject it, and an approved request shall update the Availability | Brief §Company ¶1; INT-MGR [Conflicts Q2], [Clarification Q6 follow-up]; INT-DCT [Process Q1 follow-up: deadline] | Must | Draft | Submit a request after the lock. Approve it and confirm Availability changes. Reject another and confirm Availability is unchanged |
-| FR-18 | The Manager shall be able to mark a Staff member unavailable for any date, including after the Weekly Roster is published (e.g. sick leave or an emergency) | INT-MGR [Process Q4], [Conflicts Q2] | Must | Draft | Mark an assigned Staff member unavailable. Their Assignment must be flagged for reassignment |
-| FR-19 | Staff shall be able to copy the previous week's Availability into a new week | INT-DCT [Clarification Q2] ("It would be nice") | Could | Draft | Copy, then confirm all Slots match the source week |
-| FR-20 | The system shall not require Availability from Managers or calculate Workload for them | INT-MGR [Clarification Q1] | Must | Draft | A Manager account has no Availability page and does not appear in the Workload views |
+| FR-13 | Staff shall set each **Slot** (Morning or Afternoon) of each working day to `Available` or `Unavailable`, and may clear an entry. A Slot with no entry is **Not submitted** and counts as unavailable for allocation | Brief R8; INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2]; DEC-03 | Must | Draft | Set Morning = Available and leave Afternoon blank. Allocation treats the afternoon as unavailable. Sunday and public holiday Slots are not offered |
+| FR-14 | Staff shall be able to enter or change Availability only for dates from **today through the same calendar date next month, inclusive** (clamped to that month's last day), and only before the Availability Lock | Brief R8 + Lecturer clarification; DEC-01; DEC-30; DEC-02 | Must | Draft | From 15 Mar: 15 Apr accepted, 16 Apr refused. From 31 Jan: 28 Feb accepted (non-leap year), 1 Mar refused |
+| FR-15 | The Manager shall view the Availability of all Staff up to 1 month in advance (the FR-14 window) as a calendar grid, with Staff down the side and days across. Each cell shows one of five colour-coded states: available all day, morning only, afternoon only, on Leave, or unavailable / not submitted | Brief §Intro ¶4 + Lecturer clarification; INT-MGR [System Q2]; DEC-03 | Must | Draft | Seed each state and check that each has a distinct colour and a legend |
+| FR-16 | Availability and Job Preference for a Planning Week shall lock at **18:00 on the Wednesday 12 days before** that week's Monday, in company local time | Brief §Company ¶1; INT-MGR [Clarification Q6 follow-up]; DEC-02; DEC-07 | Must | Draft | Week of Mon 19th: an edit at Wed 7th 17:59 is accepted, an edit at 18:00 is refused |
+| FR-17 | For a locked week, Staff shall submit a **Late Availability Change Request** to set or change one or more Slots, with a reason. The Manager approves or rejects it. Approval applies the change, and FR-70 applies if the change affects a Crew. Rejection leaves Availability unchanged. The Staff member is notified either way | Brief §Company ¶1; INT-MGR [Conflicts Q2]; INT-DCT [Process Q1 follow-up: deadline]; DEC-02 | Must | Draft | Request without a reason → refused. Approve → Slot updated. Reject → unchanged. Both outcomes notify the Staff member |
+| FR-18 | The Manager shall be able to mark a Staff member unavailable for one or more dates (e.g. sick leave, emergency), including in a published week. FR-70 applies | INT-MGR [Process Q4], [Conflicts Q2] | Must | Draft | Mark a Crew member unavailable. They are removed from the Crew, the Van-day shows Needs attention, and they are notified |
+| FR-19 | Staff may copy the previous week's Availability into a week that is open for editing. Copied Slots must obey FR-14 and FR-16, and public holidays are skipped | INT-DCT [Clarification Q2] | Could | Draft | Copy into a week containing a public holiday: that day stays blank |
+| FR-20 | Managers shall have no Availability, Leave or Workload, and shall not appear in Workload views | INT-MGR [Clarification Q1]; DEC-18 | Must | Draft | A Manager account has no Availability page and is absent from Workload charts |
 
 ### 3.4 Job Preference
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-21 | Staff shall be able to indicate a Job Preference for each week, covering preferred area, preferred days or time of day, and preferred Job Type. Preferences are advisory: they are shown during allocation (FR-43) and only raise a warning (FR-45) | Brief R9, R5; INT-DCT [Clarification Q4]; INT-DRV [Q10]; INT-MGR [Process Q1 follow-up: ordering] ("tie-breaker, not a rule") | Must | Draft | Save a preference and confirm it appears in the allocation comparison. The preference deadline is **TBC** (see §6, DEC-07) |
+| FR-21 | Staff shall be able to set a weekly Job Preference with optional fields: preferred area(s), preferred days, preferred Slot and preferred Job Type. It locks with Availability (FR-16). Preferences are advisory: they are shown in the comparison (FR-43), and violating one only raises a warning (FR-45) | Brief R9, R5; INT-DCT [Clarification Q4]; INT-DRV [Q10]; INT-MGR [Process Q1 follow-up: ordering]; DEC-07 | Must | Draft | Save a preference and see it in the comparison. Allocate against it → warning only. An empty preference is allowed |
 
 ### 3.5 Leave
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-22 | Staff shall be able to submit a Leave Request for one or more days, with an optional note | Brief §Company ¶4; INT-MGR [Process Q4], [Process Q4 follow-up]; INT-DCT [Process Q3] | Must | Draft | Submit with and without a note |
-| FR-23 | The Manager shall be able to approve or reject a Leave Request. A rejection requires a reason, and the Staff member shall see the decision and the reason | INT-MGR [Process Q4], [Process Q4 follow-up] | Must | Draft | Try to reject without a reason, which must fail. Reject with a reason and confirm the Staff member sees it |
-| FR-24 | Approved Leave shall automatically make the Staff member unavailable for those days, and the system shall block Assignments on them | INT-MGR [Process Q4]; INT-DRV [Q15] | Must | Draft | Approve Leave, then try to add the person to a Crew that day. It must be blocked |
-| FR-25 | The system shall track each Staff member's Leave balance: 7 days per calendar year, with no carry-over. The remaining balance shall be shown to the Staff member and the Manager | Brief §Company ¶4; INT-MGR [Process Q4], [System Q1]; INT-DCT [Process Q3], [System Q2] | Must | Draft | Approve 2 days and confirm the balance is 5. On 1 Jan confirm it resets to 7 |
-| FR-26 | When reviewing a Leave Request, the system shall show how many Vans could still be crewed on each requested day | INT-MGR [Process Q4] ("make sure we can still run at least three vans that day"). *Derived: supports a check the Manager described* | Could | Draft | Approve Leave that drops a day to 2 crewable Vans and confirm the count is shown |
+| FR-22 | Staff shall submit a Leave Request for one or more **full working days**, with an optional note. A request cannot exceed the remaining balance or overlap an existing pending or approved request | Brief §Company ¶4; INT-MGR [Process Q4], [Process Q4 follow-up]; INT-DCT [Process Q3]; DEC-13 | Must | Draft | With 2 days left, a 3-day request → refused. An overlapping request → refused. A range including a Sunday deducts working days only |
+| FR-23 | The Manager shall approve or reject a Leave Request. A rejection requires a reason. The Staff member is notified of the decision and any reason | INT-MGR [Process Q4], [Process Q4 follow-up]; DEC-13 | Must | Draft | Reject without a reason → refused. Reject with a reason → Staff sees it |
+| FR-24 | Approved Leave makes the Staff member unavailable on those days, and FR-44 blocks Assignments on them. If the person is already in a Crew on those days, the Manager is warned before approving, and on approval FR-70 applies | INT-MGR [Process Q4]; INT-DRV [Q15]; DEC-13; DEC-19 | Must | Draft | Approve Leave for a Crew member → warning first. After confirming, they are removed from the Crew and the Van-day shows Needs attention |
+| FR-25 | Each Staff member has **7 Leave days per calendar year**, with no carry-over. Days are deducted on approval, and the remaining balance is shown to the Staff member and the Manager | Brief §Company ¶4; INT-MGR [Process Q4], [System Q1]; INT-DCT [System Q2]; DEC-13 | Must | Draft | Approve 2 days → balance 5. On 1 Jan the balance resets to 7 |
+| FR-26 | When reviewing a Leave Request, the system shall show, for each requested day, how many Vans would still be on service if it were approved | INT-MGR [Process Q4]; DEC-19 | Could | Draft | Approving would drop a day from 3 to 2 Vans on service → the count shows 2 |
 
 ### 3.6 Vans and Crews
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-27 | The system shall record each Van's number and licence plate | Brief §Company ¶3; INT-DRV [Q2]; INT-MGR [Process Q3] | Must | Draft | Six Vans are listed with plates |
-| FR-28 | The system shall record Workshop Servicing dates, during which a Van is unavailable all day. The rotation: in odd months Vans 1, 2 and 3 go on the 1st, 11th and 21st, and in even months Vans 4, 5 and 6 go on the same dates. A date that falls on a Sunday or public holiday moves to the next working day | Brief §Company ¶5; INT-MGR [Process Q3] | Must | Draft (manual entry vs generated: §6, DEC-14) | Check a month where the 11th is a Sunday: the servicing must move to Monday the 12th. The Van cannot be crewed that day |
-| FR-29 | The Manager shall be able to mark a Van unavailable for a date range (e.g. breakdown). Jobs assigned to that Van in the range shall become Unassigned Jobs | INT-MGR [Conflicts Q4]; INT-DRV [Q8] | Must | Draft | Mark a Van unavailable and confirm its Jobs appear in the Unassigned list |
-| FR-30 | The Manager shall form a Crew for each Van on each working day. A Crew is exactly one Driver plus one or two Technicians (2–3 people). A Crew stays fixed for the day | Brief §Company ¶3–4; INT-MGR [Process Q1], [Clarification Q4 follow-up] | Must | Draft | Try a Crew with 0 Drivers, 2 Drivers, 0 Technicians or 3 Technicians. All must be refused |
-| FR-31 | The system shall not allow a Technician to be the Driver of a Crew | INT-MGR [Clarification Q3]; INT-DCT [Clarification Q1] | Must | Draft | Try to set a Technician as Driver. It must be refused |
-| FR-32 | The Technicians of a Crew shall hold Certifications covering the Brand of every Job assigned to its Van that day. For Jobs of both Brands, that means either one dual-Brand Technician or one Technician per Brand | Brief §Company ¶2–3; INT-MGR [Process Q1 follow-up: ordering], [Process Q2]; INT-DCT [Conflicts Q1 follow-up] | Must | Draft | Decision-table candidate for M2 black-box testing: Brands on the Van × Technician Certifications |
-| FR-33 | The Manager shall be able to change the current day's Crew in an emergency, and the affected Staff shall be notified | INT-MGR [Clarification Q4 follow-up]; INT-DRV [Q7] | Must | Draft | Swap a Technician mid-day and confirm both Staff are notified and FR-32 is re-validated |
+| FR-27 | The system shall store each Van's number and licence plate. The Manager maintains the Van list | Brief §Company ¶3; INT-DRV [Q2]; DEC-14 | Must | Draft | Six Vans are listed with plates. Adding a seventh is possible |
+| FR-28 | The system shall **generate** Workshop Servicing dates from the rotation: odd months Vans 1, 2 and 3; even months Vans 4, 5 and 6; on the 1st, 11th and 21st respectively. A date that falls on a Sunday or public holiday moves forward **day by day until it reaches a working day**. The Van is unavailable all that day. The Manager may adjust a generated date | Brief §Company ¶5; INT-MGR [Process Q3]; DEC-14 | Must | Draft | 11th = Sunday and 12th = public holiday → the servicing is on the 13th. **White-box candidate for M2** |
+| FR-29 | The Manager shall be able to mark a Van unavailable for a date range (e.g. breakdown). Its not-yet-completed Jobs in that range become Unassigned, its Crew for those days is released, and the Crew members are notified | INT-MGR [Conflicts Q4]; INT-DRV [Q8] | Must | Draft | Completed Jobs are untouched. Assigned Jobs appear in the Unassigned list |
+| FR-30 | For each Van that is to be on service on a working day, the Manager shall form a Crew of **exactly one Driver and one or two Technicians**. Each Crew member must be available for every Slot in which the Van has Jobs. A person may be in only one Crew per day. The Crew is fixed for the day, except under FR-33 | Brief §Company ¶3–4; INT-MGR [Process Q1], [Clarification Q4 follow-up]; DEC-09 | Must | Draft | 0 or 2 Drivers → refused. 0 or 3 Technicians → refused. A Technician available Morning only on a Van with an afternoon Job → refused |
+| FR-31 | A Technician shall never be the Driver of a Crew | INT-MGR [Clarification Q3]; INT-DCT [Clarification Q1] | Must | Draft | Setting a Technician as Driver → refused |
+| FR-32 | Together, a Crew's Technicians shall hold **valid Certifications (FR-10) for the Brand of every Job** on the Van that day. For Jobs of both Brands, this means either one dual-Brand Technician or one Technician per Brand | Brief §Company ¶2–3; INT-MGR [Process Q1 follow-up: ordering], [Process Q2]; INT-DCT [Conflicts Q1 follow-up]; DEC-09 | Must | Draft | **Black-box decision table for M2:** Brands on the Van × Technician Certifications × expiry |
+| FR-33 | The Manager shall be able to change a Crew during the day in an emergency. The removed and added Staff are notified. Hours for Jobs already completed stay credited to whoever was on the Crew when each Job was completed | INT-MGR [Clarification Q4 follow-up]; INT-DRV [Q7]; DEC-39 | Must | Draft | After a swap, the new Technician is credited only with the remaining Jobs. FR-30 and FR-32 are re-checked |
 
 ### 3.7 Jobs
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-34 | The Manager shall be able to create a Job. It records: customer name, customer phone, address (including unit number) and postal code, Brand, Job Type (Installation or Servicing), number of units, aircon model (optional), preferred date, preferred Slot, and notes (e.g. parking, lift access) | INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info]; INT-DRV [Q2] | Must | Draft | Create a Job with only the optional fields left blank. It saves. Leave out any required field and it is refused |
-| FR-35 | The system shall pre-fill a Job's duration from its Standard Duration (Servicing 1 h per unit, Installation 3 h per unit), and the Manager shall be able to adjust it | INT-MGR [Process Q2 follow-up: hours], [Clarification Q5 follow-up]; INT-DCT [Clarification Q3 follow-up] | Must | Draft | 2 Installation units pre-fill 6 h. Edit it to 7 h and confirm it saves |
-| FR-36 | Each Job shall have exactly one Brand. A customer with units of both Brands is recorded as two Jobs at the same address, and the Crew sees them together | INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info] | Must | Draft | Create two Jobs at one address and confirm the Staff view groups them |
-| FR-37 | The Manager shall be able to update or cancel a Job. If the Job is assigned, the Crew shall be notified | INT-MGR [added follow-up: cancellations] | Must | Draft | Cancel an assigned Job and confirm the Crew is notified and the Job leaves their list |
-| FR-38 | The system shall track each Job's status as at least Unassigned, Assigned, Completed or Cancelled | INT-MGR [Conflicts Q3], [Conflicts Q4], [added follow-up: cancellations], [Process Q1 follow-up: completion] | Must | Draft | Take a Job through each transition |
-| FR-39 | A Crew member shall be able to mark an assigned Job Completed, recording the actual start and end times, a short remark, and whether a follow-up visit is needed | INT-DCT [Process Q1 follow-up: completion]; INT-MGR [Process Q1 follow-up: completion] | Must | Draft (see DEC-40) | Complete a Job and confirm all four fields are stored. End time before start time must be refused |
-| FR-40 | When marking a Job Completed, the Crew shall be able to attach a photo of the invoice signed by the customer | INT-MGR [Process Q1 follow-up: completion] | Should | Draft (see DEC-40) | Attach a photo from a phone camera |
+| FR-34 | The Manager shall create a Job. **Required:** customer name, customer phone, address, postal code, Brand, Job Type (Installation or Servicing), number of units (≥1), preferred date (a working day) and preferred Slot. **Optional:** unit number, aircon model, notes | INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info]; INT-DRV [Q2]; DEC-11 | Must | Draft | Required fields only → saved. Units = 0 → refused. Preferred date on a Sunday → refused |
+| FR-35 | The Job's duration shall be pre-filled from its Standard Duration (Servicing 1 h per unit, Installation 3 h per unit). The Manager can adjust it | INT-MGR [Process Q2 follow-up: hours]; INT-DCT [Clarification Q3 follow-up]; DEC-22 | Must | Draft | 2 Installation units → 6 h pre-filled. Edited to 7 h → saved |
+| FR-36 | Each Job has exactly one Brand. The Manager can **link** Jobs of different Brands at the same address. Linked Jobs must be allocated to the same Van on the same date, and Staff see them grouped | INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info]; DEC-11 | Must | Draft | Allocate one of two linked Jobs to a different Van → blocked |
+| FR-37 | The Manager shall be able to edit or cancel a Job that is not Completed. An edited, assigned Job is re-checked against FR-44. If it now breaks a rule, it becomes Unassigned and the Manager is told why. The Crew is notified of any change or cancellation | INT-MGR [added follow-up: cancellations]; DEC-19 | Must | Draft | Change an assigned Job's Brand to one the Crew can't do → Job becomes Unassigned and a reason is shown. Cancel → Crew notified |
+| FR-38 | Job status shall follow these transitions only: Unassigned → Assigned (allocation). Assigned → Unassigned (rejection, Van unavailable, invalidating edit, deactivated Staff or the Manager unassigning it). Assigned → Completed (FR-39). Unassigned or Assigned → Cancelled. Completed and Cancelled are final | INT-MGR [Conflicts Q3], [Conflicts Q4], [added follow-up: cancellations]; DEC-15; DEC-40 | Must | Draft | Test each allowed transition. Completed → Cancelled → refused |
+| FR-39 | A **Technician** on the Van's Crew shall mark an assigned Job Completed. They record: actual start and end time (end after start, both on the Job's date), a short remark, whether a follow-up visit is needed, and the invoice photo (FR-40) | INT-DCT [Process Q1 follow-up: completion]; INT-MGR [Process Q1 follow-up: completion]; DEC-40 | Must | Draft | A Driver attempts it → refused. End before start → refused |
+| FR-40 | Completing a Job **requires** a photo of the invoice signed by the customer. If the Technician is offline, it can be queued (NFR-08) | INT-MGR [Process Q1 follow-up: completion]; DEC-40 | Must | Draft | Submit without a photo → refused |
 
 ### 3.8 Job Allocation
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-41 | The Manager shall allocate Jobs one Planning Week at a time, by assigning each Job to a Van (and its Crew) on a date | Brief R3; INT-MGR [Process Q1], [Clarification Q6] | Must | Draft | Allocation is restricted to a single Planning Week |
-| FR-42 | The Manager shall be able to set the order and time of Jobs within a Van's day | INT-DRV [Q5]; INT-MGR [Process Q2] (preferred Slot) | Should | Draft | Reorder two Jobs and confirm the Staff view reflects the new order |
-| FR-43 | On the Job Allocation page, the Manager shall be able to select up to three Staff and compare them side by side. For each, show: Availability that day and week, Workload so far this week, Certifications, Job Preference, and location that day. Location is the area of their other Jobs that day, not GPS | Brief R4, R5; INT-MGR [System Q3] | Must | Draft | Selecting a 4th Staff member is refused. All five items are shown for each selected person |
-| FR-44 | The system shall **block** an allocation or Crew change that would create any of these: a Technician without Certification for a Job's Brand; a double booking; Staff on Leave or unavailable in that Slot; a Van without a valid Crew; a Van that is unavailable (Workshop Servicing or breakdown); or a Sunday or public holiday | INT-MGR [System Q4], [Process Q3], [Clarification Q8] | Must | Draft | One negative test per rule. Decision-table candidate for M2 |
-| FR-45 | The system shall **warn**, and let the Manager override, when an allocation would cause any of these: a Staff member exceeds 40 hours of Workload in the Planning Week; a Job Preference is not met; or fewer than 3 Vans are crewed on a Monday–Saturday working day | Brief §Company ¶4, R6; INT-MGR [System Q4], [Conflicts Q1] | Must | Draft | Trigger each warning, override it, and confirm the allocation saves |
-| FR-46 | The system shall list the Unassigned Jobs and show how many there are | INT-MGR [Conflicts Q1], [System Q1 follow-up: ranking] | Must | Draft | Cancelling an Assignment increments the count |
-| FR-47 | For each working day, the system shall show Staff who marked themselves available but have no Assignment | INT-MGR [Conflicts Q2 follow-up: standby] | Should | Draft | Seed one available, unallocated person and confirm they are listed |
-| FR-48 | For an Unassigned Job, the system shall suggest Staff who are available, qualified and have the lowest Workload that week. The Manager chooses who to assign | INT-MGR [Conflicts Q2 follow-up: staff cancellation] | Should | Draft | The suggestion list excludes unqualified and unavailable Staff and is sorted by ascending Workload |
-| FR-49 | The Manager shall be able to publish the Weekly Roster even when warnings are outstanding. Publishing notifies all affected Staff | INT-MGR [Process Q1], [Conflicts Q1], [added follow-up: notifications] | Must | Draft | Publish with a "fewer than 3 Vans" warning open. It succeeds and Staff are notified |
-| FR-50 | After publication, the Manager shall be able to change Assignments, e.g. add a last-minute Job or reassign one. Affected Staff shall be notified | INT-MGR [Conflicts Q5], [Conflicts Q2 follow-up: staff cancellation] | Must | Draft | Add a Job to a published day and confirm the Crew is notified and Workload updates |
-| FR-51 | The system shall show a weekly timeline with one row per Van, showing its Crew and Jobs | INT-MGR [System Q2] | Must | Draft | Six rows are shown for a Planning Week |
+| FR-41 | The Manager shall allocate Jobs **one Planning Week at a time** (the next unpublished week), assigning each Job to a Van with a Crew on a date within that week | Brief R3; INT-MGR [Process Q1], [Clarification Q6]; DEC-10; DEC-16 | Must | Draft | Try to allocate to a date outside the Planning Week → refused (published weeks change via FR-50) |
+| FR-42 | The Manager shall set each Job's start time on the Van's day. Rules: Jobs run within 09:00–18:00 and skip lunch (13:00–14:00). A Job may span both Slots. Consecutive Jobs must be at least the 0.5 h Travel Allowance apart. Jobs on the same Van must not overlap | INT-DRV [Q5]; INT-MGR [Clarification Q4], [Clarification Q7]; DEC-12; DEC-31 | Should | Draft | A 3 h Job at 11:00 runs 11:00–13:00, pauses for lunch and ends 15:00. A Job at 15:10 → refused (needs 15:30 or later) |
+| FR-43 | On the Job Allocation page, the Manager shall select **up to three** Staff and compare them side by side for the Job's date and Planning Week. For each, show: Availability that day and week, Workload in that Planning Week, Certifications with expiry, Job Preference, and location that day (postal districts of their other Jobs, or "No Jobs") | Brief R4, R5; INT-MGR [System Q3]; DEC-06; DEC-08 | Must | Draft | A 4th selection → refused. All five items are shown for each person |
+| FR-44 | The system shall **block** any allocation, Crew change, Job edit or approval that would cause: an invalid or expired Certification for a Job's Brand (FR-32); a double booking (a person in two Crews on one day, or overlapping Jobs on a Van); a Crew member unavailable, not submitted or on Leave for a Slot the Van works; an invalid Crew (FR-30, FR-31); linked Jobs split across Vans (FR-36); a Van that is unavailable; or a Sunday or public holiday | INT-MGR [System Q4], [Process Q3], [Clarification Q8]; DEC-19 | Must | Draft | One negative test per rule. **Black-box decision-table candidate** |
+| FR-45 | The system shall **warn**, allow an override and log it, when an allocation would cause: a Staff member's Workload above 40 h in the Planning Week; a Job Preference not met; a Job starting outside the customer's preferred Slot; or fewer than 3 Vans on service on a working day. Overtime has no approval step | Brief §Company ¶4, R6; INT-MGR [System Q4], [Conflicts Q1]; DEC-19; DEC-32 | Must | Draft | Trigger each warning, override it, and see the override in the audit log (FR-66) |
+| FR-46 | The system shall list the Jobs with status **Unassigned** and show their count. Cancelled Jobs are excluded | INT-MGR [Conflicts Q1], [System Q1 follow-up: ranking] | Must | Draft | Reject an assigned Job → count +1. Cancel an Unassigned Job → count −1 |
+| FR-47 | For each working day and Slot, the system shall list Staff who are available but not in any Crew | INT-MGR [Conflicts Q2 follow-up: standby] | Should | Draft | Seed one available, uncrewed person → listed |
+| FR-48 | For an Unassigned Job, the system shall suggest replacement Staff. Candidates must: hold a valid Certification for the Job's Brand (Technicians); be available for the Job's Slots; and be either uncrewed that day or already on a Van with room in its Crew. The list is sorted by Planning Week Workload, lowest first, then by name. The Manager chooses | INT-MGR [Conflicts Q2 follow-up: staff cancellation]; DEC-19 | Should | Draft | Unqualified and unavailable Staff are excluded. The order is checked on seeded data |
+| FR-49 | The Manager shall **publish** a Planning Week's roster, changing it from Draft to Published. Publishing is refused while any FR-44 violation exists, and allowed with FR-45 warnings outstanding. Every Staff member with Assignments that week is notified | INT-MGR [Process Q1], [Conflicts Q1], [added follow-up: notifications]; DEC-16; DEC-19 | Must | Draft | Publish with a "fewer than 3 Vans" warning → allowed. Publish with an invalid Crew → refused |
+| FR-50 | After publication, the Manager shall be able to add, move or unassign Jobs and change Crews for current and future dates. Changes are re-checked (FR-44 and FR-45). The removed and added Staff are notified | INT-MGR [Conflicts Q5], [Conflicts Q2 follow-up: staff cancellation]; DEC-16 | Must | Draft | Add a Job to a published day → Crew notified and Workload updated. Past dates → read-only |
+| FR-51 | The system shall show a weekly timeline for a selected week, with one row per Van: its Crew and Jobs, and unavailable days shaded | INT-MGR [System Q2] | Must | Draft | A Van on Workshop Servicing shows a shaded day |
+| FR-69 | Each Planning Week's roster is **Draft** until published. Staff see Assignments only for Published weeks. The Manager sees both | DEC-16 | Must | Draft | Assign a Job in a Draft week → invisible to Staff until publication |
+| FR-70 | When a later event makes an existing Crew invalid, the system shall remove the affected person from that Crew for the affected dates, mark each affected Van-day **Needs attention** on the Manager's Landing Page, and notify the removed person. Triggering events: approved Leave, the Manager marking someone unavailable, an approved Late Availability Change Request, a Certification expiring, or a public holiday being added. The Van's Jobs stay on the Van until the Manager fixes the Crew. (A Van becoming unavailable is handled by FR-29 instead) | DEC-19; INT-MGR [Process Q4], [Conflicts Q2] | Must | Draft | Approve Leave for the only Driver of a Van → Driver removed, Van-day flagged, Jobs still on the Van |
 
 ### 3.9 Workload and Landing Pages
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-52 | A Job's Planned Hours shall be its duration (FR-35) plus a 30-minute Travel Allowance. Breaks are not counted | INT-MGR [Clarification Q7], [Clarification Q5 follow-up]; INT-DCT [System Q1] | Must | **Blocked** (DEC-31) | A 1-unit Servicing Job gives 1.5 h |
-| FR-53 | A Technician's Workload shall be the sum of the hours of the Jobs assigned to them. A Driver's Workload shall equal the hours of the Van they are on | INT-MGR [Clarification Q5 follow-up], [Clarification Q7] | Must | **Blocked** (DEC-39) | Depends on how Technician hours are counted on mixed or 3-person Vans |
-| FR-54 | When a Job is Completed, its Actual Hours shall replace its Planned Hours in Workload | INT-MGR [Clarification Q7], [Conflicts Q5]; INT-DCT [Conflicts Q3] | Must | **Blocked** (DEC-40) | Depends on whether the Travel Allowance still applies to Actual Hours |
-| FR-55 | Workload shall be calculated per Planning Week (Monday–Saturday). Workload **above** 40 hours is Overtime and shall be highlighted | Brief R6; INT-MGR [Clarification Q7], [Conflicts Q5] | Must | Draft | Boundary test: 40.0 h is not highlighted, 40.5 h is. Black-box candidate |
-| FR-56 | The Manager's Landing Page shall show: this week's Workload for every Driver and Technician as a bar chart with a line at 40 hours, with Overtime highlighted; the three-lowest lists (FR-57); today's Vans and Crews; the number of Unassigned Jobs; and pending requests (Leave Requests, Late Availability Change Requests and Job Rejections) | Brief R2, R6; INT-MGR [System Q1 follow-up: landing page], [System Q2] | Must | Draft | Seed data covering each element and confirm all are visible on first load |
-| FR-57 | The Landing Page shall show the three Technicians and the three Drivers with the lowest Workload this week, as **separate** lists, excluding Staff on Leave that week | Brief R6; INT-MGR [added follow-up: lowest three] | Must | Draft (ties and "on Leave that week": §6, DEC-05) | Put one Technician on Leave with the lowest hours. They must not appear |
-| FR-58 | The Staff Landing Page shall show: a weekly calendar of their Assignments by day, with times and addresses; their total hours for the week against 40; their total hours for the month; and their Leave balance | Brief R7; INT-DCT [System Q2]; INT-DRV [Q13], [Q1] | Must | Draft ("month" definition: §6, DEC-04) | Seed a week of Jobs and check the totals |
-| FR-59 | For each Assignment, Staff shall see: customer name and phone, address and postal code, Brand, model, number of units, Job Type, time Slot, notes, Van number and licence plate, and Crew members' names | INT-DRV [Q2], [Q1]; INT-DCT [Process Q1 follow-up: job info] | Must | Draft | All fields are visible on a phone-width screen |
-| FR-60 | The Manager shall be able to view, per Staff member, hours this week and this month, and Leave taken and remaining. The Manager shall also see the number of Jobs completed per month | INT-MGR [System Q1], [System Q1 follow-up: ranking] | Should | Draft | Totals match the seeded data |
-| FR-61 | The Manager shall be able to view how many days each Van was on the road in a month | INT-MGR [System Q1], [System Q1 follow-up: ranking] ("nice to have") | Could | Draft | Totals match the seeded Crews |
+| FR-52 | A Job's **Planned Hours** = its duration (FR-35) + a 0.5 h Travel Allowance. Breaks are not counted | INT-MGR [Clarification Q7]; INT-DCT [System Q1]; DEC-31 | Must | Draft | 1 Servicing unit → 1.5 h. 2 Installation units → 6.5 h |
+| FR-53 | Every Crew member (the Driver and each Technician) is credited with the hours of **all Jobs on their Van that day**. Workload counts Assigned Jobs at Planned Hours and Completed Jobs at Actual Hours. Unassigned and Cancelled Jobs count zero | INT-MGR [Clarification Q7], [Clarification Q4 follow-up]; DEC-39; DEC-40 | Must | Draft | A Van with 7 h of Jobs → Driver and both Technicians each get 7 h |
+| FR-54 | When a Job is Completed, its **Actual Hours** = (actual end − actual start) + 0.5 h, and they replace its Planned Hours in Workload | INT-MGR [Clarification Q7], [Conflicts Q5]; INT-DCT [Conflicts Q3]; DEC-40 | Must | Draft | Planned 1.5 h, actual 10:00–11:30 → counts 2.0 h |
+| FR-55 | Workload is summed per Planning Week (Monday–Saturday). Workload **strictly above 40 h** is Overtime and is highlighted wherever Workload is shown | Brief R6; INT-MGR [Clarification Q7]; DEC-04 | Must | Draft | **Boundary test:** 40.0 h → not highlighted, 40.5 h → highlighted |
+| FR-56 | The Manager's Landing Page shall show, for the current week by default and switchable to the Planning Week: a Workload bar chart for every Driver and Technician with a line at 40 h and Overtime highlighted; the lowest-three lists (FR-57); today's Vans and Crews; the Unassigned Job count (FR-46); **requests awaiting a decision** (Leave Requests, Late Availability Change Requests); **rejected Jobs awaiting reassignment**; Van-days marked Needs attention; and Certification reminders (FR-11) | Brief R2, R6; INT-MGR [System Q1 follow-up: landing page], [System Q2]; DEC-15; DEC-19 | Must | Draft | Seed each element and check they are all visible without navigating away |
+| FR-57 | The Landing Page shall show two lists for the displayed week: the three **Technicians** and the three **Drivers** with the lowest Workload. Staff with any approved Leave day in that week are excluded. Ties are broken by name (A–Z). If fewer than three are eligible, show those who are | Brief R6; INT-MGR [added follow-up: lowest three]; DEC-05 | Must | Draft | A Technician on Leave on Tuesday → excluded. Two Drivers tied at 20 h → alphabetical order |
+| FR-58 | The Staff Landing Page shall show: a weekly calendar of their Assignments for the current week, switchable to the next Published week, with times and addresses; their Workload for that week against 40 h; their Workload for the **calendar month**; and their Leave balance | Brief R7; INT-DCT [System Q2]; INT-DRV [Q13]; DEC-04; FR-69 | Must | Draft | Seeded totals match. A Draft week is not selectable |
+| FR-59 | For each Assignment, Staff shall see: customer name and phone, address, unit number and postal code, Brand, model, number of units, Job Type, start time, notes, Van number and licence plate, the Crew members' names and contact numbers, and any Linked Jobs | INT-DRV [Q1], [Q2]; INT-DCT [Process Q1 follow-up: job info]; DEC-37 | Must | Draft | All fields fit a 360 px-wide screen (NFR-15) |
+| FR-60 | The Manager shall view, per Staff member, Workload for a selected week and calendar month, and Leave taken and remaining. The Manager also sees the number of Jobs Completed per calendar month | INT-MGR [System Q1], [System Q1 follow-up: ranking]; DEC-04 | Should | Draft | Totals match the seeded data |
+| FR-61 | The Manager shall view, per Van, the days in a calendar month it was **on the road**, meaning it had at least one Completed Job that day | INT-MGR [System Q1] ("nice to have") | Could | Draft | A day with only cancelled Jobs is not counted |
 
 ### 3.10 Job Rejection
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-62 | Staff shall be able to reject a Job assigned to them. Before confirming, the system shall warn them to discuss it with the Manager first. The Staff member must choose a reason: Personal emergency; Clash with another job; Not qualified or missing equipment; or Other, with a comment box. Telling the company ahead of time that a Job cannot be done uses this same function | Brief R10, §Intro ¶3; INT-MGR [Conflicts Q3], [added follow-up: early rejection]; INT-DCT [Process Q2], [Conflicts Q2]; INT-DRV [Q17] | Must | Draft | Cancel at the warning and confirm nothing changes. Try to confirm without a reason, which must fail. The Manager's "at least 48 hours' notice" preference has no system rule yet (**TBC**) |
-| FR-63 | A confirmed rejection needs no approval. The Job leaves the Staff member's list and becomes an Unassigned Job. The Manager is notified immediately, and the Staff member sees a confirmation | INT-MGR [Conflicts Q3]; INT-DCT [Process Q2 follow-up: after reject] | Must | Draft (effect on the rest of the Crew: DEC-15) | After a rejection, the Job is in the Unassigned list, the Manager has a notification and the Staff member has a confirmation |
+| FR-62 | Any Crew member shall be able to reject a Job assigned to their Van in a Published week. Before confirming, the system warns them to discuss it with the Manager first. If the Job starts within 48 hours, the warning also says the Manager expects 48 hours' notice except in emergencies. The Staff member must pick a reason: Personal emergency; Clash with another job; Not qualified or missing equipment; or Other, which requires a comment. Telling the company ahead of time that a Job can't be done uses this same function | Brief R10, §Intro ¶3; INT-MGR [Conflicts Q3], [added follow-up: early rejection]; INT-DCT [Process Q2], [Conflicts Q2]; INT-DRV [Q17]; DEC-15 | Must | Draft | Cancel at the warning → nothing changes. "Other" with no comment → refused. A Job starting within 48 h → the extra warning text appears |
+| FR-63 | A confirmed rejection needs **no approval**. The Job becomes Unassigned and is removed from the whole Van. The Manager is notified immediately, the other Crew members are notified, and the rejecting person sees a confirmation | INT-MGR [Conflicts Q3]; INT-DCT [Process Q2 follow-up: after reject]; DEC-15 | Must | Draft | After rejecting: the Job is in the Unassigned list, gone from all Crew members' views, and the Manager has a notification |
 
 ### 3.11 Notifications
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-64 | Staff shall be notified on their Landing Page and by email when: the Weekly Roster is published; one of their Assignments is added, changed or cancelled; their Crew changes; or a decision is made on their Leave Request or Late Availability Change Request | INT-MGR [added follow-up: notifications], [Conflicts Q5], [added follow-up: cancellations]; INT-DCT [Process Q1 follow-up: updates], [Conflicts Q2]; INT-DRV [Q7] | Must | Draft | One test per trigger, checking both channels |
-| FR-65 | The Manager shall be notified on their Landing Page of new Job Rejections, Leave Requests and Late Availability Change Requests | INT-MGR [Conflicts Q3], [System Q1 follow-up: landing page] | Must | Draft | Each request type appears under pending requests. Whether the Manager also gets email is **TBC** |
+| FR-64 | Staff shall be notified **on their Landing Page and by email** when: a week containing their Assignments is published; one of their Assignments is added, changed, cancelled or rejected by a Crew-mate; they are added to or removed from a Crew; or a decision is made on their Leave Request or Late Availability Change Request | INT-MGR [added follow-up: notifications], [Conflicts Q5], [added follow-up: cancellations]; INT-DCT [Process Q1 follow-up: updates], [Conflicts Q2]; INT-DRV [Q7] | Must | Draft | One test per trigger, checking both channels and both the removed and added Staff |
+| FR-65 | The Manager shall be notified on their Landing Page of: new Job Rejections; new Leave Requests and Late Availability Change Requests; newly flagged Needs attention Van-days; and Certification reminders. Each item can be marked handled | INT-MGR [Conflicts Q3], [System Q1 follow-up: landing page]; DEC-15; DEC-19 | Must | Draft | Each event type appears. Marking an item handled removes it from the list |
 
 ### 3.12 Audit and records
 
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
-| FR-66 | The system shall keep an audit log of account detail changes, password change requests and all schedule changes (Availability, Crews, Assignments), recording who made each change, what it was and when | INT-ITA [Q: Audit] | Should | Draft | Make each change type and confirm a log entry. Who can view the log is **TBC** (assumed IT Administrator) |
-| FR-67 | Schedule records dated in the past or currently in progress shall not be deletable. Future ones may be deleted | INT-ITA [Q: Retention] | Should | Draft (see DEC-34) | Try to delete yesterday's Assignment, which must be refused. Deleting next week's is allowed |
-| FR-68 | The system shall import existing schedules from a CSV export | INT-ITA [Q: Existing systems] | Could | **Blocked** (DEC-36) | Conflicts with the Manager's statement that there is no other system to import from |
+| FR-66 | The system shall log, with who, what and when: account and role changes, password change requests, and every change to Availability, Crews, Assignments, Jobs and Leave, including overridden warnings. Only the IT Administrator can view the audit log | INT-ITA [Q: Audit]; DEC-17 | Should | Draft | Make each change type → log entry exists. Manager tries to open the log → refused |
+| FR-67 | No user may delete records dated in the past or in progress. Jobs are Cancelled rather than deleted. Future Availability entries may be cleared (FR-13) | INT-ITA [Q: Retention]; DEC-34 | Must | Draft | Try to delete yesterday's Job → no delete option exists. Cancelling a future Job is allowed |
+| FR-68 | ~~Import existing schedules from a CSV export~~ | INT-ITA [Q: Existing systems]; DEC-36 | Won't | **Withdrawn** | Withdrawn by DEC-36: no schedule import |
 
 ---
 
@@ -246,93 +258,70 @@ The Manager's example: "for the week starting Monday the 19th, availability is d
 
 | ID | Category | Description (with measurable criterion) | Source / justification | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|---|
-| NFR-01 | Performance | Main user actions (saving Availability, an Assignment or a request, or loading a Landing Page) shall respond within **5 seconds**, under the load in NFR-03 | INT-ITA [Q: Response time] ("maybe 3 or 5 seconds"); Brief R2 ("immediately") | Should | Draft (3 s vs 5 s: confirm) | Load test with 50 simulated users. The percentile used (e.g. 95th) is **†TBC** |
-| NFR-02 | Performance | A saved change shall be visible to other users within **1 minute** | INT-ITA [Q: Response time] ("less than a minute or so") | Should | Draft | Save as the Manager and time how long until it appears in a Staff session |
-| NFR-03 | Capacity | The system shall support at least **50 concurrent users**, including one person logged in on several devices | INT-ITA [Q: Concurrency]; Brief §Company ¶4 (17 Staff) | Must | Draft | Load test at 50 sessions |
-| NFR-04 | Security | The system shall rate-limit requests per user to prevent high request volumes | INT-ITA [Q: Concurrency] | Should | Draft | Limit **†TBC**. Exceed it and confirm the requests are throttled |
-| NFR-05 | Availability | The system shall be available 24/7. Scheduled maintenance happens only early morning or late night, avoiding the peaks (Monday early morning, Thursday) | INT-ITA [Q: Hours], [Q: Outage] | Must | Draft | Uptime target (%) and exact maintenance window are **†TBC** |
-| NFR-06 | Recoverability | After a failure, the service shall be restored within **24 hours** | INT-ITA [Q: Outage] ("Not more than one day"), [Q: Restore] | Must | Draft | Restore drill from backup, timed |
-| NFR-07 | Recoverability | No more than **1 hour** of data may be lost, so backups shall run at least hourly | INT-ITA [Q: Restore] ("losing an hour of schedule updates is not very impactful"), [Q: Outage] ("updated every hour or so") | Must | Draft | Check the backup schedule. Restore and compare against the pre-failure data |
-| NFR-08 | Reliability / offline | Staff shall be able to view today's Assignments without a network connection. Updates made while offline are submitted once the connection returns | INT-DCT [System Q3]; INT-ITA [Q: Outage], [Q: Connection failure] | Should | Draft | In airplane mode, today's Jobs remain viewable. A completion entered offline syncs on reconnect |
-| NFR-09 | Reliability | If a submission fails, the system shall keep it and retry. If it still cannot be saved, the system shall tell the user it failed and advise them to try again or contact the IT Administrator | INT-ITA [Q: Connection failure] | Should | Draft | Cut the network mid-submit and confirm the retry or the error message |
-| NFR-10 | Security | Login shall use two-factor authentication through an email confirmation | INT-ITA [Q: Safeguards] ("would be good") | Should | Draft (see DEC-41) | Login is not completed until the email confirmation is done |
-| NFR-11 | Security | Staff personal data and schedule data shall be encrypted at rest | INT-ITA [Q: Safeguards] | Must | Draft | Inspect storage: fields are not readable in plain text. Encryption in transit (HTTPS) is recommended but no stakeholder stated it |
-| NFR-12 | Security | Access shall be role-based. Staff view and edit only their own Availability, Job Preference, Leave and Assignments. Managers view and edit all Staff schedules. Only the IT Administrator manages accounts and permissions | INT-ITA [Q: Onboarding], [Q: Permissions] | Must | Draft (colleague visibility: DEC-37) | Access-control test matrix: role × page × action |
-| NFR-13 | Data retention | Schedule records shall be kept for at least **1 year** for yearly reviews | INT-ITA [Q: Retention] | Must | Draft (see DEC-34) | Confirm a record from 12 months ago is still retrievable |
-| NFR-14 | Compatibility | The system shall work on current versions of Chrome (the priority), Edge, Firefox and DuckDuckGo | INT-ITA [Q: Devices] | Must | Draft | Cross-browser test of the main user flows |
-| NFR-15 | Compatibility / usability | All Staff functions shall be usable on a smartphone, including Android, and on a tablet. The Manager's functions shall be usable on a laptop | INT-DCT [System Q3]; INT-DRV [Q14]; INT-ITA [Q: Devices] | Must | Draft | Test at phone width (**†**e.g. 360 px) with no horizontal scrolling on Staff pages |
-| NFR-16 | Usability | The interface shall be simple enough for non-technical Staff | INT-MGR [Closing] ("Just keep it simple. Most of my staff aren't very technical.") | Must | Draft | Measurable target **†TBC**, e.g. a first-time user submits a week's Availability without help in under 3 minutes |
-| NFR-17 | Constraint | The system shall be a web application | Brief R1 | Must | Draft | Runs in a browser with no install |
+| NFR-01 | Performance | With the NFR-03 load and reference dataset, **95%†** of main user actions (saving Availability, a Leave Request, an Assignment or a rejection; loading a Landing Page) shall complete within **5 s**, measured at the server | INT-ITA [Q: Response time] ("maybe 3 or 5 seconds"); Brief R2 ("immediately") | Should | Draft | Load test, reporting the 95th percentile per action |
+| NFR-02 | Performance | A saved change shall be visible to other logged-in users within **60 s** | INT-ITA [Q: Response time] ("less than a minute or so") | Should | Draft | Save as the Manager and time until it appears in an open Staff session |
+| NFR-03 | Capacity | The system shall support **50 concurrent sessions**, including one person on up to 3† devices, with a reference dataset of 6 Vans, 17 Staff, 25 Jobs per working day† (above the brief's "more than 20") and 13 months of records (the 12-month retention plus the 1-month window) | INT-ITA [Q: Concurrency]; Brief §Company ¶4–5; DEC-34 | Must | Draft | Load test at 50 sessions on the reference dataset |
+| NFR-04 | Security | Each user shall be limited to **60 requests per minute†**. Excess requests are rejected with a "try again shortly" message, and normal service resumes after the minute | INT-ITA [Q: Concurrency] | Should | Draft | Script 61 requests in one minute → the 61st is rejected |
+| NFR-05 | Availability | The system shall be available 24/7 with **≥ 99%† monthly uptime**, excluding planned maintenance between **00:00 and 05:00†**, which must not fall on Monday or Thursday mornings (peak periods) | INT-ITA [Q: Hours], [Q: Outage]; DEC-38 | Must | Draft | Monthly uptime report from monitoring |
+| NFR-06 | Recoverability | After a failure, service and data shall be restored within **24 h** of the failure being detected | INT-ITA [Q: Outage] ("Not more than one day"), [Q: Restore] | Must | Draft | Timed restore drill from backup on a test environment |
+| NFR-07 | Recoverability | No more than **1 h** of saved data may be lost. Backups run at least hourly, and a failed backup raises an alert to the IT Administrator | INT-ITA [Q: Restore], [Q: Outage] | Must | Draft | Restore the latest backup and confirm the newest record is at most 1 h older than the failure point |
+| NFR-08 | Reliability / offline | Staff shall be able to view **today's** published Assignments without a connection. A Job completion (with its photo) entered offline is queued and submitted automatically when the connection returns | INT-DCT [System Q3]; INT-ITA [Q: Outage], [Q: Connection failure] | Should | Draft | In airplane mode, today's Jobs are viewable and a completion is queued. Reconnect → it is saved |
+| NFR-09 | Reliability | A failed submission shall be retried automatically up to **3†** times. If it still fails, the user sees a message saying it was not saved and advising them to try again or contact the IT Administrator | INT-ITA [Q: Connection failure] | Should | Draft | Cut the network mid-submit → retries, then the message |
+| NFR-10 | Security | Login from a device not used in the last **30 days** shall require an email confirmation (2FA), for all roles | INT-ITA [Q: Safeguards]; DEC-41 | Should | Draft | New device → email confirmation required. Same device the next day → not required |
+| NFR-11 | Security | Staff personal data and schedule data shall be encrypted at rest. Passwords are stored only as salted hashes† | INT-ITA [Q: Safeguards] ("encrypted properly in the backend") | Must | Draft | Inspect the database: personal fields are unreadable and there are no plaintext passwords |
+| NFR-12 | Security | Access shall be role-based, following the **permission matrix in §4.1** | INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-18; DEC-37 | Must | Draft | Test every role × action cell in §4.1. Every ✗ must be refused |
+| NFR-13 | Data retention | Schedule records (Jobs, Crews, Assignments, Availability, Leave) shall be kept for **12 months** from their date, and may then be purged. Deactivated users' records follow the same rule | INT-ITA [Q: Retention] ("up to one year"); DEC-34 | Must | Draft | A record from 11 months ago is retrievable |
+| NFR-14 | Compatibility | The system shall work on the latest stable versions of Chrome, Edge, Firefox and DuckDuckGo at the time of the M2 demo, on Windows, Android and iOS | INT-ITA [Q: Devices] | Must | Draft | Run the main flows on each browser. Record the versions tested |
+| NFR-15 | Compatibility / usability | All Staff pages shall work at **360 px† width** without horizontal scrolling. The Manager's pages shall work at **1366 px† width or more** | INT-DCT [System Q3]; INT-DRV [Q14]; INT-ITA [Q: Devices] | Must | Draft | Responsive check at those widths |
+| NFR-16 | Usability | In a walkthrough with **3†** non-technical users, each shall complete "enter a week's Availability" and "reject a Job" without help, in under **3 minutes†** each | INT-MGR [Closing] ("Just keep it simple. Most of my staff aren't very technical.") | Must | Draft | Moderated walkthrough on the wireframe prototype |
+| NFR-17 | Constraint | The system shall be a web application that runs in a browser with no install | Brief R1 | Must | Draft | Open it in a browser |
+
+### 4.1 Permission matrix (NFR-12)
+
+✓ = allowed, ✗ = refused, "own" = only for the user's own records, "crew" = only for Jobs on their own Van.
+
+| Action | Staff (Driver) | Staff (Technician) | Manager | IT Administrator |
+|---|---|---|---|---|
+| Set Availability, Job Preference; request Leave or a late change | own | own | ✗ | ✗ |
+| View Assignments | own, Published weeks only | own, Published weeks only | all | ✗ |
+| View Crew-mates' names and contact numbers | crew | crew | all | ✗ |
+| View other Staff's Availability, Leave or Workload | ✗ | ✗ | ✓ | ✗ |
+| Reject a Job | crew | crew | ✗ | ✗ |
+| Mark a Job Completed | ✗ | crew | ✗ | ✗ |
+| Create, edit or cancel Jobs; form Crews; allocate; publish | ✗ | ✗ | ✓ | ✗ |
+| Approve or reject Leave and late changes; mark Staff unavailable | ✗ | ✗ | ✓ | ✗ |
+| Maintain Vans, Workshop Servicing dates and Certifications (after creation) | ✗ | ✗ | ✓ | ✗ |
+| Create, import or deactivate accounts; change roles; unlock accounts | ✗ | ✗ | ✗ | ✓ |
+| Load public holidays; view the audit log | ✗ | ✗ | ✗ | ✓ |
+
+Sources: INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-35; DEC-37; DEC-40.
 
 ---
 
 ## 5. Coverage check: Brief initial requirements
 
-| Brief | Summary (see brief for exact text) | FR / NFR IDs | Open DECs |
-|---|---|---|---|
-| R1 | Web-based | NFR-17, NFR-14 | — |
-| R2 | Manager Landing Page shows staff workload | FR-56, NFR-01 | — |
-| R3 | Allocate jobs one week at a time | FR-41 | — |
-| R4 | Allocation page: up to three staff availability | FR-43 | — |
-| R5 | Availability display: workload, preference, location, week availability | FR-43, FR-21 | — |
-| R6 | Three lowest workload; highlight >40 hours | FR-55, FR-56, FR-57 | DEC-05 (ties) |
-| R7 | Staff Landing Page: weekly assignments and monthly workload | FR-58, FR-59 | DEC-04 ("month") |
-| R8 | Add/edit availability up to **1 month in advance** (the brief's "5 weeks" is superseded by the lecturer, DEC-01) | FR-13, FR-14 | DEC-30 |
-| R9 | Weekly job preference | FR-21 | DEC-07 (deadline) |
-| R10 | Reject jobs with warning | FR-62, FR-63 | DEC-15 (crew effect) |
-| R11 | IT administrators add staff and managers | FR-01–FR-04, FR-08 | DEC-34, DEC-35, DEC-36 |
-
-Every Brief requirement maps to at least one FR or NFR.
-
-## 6. How the interviews bear on the open DECs
-
-This section is for the team, to help close DECs. The DEC statuses in `decisions.md` are **unchanged**. Deciding them is the team's call.
-
-| DEC | Answered by | What the interviews say | Still open | FRs |
-|---|---|---|---|---|
-| DEC-02 Availability Deadline | INT-MGR [Clarification Q6 follow-up], [Conflicts Q2] | Wednesday 18:00, 12 days before the week. Availability locks, and later changes become requests | — | FR-16, FR-17 |
-| DEC-03 Availability granularity | INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2] | Half-day Slots | Default (available or unavailable?) and whether entries can be deleted | FR-13 |
-| DEC-04 Workload and the 40-hour period | INT-MGR [Clarification Q7] | Week is Monday–Saturday, above 40 h is Overtime, Travel Allowance applies | "Month" in R7 (calendar month?) | FR-52–FR-55, FR-58 |
-| DEC-05 Top three | INT-MGR [added follow-up: lowest three] | Drivers and Technicians listed separately, Staff on Leave excluded | Tie-breaking. Does one Leave day exclude someone for the whole week? | FR-57 |
-| DEC-06 Up to three staff | INT-MGR [System Q3] | The Manager selects up to three Staff to compare | — | FR-43 |
-| DEC-07 Job Preference | INT-MGR [Process Q1 follow-up: ordering]; INT-DCT [Clarification Q4]; INT-DRV [Q10] | Area, time or days and Job Type, used as a tie-breaker | Preference deadline | FR-21 |
-| DEC-08 Location | INT-MGR [System Q3] | Area of the Staff member's scheduled Jobs, no GPS | — | FR-43 |
-| DEC-09 Van composition | INT-MGR [Process Q1 follow-up: ordering], [Clarification Q3], [Clarification Q4 follow-up]; INT-DCT [Conflicts Q1 follow-up] | One DCT can cover both Brands. Technicians never drive. The Crew is fixed for the day | — | FR-30–FR-32 |
-| DEC-10 Unit of assignment | INT-MGR [Process Q1] | Crews are built first, then Jobs are allocated to Vans | — | FR-30, FR-41 |
-| DEC-11 Job definition | INT-MGR [Process Q2], [Process Q2 follow-up: hours] | The Manager enters Jobs manually. Field list and Standard Durations given | — | FR-34–FR-36 |
-| DEC-12 Working days | INT-MGR [Clarification Q8], [Clarification Q4] | Monday–Saturday, 09:00–18:00, closed Sundays and public holidays | — | FR-09, FR-13, FR-44 |
-| DEC-13 Leave | INT-MGR [Process Q4] | Requested in the system, approved by the Manager, 7 days per calendar year, no carry-over. Sick leave is marked by the Manager | Half-day Leave? | FR-22–FR-25, FR-18 |
-| DEC-14 Workshop Servicing | INT-MGR [Process Q3], [Conflicts Q4] | Fixed rotation. Breakdowns are handled manually | Are servicing dates generated by the system or entered? | FR-28, FR-29 |
-| DEC-15 Job Rejection | INT-MGR [Conflicts Q3], [added follow-up: early rejection] | Reason required, warning shown, no approval, Job becomes Unassigned, Manager notified | What happens to the rest of the Crew. How the 48 h notice is enforced | FR-62, FR-63 |
-| DEC-16 Allocation horizon | INT-MGR [Clarification Q6], [Conflicts Q5] | The Manager views 1 month ahead but allocates and publishes one week at a time. Post-publication changes are allowed | — | FR-41, FR-50 |
-| DEC-17 IT Administrator | INT-ITA; INT-MGR [Clarification Q2] | A distinct actor who creates accounts, manages roles and permissions, and handles lockouts | Delete vs deactivate (DEC-34) | FR-02–FR-09 |
-| DEC-18 Roles | INT-MGR [Clarification Q1] | The Manager is not Staff, has no Availability and no Workload | Multiple Managers? Other administrative staff? | FR-01, FR-20 |
-| DEC-19 Rule enforcement | INT-MGR [System Q4], [Conflicts Q1] | Block / warn split given | — | FR-44, FR-45 |
-| DEC-20 Hours engaged | INT-MGR [Clarification Q7]; INT-DCT [Process Q1 follow-up: completion] | Completion records actual times, and Actual Hours replace Planned Hours | See DEC-40 | FR-39, FR-54 |
-| DEC-22 Job volume and duration | INT-MGR [Process Q2 follow-up: hours], [Process Q2 follow-up: advance] | Standard Durations. Bookings are usually 1–2 weeks ahead, rarely more than 4 | — | FR-35 |
-
-Rubric DECs (21, 23–29) and DEC-30 are not affected by the interviews.
-
-## 7. Source conflicts (new DEC entries)
-
-These conflicts were found while drafting and are logged as **open** in [decisions.md](decisions.md). The affected rows are marked `Blocked` or carry a DEC reference.
-
-| DEC | Conflict | Affects |
+| Brief | Summary (see brief for exact text) | FR / NFR IDs |
 |---|---|---|
-| DEC-31 | Travel time: a fixed 30-minute allowance (Manager) vs estimated driving time correlated with mileage logs (Driver) | FR-52 |
-| DEC-32 | Overtime: "automatically flagged for approval" (Driver) vs a highlight plus an overridable warning with no approval step (Manager) | FR-45, FR-55 |
-| DEC-33 | Real-time delay reporting by the Crew in the system (Driver) vs phone calls (Manager, DCT) | not included |
-| DEC-34 | Leavers: "delete their account ... those should be removed" vs "Deletion of past or currently happening schedules should not be possible" (both from the IT Administrator) | FR-05, FR-67, NFR-13 |
-| DEC-35 | Who maintains Certifications and staff details: the IT Administrator alone vs the Manager | FR-10, FR-11 |
-| DEC-36 | Manual account creation vs CSV import (both from the IT Administrator). Schedule import (IT Administrator) vs "no other system to import from" (Manager) | FR-08, FR-68 |
-| DEC-37 | What Staff may see about colleagues: "only ... the names and emails" (IT Administrator) vs the Manager's side-by-side comparison | NFR-12 |
-| DEC-38 | "Thursday since they can start scheduling their slots then" (IT Administrator) vs Availability due Wednesday with Manager planning on Thursday | NFR-05 peak assumptions |
-| DEC-39 | Technician Workload on a mixed-Brand or 3-person Van: only their own Jobs, or the whole Van day like the Driver? | FR-53 |
-| DEC-40 | Actual Hours: does the Travel Allowance still apply? Who records completion? Is the invoice photo required? | FR-39, FR-40, FR-54 |
-| DEC-41 | Email 2FA on every login vs "Just keep it simple" and the offline use in the field | NFR-10, NFR-08 |
+| R1 | Web-based | NFR-17, NFR-14 |
+| R2 | Manager Landing Page shows staff workload | FR-56, NFR-01 |
+| R3 | Allocate jobs one week at a time | FR-41, FR-69 |
+| R4 | Allocation page: up to three staff availability | FR-43 |
+| R5 | Availability display: workload, preference, location, week availability | FR-43, FR-21 |
+| R6 | Three lowest workload; highlight >40 hours | FR-55, FR-56, FR-57 |
+| R7 | Staff Landing Page: weekly assignments and monthly workload | FR-58, FR-59 |
+| R8 | Add/edit availability up to **1 month in advance** (the brief's "5 weeks" is superseded, DEC-01) | FR-13, FR-14 |
+| R9 | Weekly job preference | FR-21 |
+| R10 | Reject jobs with warning | FR-62, FR-63 |
+| R11 | IT administrators add staff and managers | FR-02, FR-03 |
 
-## 8. Gaps to raise before M1
+## 6. Candidate M2 testing targets
 
-- **Stakeholder count:** Appendix A requires at least 5 Stakeholder Representatives. There are 4 transcripts (Manager, DCT, Driver, IT Administrator). `document-analysis.md` lists questions for a Single-Brand Technician (SBT), but there is no SBT transcript in the repo.
-- **Interview metadata:** date, interviewer and interviewee are TBC for all four interviews, and the report needs attendance records ([elicitation/README.md](elicitation/README.md)).
-- **Missing measurable targets:** every **†** threshold above needs a stakeholder-confirmed value, because the rubric requires each NFR to be "measurable and justified".
+| Rubric item | Candidate | Why it qualifies |
+|---|---|---|
+| Black-box (decision table) | FR-32 / FR-44: Crew and Brand validity | Several conditions: Brands on the Van, each Technician's Certifications, expiry vs Job date, Crew size |
+| Black-box (alternative) | FR-62 / FR-63: Job Rejection | Conditions: published week, within 48 h, reason = Other, comment present |
+| White-box (CFG with ≥8 nodes and ≥2 decisions) | FR-28: generate Workshop Servicing dates | A loop over Vans and dates, an odd/even month branch, and a Sunday/public-holiday shift loop |
+
+## 7. Open items affecting this SRS
+
+None of the SRS-level DECs are open. The remaining open entries are rubric and lecturer questions (DEC-21, DEC-23 to DEC-29). They affect the report and diagrams, not the requirements.
