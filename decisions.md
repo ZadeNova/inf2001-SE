@@ -8,13 +8,13 @@
 **Ask whom:** `Stakeholder` (via an elicitation meeting) · `Lecturer` (course admin/rubric) · `Team` (internal design choice)
 
 Quotes are verbatim from [brief/project-description.md](brief/project-description.md) ("Brief") and [brief/rubric-m1.md](brief/rubric-m1.md) / [brief/rubric-m2.md](brief/rubric-m2.md) / [brief/assessment-overview.md](brief/assessment-overview.md).
-DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. None of these are resolved.
+DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. The index shows which entries have since been decided.
 
 ## Index
 
 | ID | Topic | Category | Ask whom | Status |
 |---|---|---|---|---|
-| DEC-01 | Availability horizon: one month vs 5 weeks | Contradiction | Stakeholder | Open |
+| DEC-01 | Availability horizon: one month vs 5 weeks | Contradiction | Lecturer | **Decided**: 1 month in advance |
 | DEC-02 | Availability Deadline mechanics (Wed / Thu / Mon) | Ambiguity | Stakeholder | Open |
 | DEC-03 | Availability granularity, default and deletion | Missing definition | Stakeholder | Open |
 | DEC-04 | Workload unit and the period behind the 40-hour highlight | Ambiguity | Stakeholder | Open |
@@ -43,6 +43,7 @@ DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analys
 | DEC-27 | Week numbering and M1 presentation timing | Rubric | Lecturer | Open |
 | DEC-28 | Stakeholder rule: "same project" restriction | Rubric | Lecturer | Open |
 | DEC-29 | Weighting labels and unweighted Introduction items | Rubric | Lecturer | Open |
+| DEC-30 | How "1 month in advance" is measured | Ambiguity | Team | Open |
 
 ---
 
@@ -50,7 +51,7 @@ DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analys
 
 ### DEC-01: Availability horizon: one month vs 5 weeks
 
-| Category | Contradiction | Ask whom | Stakeholder | Status | Open |
+| Category | Contradiction | Ask whom | Lecturer | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -68,7 +69,11 @@ DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analys
 3. Staff input up to 5 weeks, Manager view up to one month (or the reverse).
 4. A rolling window aligned to planning weeks (e.g. the current week plus the next 4 weeks).
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 2. The Availability horizon is **1 month in advance** for both Staff input (R8) and the Manager's view. "5 weeks" in R8 is superseded. "Earlier" means **"in advance"**, i.e. a forward-looking window from the current date and not a past window.
+- Lecturer's replies (verbatim): *"Sorry for the confusion caused. It should be "1 month" for consistency."* and *"to avoid the ambiguity, the "earlier" is now changed to "in advance"."*
+- Not addressed by the reply: whether "1 month" means a calendar month or a fixed number of days. See DEC-30.
+
+**Decided by:** Prof Guan (lecturer), in reply to Team P8-1's email · **Decision source:** Lecturer email, recorded 2026-09-30
 
 ### DEC-02: Availability Deadline mechanics (Wed / Thu / Mon)
 
@@ -425,7 +430,7 @@ DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analys
 
 **Question:** What is the typical duration of an installation vs a servicing Job? How many Jobs can one Van do per day? This is needed to check whether 3–6 Vans can realistically cover more than 20 Jobs a day.
 
-**Why it matters:** It sets data-volume and performance NFRs (e.g. more than 20 Jobs/day × 5 weeks ≈ 600+ Jobs in view) and realistic Workload hours.
+**Why it matters:** It sets data-volume and performance NFRs (e.g. more than 20 Jobs/day × 1 month ≈ 500+ Jobs in view, per DEC-01) and realistic Workload hours.
 
 **Options:**
 1. Stakeholders provide standard durations per Job Type.
@@ -653,6 +658,28 @@ DEC-01 to DEC-29 were raised on 2026-09-30 during repo setup (AI-assisted analys
 
 **Options:**
 1. Treat 20% as covering the whole milestone (report and presentation), and treat the final class diagram as essential because the component diagram and pattern criteria are checked against it.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+## G. Follow-ups
+
+### DEC-30: How "1 month in advance" is measured
+
+| Category | Ambiguity | Ask whom | Team | Status | Open |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-09-30, as a follow-up to DEC-01
+
+**Source text:** Lecturer's reply (DEC-01): "It should be "1 month" for consistency." and "the "earlier" is now changed to "in advance"."
+
+**Question:** How exactly is the 1-month window computed? For example, if today is 30 Sep, is the last allowed date 30 Oct (calendar month), 29 Oct (30 days), or the end of the last planning week that starts within the month? What happens on 31 Jan (there is no 31 Feb)? Does the window start today or at the next planning week?
+
+**Why it matters:** This is the exact boundary for the Availability date validation FR and the M2 black-box test cases. It is a design choice within the lecturer's ruling, so the team can decide it, and optionally confirm it with a stakeholder.
+
+**Options:**
+1. Same date next calendar month (clamped to month end), inclusive.
+2. Fixed 30 days from today.
+3. Whole planning weeks (Mon–Sun) that start within one calendar month from today.
 
 **Decision:** — · **Decided by:** — · **Decision source:** —
 

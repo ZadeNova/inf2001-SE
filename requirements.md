@@ -36,7 +36,7 @@ Each Brief requirement must map to at least one FR or NFR.
 | R5 | Availability display fields | | |
 | R6 | Lowest-workload top three; highlight >40 hours | | |
 | R7 | Staff landing page: weekly assignments, monthly workload | | |
-| R8 | Add/edit availability up to 5 weeks ahead | | |
+| R8 | Add/edit availability up to **1 month in advance** (the brief's "5 weeks" is superseded by the lecturer, DEC-01) | | DEC-30 |
 | R9 | Weekly job preference | | |
 | R10 | Reject jobs with warning | | |
 | R11 | IT administrators add staff and managers | | |

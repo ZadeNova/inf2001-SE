@@ -4,9 +4,9 @@ This file applies to every contributor and every AI tool (Claude Code, Codex, et
 
 ## Project
 
-This is the INF2001 Introduction to Software Engineering (SIT) team project for a 5-person team. The client is an aircon retailer that wants a **web-based workload management system** for its aircon service team. The system will let Staff (Drivers and Technicians) see their Assignments and Workload, submit Availability and job preferences, and reject Jobs. It will let the Manager see manpower Availability up to about a month ahead, see Workload at a glance and allocate Jobs weekly. IT Administrators add Staff and Managers. Weekly cycle: Availability is due Wednesday, planning starts Thursday and Assignments are issued Monday.
+This is the INF2001 Introduction to Software Engineering (SIT) team project for a 5-person team. The client is an aircon retailer that wants a **web-based workload management system** for its aircon service team. The system will let Staff (Drivers and Technicians) see their Assignments and Workload, submit Availability and job preferences, and reject Jobs. It will let the Manager see manpower Availability up to 1 month in advance, see Workload at a glance and allocate Jobs weekly. IT Administrators add Staff and Managers. Weekly cycle: Availability is due Wednesday, planning starts Thursday and Assignments are issued Monday.
 
-The source of truth is [brief/project-description.md](brief/project-description.md), which is binding and must not be edited. The rules and rubrics are in [brief/](brief/).
+The source of truth is [brief/project-description.md](brief/project-description.md), which is binding and must not be edited. The **Lecturer clarifications** section at its end overrides the original wording where they conflict. The rules and rubrics are in [brief/](brief/).
 
 | Milestone | Scope | Deadline (report, slides, peer eval) |
 |---|---|---|
@@ -65,7 +65,7 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | **Job Type** | `Installation` or `Servicing` | — |
 | **Assignment** | The link between a Job and the Staff (or Van) doing it *(open: DEC-10)* | allocation (noun), booking |
 | **Job Allocation** | The Manager's weekly activity or page for creating Assignments (R3, R4) | scheduling, planning page |
-| **Availability** | Staff-declared dates and times they can work, up to 1 month or 5 weeks ahead *(open: DEC-01)* | schedule, free time |
+| **Availability** | Staff-declared dates and times they can work, entered and viewable **up to 1 month in advance** (DEC-01, lecturer-confirmed). The exact window calculation is *(open: DEC-30)* | schedule, free time |
 | **Availability Deadline** | Wednesday cut-off for the following week's planning | cut-off |
 | **Job Preference** | Staff's stated preference for the week (R9). Its content is *(open: DEC-07)* | — |
 | **Workload** | Hours of Jobs assigned to a Staff member over a period *(open: DEC-04)* | load, utilisation |
