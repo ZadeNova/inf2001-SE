@@ -28,7 +28,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-12 | Working days: Saturday, Sunday, public holidays | Ambiguity | Stakeholder | **Decided** |
 | DEC-13 | How Leave is handled | Missing definition | Stakeholder | **Decided** |
 | DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | **Decided** |
-| DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | **Decided** |
+| DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | **Superseded by DEC-42** |
 | DEC-16 | Allocate one week vs visualise one month | Ambiguity | Stakeholder | **Decided** |
 | DEC-17 | IT Administrator: distinct actor and scope | Missing definition | Stakeholder | **Decided** |
 | DEC-18 | Roles: Staff vs Manager vs "administrative staff" | Ambiguity | Stakeholder | **Decided** |
@@ -55,6 +55,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | **Decided** |
 | DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | **Decided** |
 | DEC-41 | Email 2FA vs simplicity and field use | Tension (interviews) | Stakeholder / Team | **Decided** |
+| DEC-42 | Job Rejection needs Manager approval (\"Staff submit, the Manager decides\") | Team decision (overrides interviews) | Team | **Decided** |
+| DEC-43 | Daily Standby Staff as backup for every Job | Team decision (overrides interview) | Team | **Decided** |
+| DEC-44 | Pay model (salary, shifts, commission) is background only | Scope | Team | **Decided** |
 
 ---
 
@@ -130,6 +133,8 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 **Decision:** Half-day Slots: Morning 09:00–13:00, Afternoon 14:00–18:00. Each Slot is `Available` or `Unavailable`; a Slot with no entry is **Not submitted** and is treated as unavailable for allocation. Staff may change or clear any Slot until the lock.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2]; default and clearing chosen by the team
+
+**Amended** 2026-09-30 (team review, ZadeNova): Staff can also set a whole day in one step, which sets both Slots (FR-13).
 
 ### DEC-16: Allocate one week at a time vs visualise one month
 
@@ -293,7 +298,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 ### DEC-15: What happens after a Job Rejection
 
-| Category | Missing definition | Ask whom | Stakeholder | Status | **Decided** |
+| Category | Missing definition | Ask whom | Stakeholder | Status | **Superseded by DEC-42** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -319,6 +324,8 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 **Decision:** Option 1: any Crew member may reject a Job assigned to their Van. Warning first, reason required (comment required for "Other"). No approval: the Job is removed from the Van and becomes Unassigned; the whole Crew and the Manager are notified; the rejecter gets a confirmation. If the Job starts within 48 hours the warning also states the Manager's 48-hour-notice expectation (not a block). "Indicating ahead of time" is the same function.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R10; INT-MGR [Conflicts Q3], [added follow-up: early rejection]; INT-DCT [Process Q2], [Process Q2 follow-up: after reject]; crew-wide effect chosen by the team
+
+**Superseded** on 2026-09-30 by DEC-42 (team review): every Job Rejection is now a request that needs the Manager's approval.
 
 ## D. Domain: Vans, Jobs, Leave, calendar
 
@@ -463,6 +470,8 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 **Decision:** The system **generates** Workshop Servicing dates from the fixed rotation (odd months Vans 1–3, even months Vans 4–6, on the 1st/11th/21st), moving a date forward day by day while it falls on a Sunday or public holiday. The Manager can adjust a generated date and can mark ad-hoc unavailability (breakdowns).
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q3], [Conflicts Q4]; generation chosen by the team
+
+**Amended** 2026-09-30 (team review, ZadeNova): when servicing needs more than one day, the Manager records the extra days as Van unavailability (FR-29).
 
 ### DEC-22: Job volume and duration vs crew capacity
 
@@ -993,6 +1002,112 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 **Decision:** Option 2: email 2FA when a user logs in from a new device, for all roles; the device is then remembered for 30 days.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-ITA [Q: Safeguards]; INT-MGR [Closing]; 30-day period chosen by the team
+
+## I. Team review decisions (round 1)
+
+These entries were made by the team on 2026-09-30 while reviewing SRS v2. They are the team's own decisions: the flow details were proposed by AI (Claude Code), and the team chose them from the options given. **DEC-42 and DEC-43 deliberately override what a stakeholder said in an interview.** The rationale is recorded so that the report and presentation can explain it.
+
+### DEC-42: Job Rejection needs Manager approval
+
+| Category | Team decision (overrides interviews) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-09-30 by ZadeNova (team review of SRS v2)
+
+**Source text:**
+- Brief R10: "Staff can reject jobs assigned to them, but they will be warned to discuss the jobs with their manager before proceeding with the rejection"
+- INT-MGR [Conflicts Q3]: "It doesn't need my approval to go through, but the job goes back to unassigned, and I get notified straight away so I can reassign it."
+- INT-DCT [Process Q2 follow-up: after reject]: "The job should disappear from my list, and the manager gets told, so he can give it to someone else."
+- INT-MGR [System Q1 follow-up: landing page]: "Below that, today's vans and crews, the number of jobs still unassigned, and any pending requests: leave, late availability changes and rejections."
+
+**Question:** Should a Job Rejection take effect immediately (as in DEC-15), or need the Manager's approval?
+
+**Why it matters:** It changes the rejection use case, the Job status transitions, the Manager's pending requests and notifications (FR-38, FR-46, FR-56, FR-62 to FR-65).
+
+**Options:**
+1. Immediate, with no approval. This is what the Manager and the DCT said in their interviews (DEC-15).
+2. Every rejection is a request that the Manager decides.
+
+**Decision:** Option 2, following the team principle **"Staff submit, the Manager decides"**: the final decision on Leave, late Availability changes and Job Rejections rests with the Manager (SRS §2.5).
+- **Reason required:** Personal emergency; Missing equipment or parts; or Other, with a comment.
+  - "Clash with another job" is removed. The Manager assigns all work, and FR-44 blocks double bookings, so a clash can't occur.
+  - "Not qualified" is removed for the same reason, because FR-32 and FR-44 block unqualified Technicians.
+- **Short notice:** if the Job starts within 48 hours, a written explanation is also required and the request is marked Short notice. The Manager decides case by case.
+- **While pending,** the Job stays Assigned.
+- **Approved:** the Job becomes Unassigned and leaves the whole Van. The requester, the Crew and that day's Standby Staff are notified.
+- **Refused:** the Assignment stands.
+- **Still pending when the Job starts:** the request lapses and the Assignment stands.
+
+**Rationale for overriding the interviews:**
+- The team wants the Manager to keep control of the roster.
+- The Manager's own landing-page answer already lists rejections among "pending requests".
+- It makes rejections consistent with Leave Requests (FR-23) and Late Availability Change Requests (FR-17).
+- The Brief's warning to discuss with the Manager (R10) is kept.
+
+**Decided by:** ZadeNova (team review) · **Decision date:** 2026-09-30 · **Decision source:** Team review of SRS v2. The flow was proposed by AI and chosen by the team. Supersedes DEC-15.
+
+### DEC-43: Daily Standby Staff as backup for every Job
+
+| Category | Team decision (overrides interview) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-09-30 by ZadeNova (team review of SRS v2)
+
+**Source text:**
+- INT-MGR [Conflicts Q2 follow-up: standby]: "No dedicated standby staff. But anyone who marked themselves available and didn't get allocated is effectively on standby, so I'd like the system to show me who that is."
+- Team review (ZadeNova): "There will be a backup crewmember for each job." and "The crew member on standby is notified."
+
+**Question:** How is a backup provided for each Job?
+
+**Why it matters:** It is a new concept that affects Crew formation, validation, warnings, notifications and Workload (FR-44, FR-45, FR-47 to FR-49, FR-58, FR-63, FR-64, FR-70, FR-71).
+
+**Options:**
+1. Daily Standby Staff named by the Manager, with a warning when cover is missing.
+2. A named backup for each Job.
+3. No named standby: the interview model, where anyone available and not in a Crew is "effectively on standby".
+
+**Decision:** Option 1 (FR-71).
+- **Who:** for each working day, the Manager names Standby Staff from people who are available for the whole day and not in a Crew.
+- **Full cover:** at least one Standby Driver, plus Standby Technicians holding valid Certifications for both Brands.
+- **Role:** they back up every Job that day.
+- **Missing cover:** a warning, not a block, because capacity can't guarantee it (6 Drivers for 6 Vans).
+- **Workload:** a Standby day counts 0 h unless the Standby is placed into a Crew.
+- **Notifications:** Standby Staff are notified when named, and when someone they could replace drops out. The Manager decides the replacement.
+
+**Rationale for overriding the interview:**
+- The team wants a known first call for every Job.
+- The Manager's "effectively on standby" pool (FR-47) is where Standby Staff are chosen from.
+- A named backup per Job (Option 2) would mean more than 20 names a day, and is often impossible for Drivers.
+
+**Decided by:** ZadeNova (team review) · **Decision date:** 2026-09-30 · **Decision source:** Team review of SRS v2. The options were proposed by AI and chosen by the team.
+
+### DEC-44: Pay model is background only
+
+| Category | Scope | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-09-30 by ZadeNova (team review of SRS v2)
+
+**Source text:**
+- INT-MGR [System Q1]: "Wages and costs are handled by our accounts department, so I don't need those here."
+- Brief R6: "highlight all staff over 40 hours of jobs allocated"
+- Team review (ZadeNova): Drivers are on basic salary and shift work. Technicians are on basic salary, shift work and per-Job commission.
+
+**Question:** Should the pay model change the SRS? For example: the Workload definition, a pay calculation, or recording which Technician did each Job.
+
+**Why it matters:** A pay calculation would contradict the Manager's interview and add sensitive pay data. Workload defined by shifts rather than Job hours would break Brief R6.
+
+**Options:**
+1. Record data for Accounts (shifts, Completed Jobs per Technician), with no pay calculation.
+2. Calculate pay in the system.
+3. Background only.
+
+**Decision:** Option 3.
+- Payroll and commission stay out of scope (SRS §1.2).
+- Workload stays in hours of Jobs (FR-52 to FR-55), as Brief R6 requires.
+- No per-Technician Job attribution is added.
+
+**Decided by:** ZadeNova (team review) · **Decision date:** 2026-09-30 · **Decision source:** Team review of SRS v2.
 
 ---
 

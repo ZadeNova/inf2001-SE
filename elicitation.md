@@ -59,6 +59,11 @@ So the chapter must show **what** techniques were used, **why** each was chosen,
   - **Overtime approval** (DEC-32): the Driver expects an approval step, while the Manager only wants a warning.
   - **Deleting leavers' accounts vs keeping records for a year** (DEC-34): both statements come from the IT Administrator.
 - Resolution rule used: the Manager's answer was adopted as process owner where one existed. Otherwise the simplest option consistent with the brief was chosen, and each decision says which parts were chosen by the team.
+- **Team decisions that override a stakeholder statement** (from the team review on 30 Sep):
+  - **DEC-42, rejections need the Manager's approval.** The Manager and DCT both said no approval was needed.
+  - **DEC-43, daily Standby Staff.** The Manager said "No dedicated standby staff".
+
+  Explain both in the chapter, with the rationale recorded in `decisions.md` §I. Markers check that requirements match their sources, so an unexplained override looks like an error.
 
 **Result:** the SRS has 70 FRs and 17 NFRs, each citing its source, prioritised with MoSCoW (§5 of the SRS).
 
@@ -71,6 +76,7 @@ So the chapter must show **what** techniques were used, **why** each was chosen,
 - [ ] **Stakeholder question guide:** `document-analysis.md` refers to a question guide that is **not in the repo**. Add it (it shows the interviews were planned), or drop the references.
 - [ ] **Surveys:** the rubric names surveys. If one was run, add the questions and a results summary. If not, don't claim one.
 - [ ] **Rationale** for each technique, one or two sentences each. For example: document analysis first, to find gaps before meeting stakeholders; interviews, because the process depends on individual roles and edge cases; written clarification, because contradictions in the brief are the client's to resolve.
+- [ ] **Team review and overrides:** describe how the team reviewed the draft SRS (round 1 on 30 Sep: 16 rows agreed, DEC-42 to DEC-44 decided), and justify the two overrides (DEC-42, DEC-43).
 - [ ] **Process diagram** (optional but recommended): document analysis → questions → client clarification + interviews → DEC log → SRS.
 - [ ] **AI usage:** the report's AI section must mention where AI helped (e.g. the SRS draft, the DEC analysis). Use [ai-usage-log.md](ai-usage-log.md).
 
