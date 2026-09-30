@@ -12,6 +12,7 @@
 | [interviews/dct.md](interviews/dct.md) | Interview transcript, "Part B: Dual Certified Technician interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Dual Certified Technician (DCT) | TBC | TBC | TBC |
 | [interviews/driver.md](interviews/driver.md) | Interview answers to 17 numbered questions, with no opening or closing dialogue | Driver | TBC | TBC | TBC |
 | [interviews/ita.md](interviews/ita.md) | Interview transcript (Interviewer / IT admin dialogue) | IT Administrator (ITA) | TBC | TBC | TBC |
+| [planned-interview.md](planned-interview.md) | **Plan** (not yet held) for follow-up validation sessions on SRS v3.0: Manager (MTG-01), IT Administrator (MTG-02), Staff (MTG-03), with the items to validate and how results feed back into the SRS | Manager, IT Administrator, DCT or Driver | Planned | — | — |
 | [document-analysis.md](document-analysis.md) | "INF2001 Milestone 1: Document Analysis": the team's line-by-line review of the brief, with findings **F-1 to F-30** mapped to interview questions | — (team document, not a stakeholder source) | Sep 25, 2026 (stated) | — | — (author stated as "@Zade") |
 
 ## Notes on using this material
