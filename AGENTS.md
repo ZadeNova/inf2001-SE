@@ -88,6 +88,12 @@ When a new term is needed, add it here in the same commit and cite its source.
 
 `brief/` holds the source docs (read-only) and `requirements.md` holds the FR and NFR tables. `use-cases/` has one file per UC, `diagrams/` holds the PlantUML source and `elicitation/` holds the stakeholder meeting notes. The remaining files are `traceability.md`, `decisions.md` and `ai-usage-log.md`.
 
+## Elicitation material
+
+- Interview transcripts are in `elicitation/interviews/` (manager, dct, driver, ita). The team's brief review is in `elicitation/document-analysis.md`.
+- **Read [elicitation/README.md](elicitation/README.md) first.** Open individual files only when asked or when verifying a source.
+- Keep the two naming schemes apart: `F-1`..`F-30` are the document-analysis findings, and `AK-01`..`AK-14` are the Answer-key rows at the end of the manager and DCT transcripts. The answer-key rows are labelled `F-01`..`F-14` in those files, but they are a different set. The Answer keys are team summaries, not stakeholder statements.
+
 ## Collaboration rules
 
 - **Never push to `main` directly.** Work on a branch (`<name>/<topic>`) and open a PR. At least one other member reviews it.

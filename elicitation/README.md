@@ -1,8 +1,49 @@
 # Requirements Elicitation
 
-Source: [brief/assessment-overview.md, Appendix A](../brief/assessment-overview.md#appendix-a---instructions-to-engage-stakeholders-for-team-project).
+**Read this index first.** Open individual files only when asked to or when verifying a source.
+
+## Index of elicitation material
+
+"TBC" means the file itself doesn't state it. Do not fill these fields in by guessing.
+
+| File | What it is | Role | Date | Interviewer | Interviewee |
+|---|---|---|---|---|---|
+| [interviews/manager.md](interviews/manager.md) | Interview transcript, "Part A: Manager interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Manager (introduces themselves as "the operations manager") | TBC | TBC | TBC |
+| [interviews/dct.md](interviews/dct.md) | Interview transcript, "Part B: Dual Certified Technician interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Dual Certified Technician (DCT) | TBC | TBC | TBC |
+| [interviews/driver.md](interviews/driver.md) | Interview answers to 17 numbered questions, with no opening or closing dialogue | Driver | TBC | TBC | TBC |
+| [interviews/ita.md](interviews/ita.md) | Interview transcript (Interviewer / IT admin dialogue) | IT Administrator (ITA) | TBC | TBC | TBC |
+| [document-analysis.md](document-analysis.md) | "INF2001 Milestone 1: Document Analysis": the team's line-by-line review of the brief, with findings **F-1 to F-30** mapped to interview questions | — (team document, not a stakeholder source) | Sep 25, 2026 (stated) | — | — (author stated as "@Zade") |
+
+## Notes on using this material
+
+- **The transcripts are the primary source.** Cite what the stakeholder said in the transcript.
+- **The "Answer key" tables are a team summary, not stakeholder statements.** They appear at the end of `manager.md` and `dct.md`, labelled "For your write-up and SRS. Not read aloud." The two tables are currently identical.
+- **Two separate ID schemes. Never treat them as the same thing:**
+  - `AK-01` to `AK-14`: rows of the Answer key tables. In the files these rows are labelled `F-01` to `F-14`, but always refer to them as `AK-nn`.
+  - `F-1` to `F-30`: findings in `document-analysis.md`.
+  - For example, AK-01 ("Planning cycle") is **not** F-1 (the availability horizon).
+- **The provenance of the Driver and IT Administrator transcripts is unconfirmed (TBC).** We don't yet know who was interviewed, when, how or by whom.
+- **The stakeholder question guide** that `document-analysis.md` refers to is **not in the repo yet**.
+- **The team has not yet reviewed these files for inconsistencies.** Some contradictions between files are expected. Do not silently reconcile them. Raise each one in `decisions.md` when the review happens.
+
+### Conversion notes
+
+The files were copied from the team's exports. The wording was not changed, rewritten, summarised or reordered. Only these export artefacts were fixed:
+
+- **All four exported files** (`manager.md`, `dct.md`, `driver.md`, `document-analysis.md`): Google Docs backslash escapes were removed (`\[ \] \. \+ \= \> \< \)`), as were trailing spaces and whitespace-only lines.
+- **`driver.md`:** a stray `*.*` after "mileage logs" became `.`.
+- **`document-analysis.md`:** an empty `1.` list item before the §3 table was removed.
+- **`ita.md`:**
+  - The source file `IT_admin.md` was actually a PDF.
+  - The text came from the team member's paste. It was checked word for word against the PDF text, and all 1,317 words match.
+  - Blank lines were added between speaker turns so that Markdown keeps them as separate paragraphs.
+  - The first two lines were marked as headings (`#`, `##`).
+
+The raw source files remain in the uploader's Downloads folder and are not committed.
 
 ## Rules (from Appendix A)
+
+Source: [brief/assessment-overview.md, Appendix A](../brief/assessment-overview.md#appendix-a---instructions-to-engage-stakeholders-for-team-project).
 
 - Engage **at least 5 Stakeholder Representatives**, with **at most 2 from our own team**.
 - Representatives may come from our team, other teams or the real industry.
