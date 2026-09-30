@@ -36,11 +36,11 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-20 | "Working hours engaged/assigned" | Ambiguity | Stakeholder | **Decided** |
 | DEC-21 | Deliverable scope: working web app vs wireframe | Rubric | Lecturer | Open |
 | DEC-22 | Job volume and duration vs crew capacity | Missing definition | Stakeholder | **Decided** |
-| DEC-23 | M1 activity diagram examples ("subscription, announcement, notification") | Rubric | Lecturer | Open |
-| DEC-24 | M1 Formatting rubric lists M2 artefacts and a "required template" | Rubric | Lecturer | Open |
+| DEC-23 | M1 activity diagram examples ("subscription, announcement, notification") | Rubric | Lecturer | **Decided** |
+| DEC-24 | M1 Formatting rubric lists M2 artefacts and a "required template" | Rubric | Lecturer | **Decided** |
 | DEC-25 | Appendix C subsections labelled B.1–B.4 | Rubric | Lecturer | Open |
 | DEC-26 | M2 "provided report template" not in our materials | Rubric | Lecturer | Open |
-| DEC-27 | Week numbering and M1 presentation timing | Rubric | Lecturer | Open |
+| DEC-27 | Week numbering and M1 presentation timing | Rubric | Lecturer | **Asked** |
 | DEC-28 | Stakeholder rule: "same project" restriction | Rubric | Lecturer | Open |
 | DEC-29 | Weighting labels and unweighted Introduction items | Rubric | Lecturer | Open |
 | DEC-30 | How "1 month in advance" is measured | Ambiguity | Team | **Decided** |
@@ -587,7 +587,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 ### DEC-23: M1 activity diagram examples do not match this project
 
-| Category | Rubric | Ask whom | Lecturer | Status | Open |
+| Category | Rubric | Ask whom | Lecturer | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:** Rubric M1 B.4, Activity diagrams: "Clear workflows modelled for all key processes (subscription, announcement, notification)."
@@ -600,11 +600,13 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 1. Treat it as a carry-over and model this project's key processes, with a sentence in the report explaining our choice.
 2. Also model a notification process if one emerges from DEC-15.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Option 1: treat the rubric's "(subscription, announcement, notification)" as a template carry-over. The team models this project's own key processes; which ones is chosen by the team when drawing the activity diagrams.
+
+**Decided by:** ZadeNova (team) · **Decision date:** 2026-09-30 · **Decision source:** Team decision, 2026-09-30
 
 ### DEC-24: M1 Formatting rubric lists M2 artefacts and a "required template"
 
-| Category | Rubric | Ask whom | Lecturer | Status | Open |
+| Category | Rubric | Ask whom | Lecturer | Status | **Decided** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -619,7 +621,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 1. Assume a carry-over: follow B.1.2.1 and the M1 chapter list.
 2. Obtain and follow the M2 template for M1 as well.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** A report template exists and the team has it; the M1 report follows that template.
+
+**Decided by:** ZadeNova (team) · **Decision date:** 2026-09-30 · **Decision source:** Team confirmation, 2026-09-30
 
 ### DEC-25: Appendix C subsections labelled B.1–B.4
 
@@ -657,7 +661,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 ### DEC-27: Week numbering and M1 presentation timing
 
-| Category | Rubric | Ask whom | Lecturer | Status | Open |
+| Category | Rubric | Ask whom | Lecturer | Status | **Asked** |
 |---|---|---|---|---|---|
 
 **Source text:**
@@ -673,7 +677,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 **Options:**
 1. Confirm from the SIT academic calendar or LMS and record the dates here.
 
-**Decision:** — · **Decided by:** — · **Decision source:** —
+**Decision:** Partial: the M1 presentation is expected next week (week of 5 Oct 2026); exact date and time still to be announced. Week 2 / Week 6 calendar dates still to be recorded.
+
+**Decided by:** — · **Decision date:** 2026-09-30 · **Decision source:** Team information, 2026-09-30
 
 ### DEC-28: Stakeholder rule: "same project" restriction
 

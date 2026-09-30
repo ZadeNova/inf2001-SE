@@ -53,7 +53,7 @@ The canonical terms are in the [AGENTS.md glossary](AGENTS.md#glossary-canonical
 | **Crew** | The Driver and one or two Technicians assigned to one Van for one working day | DEC-09 |
 | **Planning Week** | A Monday–Saturday week. "The Planning Week" is the next week not yet published | DEC-04, DEC-16 |
 | **Slot** | A half-day unit: `Morning` (09:00–13:00) or `Afternoon` (14:00–18:00). Lunch is 13:00–14:00 | DEC-03, DEC-12 |
-| **Availability Lock** | 18:00 on the Wednesday 12 days before a Planning Week's Monday | DEC-02 |
+| **Availability Deadline** | 18:00 on the Wednesday 12 days before a Planning Week's Monday. After it, that week's Availability and Job Preference are locked | DEC-02 |
 | **Late Availability Change Request** | A Staff request to set or change Availability for a locked week | DEC-02 |
 | **Leave Request** | A request for full days of annual Leave, which the Manager approves or rejects | DEC-13 |
 | **Standard Duration** | Servicing 1 h per unit, Installation 3 h per unit | DEC-22 |
@@ -111,7 +111,7 @@ Example for the Planning Week starting Monday the 19th:
 | Step | When |
 |---|---|
 | Staff enter Availability and Job Preference | Any time within the 1-month window |
-| Availability Lock | Wednesday the 7th, 18:00 |
+| Availability Deadline (the week locks) | Wednesday the 7th, 18:00 |
 | Manager plans: Crews first, then Jobs | From Thursday the 8th (the roster is Draft) |
 | Manager publishes | Monday the 12th (Staff are notified) |
 | The week runs | Monday the 19th to Saturday the 24th |
@@ -149,7 +149,7 @@ Sources: INT-MGR [Clarification Q6 follow-up]; DEC-02; DEC-16.
 | ID | Description | Source | Priority | Status | Test / verification note |
 |---|---|---|---|---|---|
 | FR-13 | Staff shall set each **Slot** (Morning or Afternoon) of each working day to `Available` or `Unavailable`, and may clear an entry. A Slot with no entry is **Not submitted** and counts as unavailable for allocation | Brief R8; INT-MGR [Clarification Q4]; INT-DCT [Clarification Q2]; DEC-03 | Must | Draft | Set Morning = Available and leave Afternoon blank. Allocation treats the afternoon as unavailable. Sunday and public holiday Slots are not offered |
-| FR-14 | Staff shall be able to enter or change Availability only for dates from **today through the same calendar date next month, inclusive** (clamped to that month's last day), and only before the Availability Lock | Brief R8 + Lecturer clarification; DEC-01; DEC-30; DEC-02 | Must | Draft | From 15 Mar: 15 Apr accepted, 16 Apr refused. From 31 Jan: 28 Feb accepted (non-leap year), 1 Mar refused |
+| FR-14 | Staff shall be able to enter or change Availability only for dates from **today through the same calendar date next month, inclusive** (clamped to that month's last day), and only before the Availability Deadline | Brief R8 + Lecturer clarification; DEC-01; DEC-30; DEC-02 | Must | Draft | From 15 Mar: 15 Apr accepted, 16 Apr refused. From 31 Jan: 28 Feb accepted (non-leap year), 1 Mar refused |
 | FR-15 | The Manager shall view the Availability of all Staff up to 1 month in advance (the FR-14 window) as a calendar grid, with Staff down the side and days across. Each cell shows one of five colour-coded states: available all day, morning only, afternoon only, on Leave, or unavailable / not submitted | Brief §Intro ¶4 + Lecturer clarification; INT-MGR [System Q2]; DEC-03 | Must | Draft | Seed each state and check that each has a distinct colour and a legend |
 | FR-16 | Availability and Job Preference for a Planning Week shall lock at **18:00 on the Wednesday 12 days before** that week's Monday, in company local time | Brief §Company ¶1; INT-MGR [Clarification Q6 follow-up]; DEC-02; DEC-07 | Must | Draft | Week of Mon 19th: an edit at Wed 7th 17:59 is accepted, an edit at 18:00 is refused |
 | FR-17 | For a locked week, Staff shall submit a **Late Availability Change Request** to set or change one or more Slots, with a reason. The Manager approves or rejects it. Approval applies the change, and FR-70 applies if the change affects a Crew. Rejection leaves Availability unchanged. The Staff member is notified either way | Brief §Company ¶1; INT-MGR [Conflicts Q2]; INT-DCT [Process Q1 follow-up: deadline]; DEC-02 | Must | Draft | Request without a reason → refused. Approve → Slot updated. Reject → unchanged. Both outcomes notify the Staff member |
@@ -298,7 +298,36 @@ Sources: INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-35; DEC-37; DEC-
 
 ---
 
-## 5. Coverage check: Brief initial requirements
+### 4.2 Rationale for team-set thresholds (†)
+
+No stakeholder gave these numbers. The team set them, and each needs a one-line justification to meet the rubric's "measurable and justified". **The team should confirm or change each one.**
+
+| Row | Threshold | Justification |
+|---|---|---|
+| FR-07 | 5 failed logins in 15 min → lock | Stops password guessing while tolerating a non-technical user mistyping a few times (INT-MGR [Closing]). The IT Administrator asked for lockouts but gave no number (INT-ITA [Q: Passwords]) |
+| NFR-01 | 95th percentile | Response-time targets are normally stated as a percentile, so that rare network outliers don't fail an otherwise responsive system. 5 s is the upper of the IT Administrator's "3 or 5 seconds" |
+| NFR-03 | Up to 3 devices per person; 25 Jobs per day; 13 months of data | The IT Administrator named multiple devices per person (phone, tablet, laptop). 25 is about 25% headroom over the brief's "more than 20 jobs … daily". 13 months = the 12-month retention (DEC-34) + the 1-month window (DEC-01) |
+| NFR-04 | 60 requests per minute per user | Normal use is a few actions a minute, so 60 never affects a real user but stops the scripted floods the IT Administrator was concerned about |
+| NFR-05 | ≥ 99% monthly uptime; maintenance 00:00–05:00 | 99% allows about 7 h of downtime a month, well within the IT Administrator's "Not more than one day". The window matches their "early morning or late night" and falls outside working hours (09:00–18:00, DEC-12) |
+| NFR-09 | 3 automatic retries | Covers brief signal drops in basements (INT-DCT [System Q3]) without leaving the user waiting long |
+| NFR-11 | Salted password hashes | Standard practice for "encrypted properly in the backend" (INT-ITA [Q: Safeguards]). Passwords should never be recoverable |
+| NFR-15 | 360 px (Staff) / 1366 px (Manager) | 360 px is a common small Android screen width, and Technicians use their own Android phones (INT-DCT [System Q3]). 1366 px is a common laptop width for the office-based Manager |
+| NFR-16 | 3 users, under 3 minutes, no help | A small walkthrough is feasible for the team. The two tasks are the most frequent Staff actions, and 3 minutes is a reasonable ceiling for a weekly task |
+
+## 5. Prioritisation (MoSCoW)
+
+Every FR and NFR has a MoSCoW priority in its Priority column. The rules used:
+
+| Priority | Rule applied | Count |
+|---|---|---|
+| **Must** | Required by Brief R1–R11; **or** needed for the weekly cycle to work end-to-end (Availability → Crews → allocation → publish → do the work → Workload); **or** a rule the Manager called "never acceptable" to break (INT-MGR [System Q4]); **or** basic account and data protection | 56 FR, 11 NFR |
+| **Should** | Asked for by a stakeholder and clearly valuable, but the weekly cycle still works without it (e.g. replacement suggestions, audit log, password reset, 2FA) | 9 FR, 6 NFR |
+| **Could** | Described by a stakeholder as "nice to have" or "isn't essential", or a convenience (e.g. certificate scans, copy last week's Availability, Van usage) | 4 FR |
+| **Won't** | Withdrawn by a team decision (FR-68, DEC-36) | 1 FR |
+
+**Stakeholder ranking used as a tie-breaker:** the Manager ranked their needs as "Staff workload first, then unassigned jobs, then leave. Van usage is nice to have" (INT-MGR [System Q1 follow-up: ranking]). They said what mattered most was "Allocating jobs with valid crews, and seeing the workload at a glance" (INT-MGR [Closing]). The Workload, Unassigned Jobs, Crew validity and Landing Page rows are therefore Must, and Van usage (FR-61) is Could.
+
+## 6. Coverage check: Brief initial requirements
 
 | Brief | Summary (see brief for exact text) | FR / NFR IDs |
 |---|---|---|
@@ -314,7 +343,7 @@ Sources: INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-35; DEC-37; DEC-
 | R10 | Reject jobs with warning | FR-62, FR-63 |
 | R11 | IT administrators add staff and managers | FR-02, FR-03 |
 
-## 6. Candidate M2 testing targets
+## 7. Candidate M2 testing targets
 
 | Rubric item | Candidate | Why it qualifies |
 |---|---|---|
@@ -322,6 +351,6 @@ Sources: INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-35; DEC-37; DEC-
 | Black-box (alternative) | FR-62 / FR-63: Job Rejection | Conditions: published week, within 48 h, reason = Other, comment present |
 | White-box (CFG with ≥8 nodes and ≥2 decisions) | FR-28: generate Workshop Servicing dates | A loop over Vans and dates, an odd/even month branch, and a Sunday/public-holiday shift loop |
 
-## 7. Open items affecting this SRS
+## 8. Open items affecting this SRS
 
 None of the SRS-level DECs are open. The remaining open entries are rubric and lecturer questions (DEC-21, DEC-23 to DEC-29). They affect the report and diagrams, not the requirements.

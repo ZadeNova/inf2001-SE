@@ -51,31 +51,42 @@ Late work loses 20% per day, and anything more than 4 days late gets zero. See [
 
 ## Glossary (canonical terms)
 
-Use these exact terms, capitalised, in requirements, use cases, class names and diagrams. Do not substitute the synonyms in the last column. Definitions marked _(open: DEC-nn)_ depend on an unresolved decision.
+Use these exact terms, capitalised, in requirements, use cases, class names and diagrams. Do not substitute the synonyms in the last column. Definitions follow the decisions in `decisions.md` and the SRS (`requirements.md` §1.3).
 
-| Term                      | Meaning (from the brief)                                                                                                                                                       | Avoid                      |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
-| **Staff**                 | Field employees who receive Assignments, i.e. Drivers and Technicians. Whether Managers count as Staff is _(open: DEC-18)_                                                     | employee, worker, user     |
-| **Manager**               | The administrative staff member who views manpower and allocates Jobs ("administrative staff (usually the manager)")                                                           | admin, supervisor          |
-| **IT Administrator**      | Company IT staff who add new Staff and Managers (R11). Their scope is _(open: DEC-17)_                                                                                         | admin, sysadmin            |
-| **Driver**                | Staff member who drives a Van. There are 6                                                                                                                                     | —                          |
-| **Technician**            | Staff member certified for one or both Brands. There are 11: 2 dual, 5 M Electric only, 4 Dicon only                                                                           | engineer, installer        |
-| **Brand**                 | Aircon brand: `M Electric` or `Dicon` (exact spelling)                                                                                                                         | make, vendor               |
-| **Certification**         | A Technician's qualification to install or service a Brand                                                                                                                     | skill, license             |
-| **Van**                   | Service vehicle whose crew is 1 Driver plus 1–2 Technicians (2–3 people). There are 6. Composition rules are _(open: DEC-09)_                                                  | truck, team                |
-| **Job**                   | One aircon installation or servicing task. Its attributes are _(open: DEC-11)_                                                                                                 | task, order, ticket        |
-| **Job Type**              | `Installation` or `Servicing`                                                                                                                                                  | —                          |
-| **Assignment**            | The link between a Job and the Staff (or Van) doing it _(open: DEC-10)_                                                                                                        | allocation (noun), booking |
-| **Job Allocation**        | The Manager's weekly activity or page for creating Assignments (R3, R4)                                                                                                        | scheduling, planning page  |
-| **Availability**          | Staff-declared dates and times they can work, entered and viewable **up to 1 month in advance** (DEC-01, lecturer-confirmed). The exact window calculation is _(open: DEC-30)_ | schedule, free time        |
-| **Availability Deadline** | Wednesday cut-off for the following week's planning                                                                                                                            | cut-off                    |
-| **Job Preference**        | Staff's stated preference for the week (R9). Its content is _(open: DEC-07)_                                                                                                   | —                          |
-| **Workload**              | Hours of Jobs assigned to a Staff member over a period _(open: DEC-04)_                                                                                                        | load, utilisation          |
-| **Job Rejection**         | Staff declining an Assignment after a warning (R10)                                                                                                                            | decline, cancel            |
-| **Leave**                 | Annual leave, 7 days per Staff member. Handling is _(open: DEC-13)_                                                                                                            | holiday, time off          |
-| **Workshop Servicing**    | Van maintenance, every two months                                                                                                                                              | maintenance                |
-| **Weekly Roster**         | The full set of Assignments for one week                                                                                                                                       | timetable                  |
-| **Landing Page**          | First page after login, which is role-specific (R2, R6, R7)                                                                                                                    | home, dashboard            |
+| Term                                 | Meaning                                                                                                                                                                  | Avoid                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| **Staff**                            | Field employees who receive Assignments: Drivers and Technicians. Managers are not Staff (DEC-18)                                                                        | employee, worker, user     |
+| **Manager**                          | Office-based user who records Jobs, forms Crews, allocates and publishes the Weekly Roster, and decides requests. May be several accounts with identical rights (DEC-18) | admin, supervisor          |
+| **IT Administrator**                 | Manages accounts, roles, lockouts, public holidays and the audit log (Brief R11, DEC-17)                                                                                 | admin, sysadmin            |
+| **Driver**                           | Staff member who drives a Van; the only role allowed to drive. There are 6                                                                                               | —                          |
+| **Technician**                       | Staff member certified for one or both Brands; never drives. There are 11: 2 dual, 5 M Electric only, 4 Dicon only                                                       | engineer, installer        |
+| **Brand**                            | Aircon brand: `M Electric` or `Dicon` (exact spelling)                                                                                                                   | make, vendor               |
+| **Certification**                    | A Technician's qualification for a Brand (covers Installation and Servicing): Brand, number, expiry (DEC-35)                                                             | skill, license             |
+| **Van**                              | Service vehicle (number, licence plate). There are currently 6                                                                                                           | truck, team                |
+| **Crew**                             | The Driver plus 1–2 Technicians assigned to one Van for one working day (DEC-09)                                                                                         | team, van team             |
+| **Job**                              | One Installation or Servicing task for one Brand at one address, created by the Manager (DEC-11)                                                                         | task, order, ticket        |
+| **Job Type**                         | `Installation` or `Servicing`                                                                                                                                            | —                          |
+| **Linked Jobs**                      | Jobs of different Brands at the same address; must go on the same Van and date (DEC-11)                                                                                  | —                          |
+| **Assignment**                       | A Job placed on a Van on a date; every Crew member of that Van-day holds the Assignment (DEC-10, DEC-39)                                                                 | allocation (noun), booking |
+| **Unassigned Job**                   | A Job with status Unassigned; excludes Cancelled Jobs (FR-38, FR-46)                                                                                                     | open job, pending job      |
+| **Job Allocation**                   | The Manager's weekly activity or page for creating Assignments (R3, R4)                                                                                                  | scheduling, planning page  |
+| **Planning Week**                    | A Monday–Saturday week; "the" Planning Week is the next unpublished one (DEC-04, DEC-16)                                                                                 | work week                  |
+| **Weekly Roster**                    | All Crews and Assignments of one Planning Week; `Draft` until published, then `Published` (DEC-16)                                                                       | timetable, schedule        |
+| **Slot**                             | Half-day unit: `Morning` 09:00–13:00 or `Afternoon` 14:00–18:00 (DEC-03, DEC-12)                                                                                         | shift, timeslot            |
+| **Availability**                     | Per-Slot `Available`/`Unavailable` set by Staff, up to **1 month in advance** (DEC-01, DEC-30); no entry = Not submitted = unavailable (DEC-03)                          | schedule, free time        |
+| **Availability Deadline**            | 18:00 on the Wednesday 12 days before a Planning Week; that week's Availability and Job Preference then lock (DEC-02)                                                    | cut-off, lock              |
+| **Late Availability Change Request** | Staff request to set or change Availability for a locked week; Manager decides (DEC-02)                                                                                  | late request               |
+| **Job Preference**                   | Weekly advisory preference: area, days, Slot, Job Type (R9, DEC-07)                                                                                                      | —                          |
+| **Workload**                         | Hours credited to a Staff member in a Planning Week or calendar month: Planned Hours of Assigned Jobs plus Actual Hours of Completed Jobs (DEC-04, DEC-39, DEC-40)       | load, utilisation          |
+| **Travel Allowance**                 | Fixed 0.5 h added to each Job's hours (DEC-31)                                                                                                                           | travel time                |
+| **Planned Hours / Actual Hours**     | Duration + Travel Allowance / (actual end − start) + Travel Allowance (DEC-40)                                                                                           | —                          |
+| **Overtime**                         | Workload strictly above 40 h in a Planning Week (DEC-04)                                                                                                                 | OT                         |
+| **Job Rejection**                    | A Crew member declining an Assignment after a warning; the Job becomes Unassigned (R10, DEC-15)                                                                          | decline, cancel            |
+| **Leave**                            | Annual leave: full working days, 7 per calendar year, no carry-over (DEC-13)                                                                                             | holiday, time off          |
+| **Leave Request**                    | Staff application for Leave; Manager approves or rejects (DEC-13)                                                                                                        | leave form                 |
+| **Workshop Servicing**               | Van maintenance day, generated from the two-monthly rotation (DEC-14)                                                                                                    | maintenance                |
+| **Needs attention**                  | A Van-day whose Crew became invalid after a later event (DEC-19, FR-70)                                                                                                  | —                          |
+| **Landing Page**                     | First page after login, role-specific (R2, R6, R7)                                                                                                                       | home, dashboard            |
 
 When a new term is needed, add it here in the same commit and cite its source.
 
@@ -88,7 +99,7 @@ When a new term is needed, add it here in the same commit and cite its source.
 
 ## Repo map
 
-`brief/` holds the source docs (read-only) and `requirements.md` holds the FR and NFR tables. `use-cases/` has one file per UC, `diagrams/` holds the PlantUML source and `elicitation/` holds the stakeholder meeting notes. The remaining files are `traceability.md`, `decisions.md` and `ai-usage-log.md`.
+`brief/` holds the source docs (read-only) and `requirements.md` holds the SRS (FR and NFR tables). `elicitation.md` is the brief for the report's elicitation-process chapter. `use-cases/` has one file per UC, `diagrams/` holds the PlantUML source and `elicitation/` holds the stakeholder meeting notes. The remaining files are `traceability.md`, `decisions.md` and `ai-usage-log.md`.
 
 ## Elicitation material
 

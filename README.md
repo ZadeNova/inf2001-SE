@@ -11,7 +11,8 @@ brief/                      Source docs converted from the PDFs (read-only)
   rubric-m1.md                Milestone 1 deliverables and rubric (due 9 Oct 2026)
   rubric-m2.md                Milestone 2 deliverables and rubric (due 20 Nov 2026)
 AGENTS.md                   Shared context and rules (CLAUDE.md imports it)
-requirements.md             FR / NFR tables and brief coverage check
+requirements.md             SRS: FR / NFR tables, MoSCoW, brief coverage
+elicitation.md              Task brief for the elicitation-process report chapter
 use-cases/                  One file per use case (copy UC-TEMPLATE.md)
 diagrams/                   PlantUML sources, one diagram per file (see README)
 elicitation/                Stakeholder register, meeting notes (MEETING-TEMPLATE.md)
