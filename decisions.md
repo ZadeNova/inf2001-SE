@@ -44,6 +44,17 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-28 | Stakeholder rule: "same project" restriction | Rubric | Lecturer | Open |
 | DEC-29 | Weighting labels and unweighted Introduction items | Rubric | Lecturer | Open |
 | DEC-30 | How "1 month in advance" is measured | Ambiguity | Team | Open |
+| DEC-31 | Travel time: fixed allowance vs estimated driving time | Contradiction (interviews) | Stakeholder | Open |
+| DEC-32 | Overtime: approval step or warning only? | Contradiction (interviews) | Stakeholder | Open |
+| DEC-33 | Real-time delay reporting by the Crew | Scope (interviews) | Stakeholder | Open |
+| DEC-34 | Leavers: delete accounts vs retain records | Contradiction (interviews) | Stakeholder | Open |
+| DEC-35 | Who maintains Certifications and staff details | Contradiction (interviews) | Stakeholder | Open |
+| DEC-36 | Account and schedule import vs manual entry | Contradiction (interviews) | Stakeholder | Open |
+| DEC-37 | What Staff may see about colleagues | Ambiguity (interviews) | Stakeholder | Open |
+| DEC-38 | IT Administrator's Thursday peak vs the weekly cycle | Contradiction (interviews) | Stakeholder | Open |
+| DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | Open |
+| DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | Open |
+| DEC-41 | Email 2FA vs simplicity and field use | Tension (interviews) | Stakeholder / Team | Open |
 
 ---
 
@@ -680,6 +691,236 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 1. Same date next calendar month (clamped to month end), inclusive.
 2. Fixed 30 days from today.
 3. Whole planning weeks (Mon–Sun) that start within one calendar month from today.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+## H. Conflicts between interview transcripts
+
+Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`). Quotes are verbatim from `elicitation/interviews/`. Citation format: see [requirements.md §1.4](requirements.md#14-sources-and-citation-format). The options are for discussion and are **not recommendations**.
+
+### DEC-31: Travel time: fixed allowance vs estimated driving time
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-MGR [Clarification Q7]: "The system won't know real travel times, so I'd like a fixed allowance of 30 minutes per job, added on top of the job duration."
+- INT-DRV [Q4]: "it must include estimated driving time between job locations so my total weekly workload accurately reflects actual hours and flags if I exceed 40 hours. We track this workload by correlating estimated route hours alongside the vehicle's daily mileage logs."
+
+**Question:** Is travel counted as a fixed 30 minutes per Job, or as estimated driving time (route estimates or mileage logs)? If mileage logs are used, who records them?
+
+**Why it matters:** Workload drives the 40-hour highlight and the lowest-three lists (FR-52). Mileage-based travel would need new data entry and a new attribute.
+
+**Options:**
+1. A fixed 30-minute allowance per Job (the Manager's statement).
+2. Estimated driving time between Job locations.
+3. The fixed allowance for planning, with mileage-based actuals after the day.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-32: Overtime: approval step or warning only?
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-DRV [Q6]: "When delays occur, the remaining jobs are typically pushed back to another day, or overtime (OT) is automatically flagged for approval if we must complete it that evening."
+- INT-MGR [System Q4]: "It should only warn me for over forty hours, a preference not being met, or fewer than three vans in a day. Sometimes I have to accept those, so I want to be able to override the warning."
+- INT-MGR [Conflicts Q5]: "Anything above forty hours in the week shows up as overtime."
+
+**Question:** Does Overtime need an approval workflow, or is it only highlighted and warned about?
+
+**Why it matters:** An approval flow would add a use case, a request type and a notification (FR-45, FR-55).
+
+**Options:**
+1. Highlight and overridable warning only (the Manager's statements).
+2. Add an Overtime approval request that the Manager approves.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-33: Real-time delay reporting by the Crew
+
+| Category | Scope (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-DRV [Q6]: "I need a way to see real-time updates or inform the manager if a job will breach working hour limits or conflict with another appointment."
+- INT-DCT [Conflicts Q3]: "The driver calls the next customer to say we're running late, and I let the manager know."
+- INT-MGR [Conflicts Q5]: "If a job overruns, the crew finishes it and records the actual time when they mark it complete."
+
+**Question:** Should the Crew be able to report a delay or overrun in the system, or is a phone call to the Manager enough?
+
+**Why it matters:** An in-system report would add a use case and a Manager notification. The SRS currently leaves it out.
+
+**Options:**
+1. Out of scope: phone call, then actual time recorded on completion.
+2. Add a "report delay" action that notifies the Manager.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-34: Leavers: delete accounts vs retain records
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:** all from INT-ITA.
+- [Q: Role change/leaver]: "If they leave then, IT admin will delete their account. If they had any outstanding schedules, those should be removed when the account is deleted."
+- [Q: Retention]: "All schedules should exist up to one year in our system, we need to be able to track our staff and their movements for each yearly review. Deletion of past or currently happening schedules should not be possible, but if they have yet to pass then deletion should be ok."
+
+**Question:** When someone leaves, is their account deleted or deactivated? Are their past Assignments, Workload and Leave records kept for the 1-year retention?
+
+**Why it matters:** Deleting the account would also delete history that the retention rule and monthly Workload need (FR-05, FR-67, NFR-13).
+
+**Options:**
+1. Deactivate the account, remove only future Assignments, and keep history for 1 year.
+2. Delete the account, remove future Assignments, and anonymise past records.
+3. Delete the account after the 1-year retention period.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-35: Who maintains Certifications and staff details
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-ITA [Q: Permissions]: "Only the IT admins should have any permissions to grant or edit access permissions."
+- INT-ITA [Q: Account info]: "All accounts will be need name, email, default password that user can change later."
+- INT-MGR [Clarification Q2]: "I just give them the details: name, contact number, role, and for technicians, which brands they're certified for."
+- INT-MGR [Clarification Q2 follow-up]: "Certificates are renewed every two years, so the system should remind me a month before one expires."
+
+**Question:** Who enters and updates Certifications (Brand, number, expiry): the IT Administrator or the Manager? The IT Administrator also didn't list contact number or Certifications as account data.
+
+**Why it matters:** This decides which actor performs "Maintain Certification" in the use-case diagram, and which fields a user account holds (FR-02, FR-10).
+
+**Options:**
+1. The IT Administrator enters everything at account creation, and the Manager maintains Certifications afterwards.
+2. The IT Administrator maintains everything, and the Manager only receives reminders.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-36: Account and schedule import vs manual entry
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-ITA [Q: Onboarding]: "Ideally, we manually create the user so as to ensure correctness in our procedures and details."
+- INT-ITA [Q: Existing systems]: "we need to have all employees from that ported over. We have our employees and current schedules be able to be exported in CSV format so that can help with transferring data."
+- INT-MGR [Process Q2]: "There's no other system to import from. Today it's all in a spreadsheet."
+
+**Question:**
+- Are accounts created manually, bulk-imported once from the employee portal, or both?
+- Which "current schedules" exist to import?
+- Does the Manager's spreadsheet of Jobs need importing?
+
+**Why it matters:** This decides whether there are import use cases (FR-08, FR-68).
+
+**Options:**
+1. A one-off CSV import of employees, with manual creation afterwards, and no schedule import.
+2. Manual creation only.
+3. Import both employees and the existing spreadsheet schedules.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-37: What Staff may see about colleagues
+
+| Category | Ambiguity (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:** INT-ITA [Q: Safeguards]: "On the scheduler the only things that should be displayed are the names and emails of who put their schedule in that timeslot." By contrast, INT-MGR [System Q3] wants to compare "their availability that day, their hours so far this week, their brand certifications, their preferences, and where they'll be that day".
+
+**Question:** Does the IT Administrator's rule apply to what **Staff** see of colleagues (e.g. Crew-mates), with the Manager keeping full visibility? What exactly may Staff see about their Crew-mates (FR-59 shows names)?
+
+**Why it matters:** This sets the privacy rule in NFR-12 and the content of the Staff views.
+
+**Options:**
+1. Staff see only colleagues' names (and emails) and the Manager sees everything.
+2. Staff see no colleague information beyond Crew names.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-38: IT Administrator's Thursday peak vs the weekly cycle
+
+| Category | Contradiction (interviews) | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-ITA [Q: Hours]: "Another peak period would be Thursday since they can start scheduling their slots then."
+- INT-MGR [Process Q1]: "Staff update their availability by 6pm on Wednesday. On Thursday I start planning."
+
+**Question:** Does anything open to Staff on Thursday, such as Availability for a new week? Or did the IT Administrator mean the Manager's planning day?
+
+**Why it matters:** It affects the peak-load assumptions (NFR-05) and whether an Availability window opens on Thursday.
+
+**Options:**
+1. Treat Thursday as the Manager's planning peak only.
+2. Confirm with the IT Administrator.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-39: Technician Workload on mixed or 3-person Vans
+
+| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-MGR [Clarification Q5 follow-up]: "A technician's allocated hours are just the total of their jobs, plus travel."
+- INT-MGR [Clarification Q7]: "Drivers get the same hours as the van they're on, because they're with the crew the whole time, helping carry equipment."
+- INT-MGR [Clarification Q4 follow-up]: Crews "stay together for the whole day, in the same van."
+- INT-DCT [Conflicts Q1 follow-up]: "For big installations there's sometimes a second technician with me, but usually it's just me and the driver."
+
+**Question:** On a Van with two Technicians, is each Technician credited with only the Jobs of their Brand, or with every Job on the Van (like the Driver)? Which Technician "owns" a Job when both are certified for it?
+
+**Why it matters:** This defines the Workload calculation (FR-53) and whether an Assignment links a Job to individual Technicians or only to the Van.
+
+**Options:**
+1. Each Technician is credited with the whole Van day, the same as the Driver.
+2. Each Job is assigned to specific Technician(s), who get only those hours.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-40: Actual Hours, Travel Allowance and completion evidence
+
+| Category | Missing definition | Ask whom | Stakeholder | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-MGR [Clarification Q7]: "The hours should show the planned time first, and once a job is completed, use the actual time instead."
+- INT-MGR [Process Q1 follow-up: completion]: "They should mark the job as completed in the system with a photo of the invoice signed by the customer."
+- INT-DCT [Process Q1 follow-up: completion]: "In the system, I'd mark the job as complete, with the actual start and end time, a short remark, and whether a follow-up visit is needed". The DCT does not mention an invoice photo.
+
+**Question:**
+- When actual time replaces planned time, is the 30-minute Travel Allowance still added?
+- Who can mark a Job complete (any Crew member, or Technicians only)?
+- Is the invoice photo mandatory?
+
+**Why it matters:** This shapes the completion use case, its validation and the Workload formula (FR-39, FR-40, FR-54).
+
+**Options:**
+1. Actual Hours = end − start + 30 min. Technicians complete Jobs. The photo is optional.
+2. Actual Hours = end − start. Any Crew member completes Jobs. The photo is mandatory.
+
+**Decision:** — · **Decided by:** — · **Decision source:** —
+
+### DEC-41: Email 2FA vs simplicity and field use
+
+| Category | Tension (interviews) | Ask whom | Stakeholder / Team | Status | Open |
+|---|---|---|---|---|---|
+
+**Source text:**
+- INT-ITA [Q: Safeguards]: "2FA when logging in would be good, send confirmation to user email before they can login."
+- INT-MGR [Closing]: "Just keep it simple. Most of my staff aren't very technical."
+- INT-DCT [System Q3]: "in basements and some condo car parks there's no signal."
+
+**Question:** Is email 2FA required on every login, on new devices only, or only for Manager and IT Administrator accounts?
+
+**Why it matters:** It is a trade-off between security (NFR-10) on one side and usability and offline access in the field (NFR-16, NFR-08) on the other.
+
+**Options:**
+1. 2FA on every login for all roles.
+2. 2FA on new devices only, with a remembered-device session.
+3. 2FA for the Manager and IT Administrator only.
 
 **Decision:** — · **Decided by:** — · **Decision source:** —
 
