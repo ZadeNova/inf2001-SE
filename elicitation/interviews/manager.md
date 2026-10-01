@@ -1,5 +1,7 @@
 # **Part A: Manager interview**
 
+> **Scope redaction (2026-10-01, DEC-45):** clauses concerning the retired calendar scope were removed at the requesting member's explicit instruction. Remaining transcript wording is retained.
+
 ## **Opening**
 
 **INTERVIEWER:  Hi, thank you for making time for this interview. We are the project team building the new job allocation and workforce system for the company. This session is being recorded and transcribed on Zoom so we can capture your requirements accurately. Is that okay with you?**
@@ -42,7 +44,7 @@
 
 **INTERVIEWER:  How is the servicing of vans planned and recorded?**   *[Process Q3]*
 
-**MANAGER:**  It's a fixed rotation. Every van goes to the workshop every two months, on the same date. In odd months, Van 1 goes on the 1st, Van 2 on the 11th and Van 3 on the 21st. In even months it's Vans 4, 5 and 6 on the same dates. That way we never have more than one van out at a time. On service days we have five vans, and every other day all six. If a date falls on a Sunday or public holiday, it moves to the next working day. The van is out for the whole day. I'd like the system to record these dates, so the van shows as unavailable and I can't allocate jobs to it that day.
+**MANAGER:**  It's a fixed rotation. Every van goes to the workshop every two months, on the same date. In odd months, Van 1 goes on the 1st, Van 2 on the 11th and Van 3 on the 21st. In even months it's Vans 4, 5 and 6 on the same dates. That way we never have more than one van out at a time. On service days we have five vans, and every other day all six. If a date falls on a Sunday, it moves to the next working day. The van is out for the whole day. I'd like the system to record these dates, so the van shows as unavailable and I can't allocate jobs to it that day.
 
 **INTERVIEWER:  Walk us through how you review and approve staff leave.**   *[Process Q4]*
 
@@ -102,9 +104,9 @@
 
 **MANAGER:**  No, separately. I want to see the three lowest technicians and the three lowest drivers, because I can't swap one for the other. Anyone on leave that week should be left out.
 
-**INTERVIEWER:  What scheduling rules apply on Sundays and public holidays?**   *[Clarification Q8]*
+**INTERVIEWER:  What scheduling rules apply on Sundays?**   *[Clarification Q8]*
 
-**MANAGER:**  We're closed on Sundays and public holidays, so there are no jobs and no roster on those days. The three-van minimum only applies Monday to Saturday. The IT administrator should load the public holiday list once a year, so the system blocks those dates. Very rarely a customer has an emergency on a Sunday, but I handle that outside the system.
+**MANAGER:**  We're closed on Sundays, so there are no jobs and no roster on those days. The three-van minimum only applies Monday to Saturday. Very rarely a customer has an emergency on a Sunday, but I handle that outside the system.
 
 ## **Conflicts and edge cases**
 
@@ -195,7 +197,7 @@
 | **F-03 Job lifecycle** | Manager enters jobs manually (no import). Fields: customer, phone, address and postal code, brand, type, units, model, preferred date and slot. Standard duration: servicing 1h/unit, installation 3h/unit (editable). Completion records actual times, remarks, follow-up flag. |
 | **F-04 Crew** | Driver + 1 brand technician (single-brand), or driver + 1 DCT or 2 brand technicians (mixed). Max 3. Crew fixed for the day. Crews are built first, then jobs are allocated. |
 | **F-05 Qualifications** | A brand certification covers install and service. Brand, cert number, expiry (2-year renewal, 1-month reminder). Technicians never drive. |
-| **F-06 Vans** | Fixed rotation on the 1st, 11th and 21st (odd months: Vans 1–3; even months: Vans 4–6). Closed Sun/PH; ITA loads the holiday list. Breakdowns: manager marks the van unavailable and its jobs become unassigned. Fewer than 3 vans gives a warning, not a block. |
+| **F-06 Vans** | Fixed rotation on the 1st, 11th and 21st (odd months: Vans 1–3; even months: Vans 4–6). Closed Sunday. Breakdowns: manager marks the van unavailable and its jobs become unassigned. Fewer than 3 vans gives a warning, not a block. |
 | **F-07 Allocation page** | Manager picks up to 3 staff to compare. Preferences = area, time of day, job type; used as a tie-breaker. Location = scheduled job area, not GPS. Block: unqualified, double booking, unavailable, invalid crew. Warn (can override): >40h, preference not met, <3 vans. |
 | **F-08 Workload** | Job duration + 30-min travel allowance per job; no lunch. Drivers get the same hours as their van. Week = Mon–Sat; >40h = overtime. Planned hours are replaced by actual hours on completion. Lowest three shown separately for technicians and drivers; staff on leave excluded. |
 | **F-09 Changes** | Rejection needs a reason (list + comment) and shows a warning, but no approval; the job returns to unassigned and the manager is notified. 48h notice preferred. No standby pool: the system suggests free, qualified staff and the manager assigns. Notifications on the landing page and by email; phone for same-day changes. |
