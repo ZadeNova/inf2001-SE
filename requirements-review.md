@@ -1,5 +1,7 @@
 # SRS review: findings and verdict
 
+> **Historical review updated for current scope (2026-10-01, DEC-45):** this review assessed an earlier SRS. Current scope and requirement status are in SRS v3.1.
+
 **Reviewed:** 30 September 2026 (Singapore time).  
 **Reviewer:** OpenAI Codex.  
 **Scope:** All 68 Functional Requirements (FR-01 to FR-68) and all 17 Non-Functional Requirements (NFR-01 to NFR-17) in [requirements.md](requirements.md).  
@@ -67,7 +69,7 @@ The quotations below preserve the brief's wording, including its typos. R8's ori
 | Brief §Company ¶1: “If employees miss the weekly deadline, requests would be dealt with on a case-by-case basis.” | FR-17 | Include first late submission, not only changing an existing entry. |
 | Brief §Company ¶2: “Only certified technicians for the brand are qualified to do the installation or servicing.” | FR-10, FR-31, FR-32, FR-44 | Brand checks are present. Expiry validity at the Job date needs an agreed rule. |
 | Brief §Company ¶3: “Currently, there are six vans.” | FR-27, FR-28, FR-51 | Initial fleet covered. “Currently” is not evidence for permanently hard-coding six as a maximum. |
-| Brief §Company ¶4: “there should be at least three vans can be on service daily except for Sunday and public holidays.” | FR-45, FR-49 | Draft allows an override and measures crewed Vans. Confirm the service-count definition and exception treatment in DEC-19. |
+| Brief §Company ¶4: “there should be at least three vans can be on service daily except for Sunday”. | FR-45, FR-49 | Draft allows an override and measures crewed Vans. Confirm the service-count definition and exception treatment in DEC-19. Current scope follows DEC-45. |
 | Brief §Company ¶4: “The minimum manpower for a van is two and the maximum is three.” | FR-30, FR-32, FR-44 | Bounds covered. Apply them to operational Vans and record the emergency exception to fixed daily Crews. |
 | Brief §Company ¶4: “All staff are given 7 days annual leave.” | FR-22 to FR-25 | Entitlement covered; yearly/no-carry-over details are supported by MGR [Process Q4]. Balance and cancellation boundaries still need definition. |
 | Brief §Company ¶5: “A van will be sent to the workshop for servicing every two months.” | FR-28, FR-29 | Detailed rotation is supported by MGR [Process Q3]. Input/generated dates and calendar-change effects remain open. |
@@ -124,13 +126,13 @@ Draft versus published roster visibility is not defined. Staff must be able to s
 
 FR-44 covers allocation and Crew changes. Existing Assignments can also become invalid after Job edits, Leave approval, Availability approval, emergency unavailability, Certification changes, Van breakdown or holiday updates.
 
-For each entry point, specify whether the change is blocked, accepted with affected Assignments flagged, or followed by reassignment. Do not silently apply the same outcome everywhere: FR-18's test expects a flag; FR-29 explicitly makes Jobs Unassigned. Preserve the approved history policy. Resolve these distinctions using DEC-09/DEC-10/DEC-13/DEC-14/DEC-19/DEC-34/DEC-35.
+For each active entry point, specify whether the change is blocked, accepted with affected Assignments flagged, or followed by reassignment. FR-18 is Withdrawn by DEC-45; FR-29 explicitly makes Jobs Unassigned. Preserve the approved history policy. Resolve the remaining distinctions using DEC-09/DEC-10/DEC-13/DEC-14/DEC-19/DEC-34/DEC-35.
 
 ### 3.8 Several acceptance notes add or omit consequential rules
 
 - **FR-34:** Only the model is labelled optional, and its test refuses omitted required fields. This appears to make notes mandatory. DCT [job info] says **“Notes are useful too”**, not that blank notes prevent Job creation.
 - **FR-11:** A 30-day fixture does not settle “one month”. Use the agreed calendar boundary.
-- **FR-28:** “Sunday moves to Monday” is insufficient if Monday is also a public holiday; test consecutive non-working days.
+- **FR-28:** Verify the Sunday-to-Monday rule under the current DEC-45 scope.
 - **FR-39/40:** “A Crew member” and optional photo capability do not settle whether only Technicians complete Jobs or whether the invoice photo is mandatory. MGR asks Technicians to complete with a photo; DEC-40 remains open.
 - **FR-15:** Available/Morning/Afternoon/Leave omits fully unavailable and not-yet-submitted states.
 - **FR-30/42:** Half-day Availability, a fixed daily Crew and Jobs longer than one Slot need consistent timing rules. Do not assume that a six-hour Installation fits a four-hour preferred Slot.
@@ -175,7 +177,7 @@ All rows below are subject to the global citation and adoption findings in secti
 | FR-06 | Forgotten password | Retain | ITA [Passwords] | Email-based recovery is supported. Retain; its recovery flow belongs alongside authentication and account-access handling. |
 | FR-07 | Lock and unlock | Revise | ITA [Passwords] | The lockout threshold is TBC; define reset/window behaviour and successful IT Administrator unlocking, not only a negative actor test. These are proposed acceptance details, not sourced numbers. |
 | FR-08 | Employee CSV import | Hold | ITA [Existing systems, Priorities]; DEC-36 | Hold import scope/schema and one-off versus ongoing operation. Manual creation does not inherently contradict migration. Invalid/duplicate rows and permission assignment need agreed outcomes. |
-| FR-09 | Public holidays | Retain | MGR [Clarification Q8]; DEC-12 | Yearly IT Administrator calendar entry and blocked dates are supported. Retain; calendar replacement effects on an existing roster need the shared validation policy. |
+| FR-09 | Non-working-day calendar | Withdrawn | DEC-45 | Removed from current scope; ID retained. |
 | FR-10 | Certification data | Hold | Brief §Company ¶2/4; MGR [Clarification Q2 follow-up, Q5]; DEC-35 | Data fields are supported; the maintenance actor is not identified by the primary transcript. Hold that actor/permission decision and link qualification to the agreed date-validity rule. |
 | FR-11 | Expiry reminder | Revise | MGR [Clarification Q2 follow-up] | Retain the reminder need, but define calendar-month arithmetic, trigger frequency and delivery channel. A 30-day test is not an agreed interpretation of one month. |
 | FR-12 | Certification scan | Retain | MGR [Clarification Q2 follow-up] | Supported explicitly as non-essential. Retain as Could; file-format/size choices remain acceptance proposals, not additional stakeholder facts. |
@@ -184,7 +186,7 @@ All rows below are subject to the global citation and adoption findings in secti
 | FR-15 | Manager Availability calendar | Revise | Brief §Intro ¶4 as clarified; MGR [System Q2, Clarification Q6] | Add fully unavailable/not-submitted display states. Specify the date boundary and whether R5 details are available from this view (DEC-03/06/08/30). |
 | FR-16 | Wednesday lock | Hold | Brief §Company ¶1; MGR [Process Q1, Clarification Q6 follow-up]; DEC-02 | The 12-day lead-in matches the Manager's example; it is not an arithmetic error. Hold its adoption, timezone and exact cutoff semantics before finalising tests. |
 | FR-17 | Late Availability request | Revise | Brief §Company ¶1; MGR [Conflicts Q2]; DCT [deadline follow-up] | Support first late submission as well as changes. Define pending/approved/rejected effects and conflicts with published Assignments (DEC-02/10/19). |
-| FR-18 | Emergency Staff unavailability | Revise | MGR [Process Q4, Conflicts Q2] | The test expects affected Assignments to be flagged, but the description does not specify propagation. State effects on Crews, Job lists, Workload and notifications. |
+| FR-18 | Manager Availability override | Withdrawn | DEC-45 | Staff set their own Availability or submit a Late Availability Change Request; ID retained. |
 | FR-19 | Copy prior Availability | Retain | DCT [Clarification Q2] | Explicit optional request. Retain as Could; copied dates must still obey FR-14/16 and the holiday rules. |
 | FR-20 | Manager excluded from Workload | Retain | MGR [Clarification Q1] | Explicitly supported. Retain. Do not infer unrelated Manager Leave entitlement or additional administrative roles from this statement. |
 | FR-21 | Weekly Job Preference | Revise | Brief R9/R5; DCT [Clarification Q4]; DRV [Q10]; MGR [ordering follow-up] | Fields and advisory use are supported. Define missing preference, edit deadline, area matching and week context under DEC-07/08. |
@@ -194,7 +196,7 @@ All rows below are subject to the global citation and adoption findings in secti
 | FR-25 | Leave balance | Revise | Brief §Company ¶4; MGR [Process Q4]; DCT [Process Q3] | Seven days/calendar year/no carry-over is grounded. Specify charging across years, insufficient balance, duplicate approval and cancellation effects (DEC-13). |
 | FR-26 | Crewable-Van count | Revise | MGR [Process Q4]; explicitly labelled derived | A useful derived proposal, not a direct feature request. Define whether the count uses existing Crews or feasible alternative Crews and which Brands/Slots constrain it (DEC-09/13/19). |
 | FR-27 | Van number/plate | Retain | Brief §Company ¶3; DRV [Q2]; MGR [Process Q3] | Required reference data is supported. Retain; this does not itself authorise a fleet CRUD interface or a permanent six-Van maximum. |
-| FR-28 | Workshop rotation | Revise | Brief §Company ¶5; MGR [Process Q3]; DEC-14 | Rotation details are grounded. Resolve manual versus generated dates and input actor; test consecutive Sundays/holidays, not only Sunday-to-Monday. |
+| FR-28 | Workshop rotation | Revise | Brief §Company ¶5; MGR [Process Q3]; DEC-14; DEC-45 | Rotation details are grounded. Resolve manual versus generated dates and input actor; verify Sunday-to-Monday movement. |
 | FR-29 | Breakdown/date range | Revise | MGR [Conflicts Q4]; DRV [Q8] | Unassignment is supported. Define remaining Crew availability, notifications and Workload updates; agree treatment of in-progress/Completed Jobs instead of unassigning every record indiscriminately. |
 | FR-30 | Daily Crew composition | Revise | Brief §Company ¶3/4; MGR [Process Q1, Clarification Q4 follow-up] | Revise 'each Van' to avoid requiring Crews for unavailable Vans. Make FR-33's emergency exception explicit and resolve half-day Availability versus fixed daily Crews (DEC-09/10). |
 | FR-31 | Technician cannot drive | Retain | MGR [Clarification Q3]; DCT [Clarification Q1] | Explicit separation of duties. Retain as a blocking rule. |
@@ -270,10 +272,10 @@ The numbers below are **local candidate labels**, not allocated `UC-nn` IDs. No 
 | 02 | Add Staff or Manager Account | IT Administrator | FR-02, FR-03 | Brief R11; ITA Account info/Permissions | Separate account creation from later role changes; keep mandatory field validation explicit. |
 | 03 | Maintain Account Access | IT Administrator | FR-03, FR-04, FR-05, FR-07 | DEC-17/34; ITA Role change/leaver | Role changes and unlocking are supported. Departure/removal is a held variant until DEC-34. |
 | 04 | Maintain Certifications | Actor TBC | FR-10, FR-11, FR-12 | Brief §Company ¶2/4; DEC-35; MGR Certification follow-up | Actor/permissions held. Expiry reminders are supporting timed behaviour; scan upload is Could. |
-| 05 | Maintain Public Holiday Calendar | IT Administrator | FR-09 | DEC-12; MGR Clarification Q8 | Specify calendar update and affected existing Assignments. |
+| 05 | Withdrawn calendar candidate | — | FR-09 (Withdrawn) | DEC-45 | No active goal; historical candidate label retired. |
 | 06 | Set Availability | Staff | FR-13, FR-14, FR-16, FR-19 | Brief R8 as clarified; DEC-01/02/03/30 | Add/edit main flow; copy is optional. Cover lock, missing entry and month boundary alternatives. |
 | 07 | Request Late Availability Change | Staff | FR-17 | Brief §Company ¶1; DEC-02; MGR Conflicts Q2 | Include first late submission, reason, pending state and existing Assignment conflict. |
-| 08 | Handle Availability Exceptions | Manager | FR-17, FR-18 | DEC-02/13; MGR Conflicts Q2/Process Q4 | Review late requests and record emergency absence as separately described variants; split if their flows become unwieldy. |
+| 08 | Handle Availability Exceptions | Manager | FR-17 (FR-18 Withdrawn) | DEC-02/13; DEC-45 | Review Late Availability Change Requests through the merged Manager request use case. |
 | 09 | Set Weekly Job Preference | Staff | FR-21 | Brief R9/R5; DEC-07 | Advisory preferences; missing and late-edit cases still need agreement. |
 | 10 | Request Leave | Staff | FR-22, FR-25 | Brief §Company ¶4; DEC-13 | Application with optional note; show balance and define invalid/overlapping request outcomes. |
 | 11 | Review Leave Request | Manager | FR-23, FR-24, FR-25, FR-26 | DEC-13/19; MGR Process Q4 | Approve/reject with reason; update balance/Availability and handle existing Assignments. |

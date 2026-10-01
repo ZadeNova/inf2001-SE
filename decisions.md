@@ -25,7 +25,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-09 | Van crew composition and capacity | Ambiguity | Stakeholder | **Decided** |
 | DEC-10 | Unit of assignment: Staff or Van crew | Ambiguity | Stakeholder | **Decided** |
 | DEC-11 | What a Job contains and who creates Jobs | Missing definition | Stakeholder | **Decided** |
-| DEC-12 | Working days: Saturday, Sunday, public holidays | Ambiguity | Stakeholder | **Decided** |
+| DEC-12 | Working days: Saturday and Sunday | Ambiguity | Stakeholder | **Amended by DEC-45** |
 | DEC-13 | How Leave is handled | Missing definition | Stakeholder | **Decided** |
 | DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | **Decided** |
 | DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | **Superseded by DEC-42** |
@@ -58,6 +58,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-42 | Job Rejection needs Manager approval (\"Staff submit, the Manager decides\") | Team decision (overrides interviews) | Team | **Decided** |
 | DEC-43 | Daily Standby Staff as backup for every Job | Team decision (overrides interview) | Team | **Decided** |
 | DEC-44 | Pay model (salary, shifts, commission) is background only | Scope | Team | **Decided** |
+| DEC-45 | Final 15-use-case structure and scope alignment | Team decision | Team | **Decided** |
+| DEC-46 | UC-15 uses Email/Phone | Team decision | Team | **Decided** |
+| DEC-47 | Consolidate requirements to minimum active baseline | Team decision | Team | **Decided** |
 
 ---
 
@@ -403,27 +406,26 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q2]; INT-DCT [Process Q1 follow-up: job info]
 
-### DEC-12: Working days: Saturday, Sunday, public holidays
+### DEC-12: Working days: Saturday and Sunday
 
 | Category | Ambiguity | Ask whom | Stakeholder | Status | **Decided** |
 |---|---|---|---|---|---|
 
-**Source text:** Brief §Company ¶4: "there should be at least three vans can be on service daily except for Sunday and public holidays."
+**Source text:** Brief §Company ¶4: "there should be at least three vans can be on service daily except for Sunday."
 
 **Question:**
 - Is Saturday a normal working day?
-- Does the Sunday and public holiday exception mean no work at all, or only that the minimum of three Vans does not apply?
-- Which public-holiday calendar applies, and who maintains it in the system?
+- Does the Sunday exception mean no work at all, or only that the minimum of three Vans does not apply?
 - What are the working hours per day?
 
 **Why it matters:** Availability calendars, the minimum-Vans check and Workload baselines (e.g. how 40 hours relates to a 5.5- or 6-day week) all depend on this.
 
 **Options:**
-1. Mon–Sat working, no work on Sundays or public holidays.
-2. Mon–Sat working, with Sunday and public holiday work allowed but no minimum.
+1. Mon–Sat working, no work on Sundays.
+2. Mon–Sat working, with Sunday work allowed but no minimum.
 3. A configurable working calendar maintained by the Manager or IT Administrator.
 
-**Decision:** Option 1: working days are Monday–Saturday, 09:00–18:00 with lunch 13:00–14:00; closed on Sundays and public holidays (no Jobs, no Crews). The IT Administrator loads the public holiday list yearly.
+**Decision:** Option 1: working days are Monday–Saturday, 09:00–18:00 with lunch 13:00–14:00; closed on Sundays (no Jobs, no Crews). Calendar-management scope was removed by DEC-45.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Clarification Q4], [Clarification Q8]
 
@@ -467,7 +469,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Van unavailability dates entered by the Manager.
 3. The system auto-schedules servicing every two months.
 
-**Decision:** The system **generates** Workshop Servicing dates from the fixed rotation (odd months Vans 1–3, even months Vans 4–6, on the 1st/11th/21st), moving a date forward day by day while it falls on a Sunday or public holiday. The Manager can adjust a generated date and can mark ad-hoc unavailability (breakdowns).
+**Decision:** The system **generates** Workshop Servicing dates from the fixed rotation (odd months Vans 1–3, even months Vans 4–6, on the 1st/11th/21st), moving a Sunday date to Monday. The Manager can adjust a generated date and can mark ad-hoc unavailability (breakdowns). Current scope follows DEC-45.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** INT-MGR [Process Q3], [Conflicts Q4]; generation chosen by the team
 
@@ -513,7 +515,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. A distinct actor with full user CRUD, including Certifications.
 3. Not a system actor; accounts are provisioned outside the system.
 
-**Decision:** A distinct actor. The IT Administrator creates accounts, imports employees once at go-live (DEC-36), changes roles and permissions, unlocks accounts, deactivates leavers (DEC-34), loads public holidays and views the audit log. Role changes take effect at the user's next login.
+**Decision:** A distinct actor. The IT Administrator creates accounts, imports employees once at go-live (DEC-36), changes roles and permissions, unlocks accounts, deactivates leavers (DEC-34), and views the audit log. Role changes take effect at the user's next login. Current scope follows DEC-45.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief R11; INT-ITA [Q: Onboarding], [Q: Permissions], [Q: Role change/leaver], [Q: Passwords], [Q: Audit]; INT-MGR [Clarification Q8]; session rule and audit viewer chosen by the team
 
@@ -567,7 +569,7 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 2. Hard-block Certification, warn on the rest.
 3. Warnings only, leaving the Manager to decide.
 
-**Decision:** The Manager's split. **Block:** uncertified or expired Certification, double booking, Staff unavailable/not submitted/on Leave, invalid Crew, unavailable Van, Sunday/public holiday. **Warn (overridable, override logged):** Workload over 40 hours, Job Preference not met, fewer than 3 Vans on service on a working day, Job start outside the customer's preferred Slot. A Van is *on service* when it has a valid Crew and at least one Job. When a later event (Leave approval, marking unavailable, Certification expiry, holiday added) invalidates a Crew, the affected person is removed from that Crew and the Van-day is flagged *Needs attention* for the Manager.
+**Decision:** The Manager's split. **Block:** uncertified or expired Certification, double booking, Staff unavailable/not submitted/on Leave, invalid Crew, unavailable Van, or Sunday. **Warn (overridable, override logged):** Workload over 40 hours, Job Preference not met, fewer than 3 Vans on service on a working day, Job start outside the customer's preferred Slot. A Van is *on service* when it has a valid Crew and at least one Job. When approved Leave, an approved Late Availability Change Request or Certification expiry invalidates a Crew, the affected person is removed and the Van-day is flagged *Needs attention*. Current scope follows DEC-45.
 
 **Decided by:** ZadeNova, adopting an AI-proposed resolution (Claude Code) for team review · **Decision date:** 2026-09-30 · **Decision source:** Brief §Company ¶2–4; INT-MGR [System Q4], [Conflicts Q1]; expiry, preferred-Slot warning, 'on service' and invalidation handling chosen by the team
 
@@ -766,7 +768,7 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 
 **Question:** Is travel counted as a fixed 30 minutes per Job, or as estimated driving time (route estimates or mileage logs)? If mileage logs are used, who records them?
 
-**Why it matters:** Workload drives the 40-hour highlight and the lowest-three lists (FR-52). Mileage-based travel would need new data entry and a new attribute.
+**Why it matters:** Workload drives the 40-hour highlight and the lowest-three lists (now FR-53 and FR-56 after DEC-47). Mileage-based travel would need new data entry and a new attribute.
 
 **Options:**
 1. A fixed 30-minute allowance per Job (the Manager's statement).
@@ -972,7 +974,7 @@ Raised on 2026-09-30 while drafting the SRS (AI-assisted, see `ai-usage-log.md`)
 - Who can mark a Job complete (any Crew member, or Technicians only)?
 - Is the invoice photo mandatory?
 
-**Why it matters:** This shapes the completion use case, its validation and the Workload formula (FR-39, FR-40, FR-54).
+**Why it matters:** This shapes the completion use case, its validation and the Workload formula (now FR-39 and FR-53 after DEC-47).
 
 **Options:**
 1. Actual Hours = end − start + 30 min. Technicians complete Jobs. The photo is optional.
@@ -1108,10 +1110,83 @@ These entries were made by the team on 2026-09-30 while reviewing SRS v2. They a
 
 **Decision:** Option 3.
 - Payroll and commission stay out of scope (SRS §1.2).
-- Workload stays in hours of Jobs (FR-52 to FR-55), as Brief R6 requires.
+- Workload stays in hours of Jobs (FR-53 and FR-55 after DEC-47), as Brief R6 requires.
 - No per-Technician Job attribution is added.
 
 **Decided by:** ZadeNova (team review) · **Decision date:** 2026-09-30 · **Decision source:** Team review of SRS v2.
+
+---
+
+## J. Final use-case structure
+
+### DEC-45: Final 15-use-case structure and scope alignment
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-01 by the requesting member during the authorised Codex drafting task.
+
+**Source text:** The requesting member supplied the finalized table of UC-01 to UC-15 and corrected UC-08 to “Extends UC-07”.
+
+**Question:** Which use-case IDs, names, actors and connections form the M1 baseline, and how should the SRS align with capabilities removed from that list?
+
+**Decision:** Adopt the supplied 15-use-case table as use-case list v2.0.
+
+- UC-01 combines Log In and Log Out.
+- UC-07 combines Crew formation, Standby selection, Job allocation, roster validation, Published-roster changes and publication. DEC-47 later removed automatic replacement suggestions.
+- UC-08 Compare Staff extends UC-07.
+- UC-09 combines Manager decisions for Leave, Late Availability Change and Job Rejection Requests.
+- UC-11 combines Availability and Job Preference.
+- UC-12 combines Staff submission and review of the three request types.
+- UC-15 remains included system behaviour; its actor and delivery channels are amended by DEC-46.
+- Audit-log viewing is documented within UC-04 and Manager Certification maintenance within UC-10 so FR-10 to FR-12 and FR-66 remain traceable.
+- FR-09 and FR-18 are Withdrawn because the finalized scope has no managed non-working-day calendar and no separate Manager operation to overwrite Staff Availability. FR-68 remains Withdrawn.
+- Working days are Monday–Saturday; Sunday remains non-working.
+- Earlier UC numbering is superseded by this finalized table. Current artefacts use the new IDs without creating tombstone files for the superseded draft list.
+
+**Decided by:** Requesting member (identity TBC) · **Decision date:** 2026-10-01 · **Decision source:** direct team instruction in this task.
+
+---
+
+### DEC-46: UC-15 uses Email/Phone
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-01 by the requesting member during the authorised Codex drafting task.
+
+**Source text:** The requesting member stated, "uc15 should be email/phone, update it".
+
+**Question:** Which actor and delivery channels should UC-15 use?
+
+**Decision:** UC-15 uses `Email/Phone` as its primary actor and delivers each required Staff notification by email and phone, in addition to the existing Landing Page notification. The exact phone mechanism remains open for team review.
+
+**Decided by:** Requesting member (identity TBC) — **Decision date:** 2026-10-01 — **Decision source:** direct team instruction in this task.
+
+---
+
+### DEC-47: Consolidate requirements to minimum active baseline
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-01 during review of the 15 finalized use cases.
+
+**Source text:** The requesting member asked to trim duplicate, vague and unnecessary requirements to the minimum, reviewed the proposed count, then instructed Codex to perform the edit on the same branch.
+
+**Question:** Which requirements remain standalone in the minimum SRS baseline?
+
+**Decision:** Adopt SRS v3.3 with **50 active FRs and 12 active NFRs**.
+
+- Consolidate 11 FRs into related active FRs or the permission model: FR-03, FR-11, FR-20, FR-31, FR-40, FR-47, FR-52, FR-54, FR-57, FR-65 and FR-69.
+- Remove 7 optional FRs from active scope: FR-08, FR-12, FR-19, FR-26, FR-48, FR-60 and FR-61.
+- Consolidate 4 NFRs: NFR-02, NFR-07, NFR-15 and NFR-17.
+- Remove NFR-04 from active scope as unnecessary implementation-level detail.
+- Preserve the three prior withdrawals FR-09, FR-18 and FR-68.
+- Retain all 26 retired IDs in compact history tables with `Withdrawn` status; IDs are not reused.
+- Update the 15 formal use cases and traceability matrix so they reference only the active baseline.
+
+**Decided by:** Requesting member (identity TBC) — **Decision date:** 2026-10-01 — **Decision source:** direct team instruction in this task.
 
 ---
 

@@ -1,5 +1,7 @@
 # **Part B: Dual Certified Technician interview**
 
+> **Scope redaction (2026-10-01, DEC-45):** the Answer-key summary was adjusted to the current scope. Remaining transcript wording is retained.
+
 ## **Opening**
 
 **INTERVIEWER:  Hi, thank you for joining. We are the project team building the new job allocation system. This session is being recorded and transcribed on Zoom so we can capture your needs accurately. Is that okay with you?**
@@ -127,7 +129,7 @@
 | **F-03 Job lifecycle** | Manager enters jobs manually (no import). Fields: customer, phone, address and postal code, brand, type, units, model, preferred date and slot. Standard duration: servicing 1h/unit, installation 3h/unit (editable). Completion records actual times, remarks, follow-up flag. |
 | **F-04 Crew** | Driver + 1 brand technician (single-brand), or driver + 1 DCT or 2 brand technicians (mixed). Max 3. Crew fixed for the day. Crews are built first, then jobs are allocated. |
 | **F-05 Qualifications** | A brand certification covers install and service. Brand, cert number, expiry (2-year renewal, 1-month reminder). Technicians never drive. |
-| **F-06 Vans** | Fixed rotation on the 1st, 11th and 21st (odd months: Vans 1–3; even months: Vans 4–6). Closed Sun/PH; ITA loads the holiday list. Breakdowns: manager marks the van unavailable and its jobs become unassigned. Fewer than 3 vans gives a warning, not a block. |
+| **F-06 Vans** | Fixed rotation on the 1st, 11th and 21st (odd months: Vans 1–3; even months: Vans 4–6). Closed Sunday. Breakdowns: manager marks the van unavailable and its jobs become unassigned. Fewer than 3 vans gives a warning, not a block. |
 | **F-07 Allocation page** | Manager picks up to 3 staff to compare. Preferences = area, time of day, job type; used as a tie-breaker. Location = scheduled job area, not GPS. Block: unqualified, double booking, unavailable, invalid crew. Warn (can override): >40h, preference not met, <3 vans. |
 | **F-08 Workload** | Job duration + 30-min travel allowance per job; no lunch. Drivers get the same hours as their van. Week = Mon–Sat; >40h = overtime. Planned hours are replaced by actual hours on completion. Lowest three shown separately for technicians and drivers; staff on leave excluded. |
 | **F-09 Changes** | Rejection needs a reason (list + comment) and shows a warning, but no approval; the job returns to unassigned and the manager is notified. 48h notice preferred. No standby pool: the system suggests free, qualified staff and the manager assigns. Notifications on the landing page and by email; phone for same-day changes. |

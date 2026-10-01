@@ -29,7 +29,7 @@
 
 ### Conversion notes
 
-The files were copied from the team's exports. The wording was not changed, rewritten, summarised or reordered. Only these export artefacts were fixed:
+The files were copied from the team's exports. Except for the explicitly recorded DEC-45 scope redactions in `manager.md`, the DCT Answer key and `document-analysis.md`, the wording was not changed, rewritten, summarised or reordered. The following export artefacts were also fixed:
 
 - **All four exported files** (`manager.md`, `dct.md`, `driver.md`, `document-analysis.md`): Google Docs backslash escapes were removed (`\[ \] \. \+ \= \> \< \)`), as were trailing spaces and whitespace-only lines.
 - **`driver.md`:** a stray `*.*` after "mileage logs" became `.`.

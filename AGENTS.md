@@ -6,7 +6,7 @@ This file applies to every contributor and every AI tool (Claude Code, Codex, et
 
 This is the INF2001 Introduction to Software Engineering (SIT) team project for a 5-person team. The client is an aircon retailer that wants a **web-based workload management system** for its aircon service team. The system will let Staff (Drivers and Technicians) see their Assignments and Workload, submit Availability and job preferences, and request Job rejections, which the Manager decides. It will let the Manager see manpower Availability up to 1 month in advance, see Workload at a glance and allocate Jobs weekly. IT Administrators add Staff and Managers. Weekly cycle: Availability is due Wednesday, planning starts Thursday and Assignments are issued Monday.
 
-The source of truth is [brief/project-description.md](brief/project-description.md), which is binding and must not be edited. The **Lecturer clarifications** section at its end overrides the original wording where they conflict. The rules and rubrics are in [brief/](brief/).
+The source of truth is [brief/project-description.md](brief/project-description.md), which is binding and must not be edited except for the explicit DEC-45 scope redaction already recorded in that file. The **Lecturer clarifications** section at its end overrides the original wording where they conflict. The rules and rubrics are in [brief/](brief/).
 
 | Milestone | Scope                                                                        | Deadline (report, slides, peer eval) |
 | --------- | ---------------------------------------------------------------------------- | ------------------------------------ |
@@ -45,7 +45,7 @@ Late work loses 20% per day, and anything more than 4 days late gets zero. See [
 | `DEC-nn`         | Decision or open question         | `DEC-01`        | `decisions.md`                      |
 | `MTG-nn`         | Stakeholder meeting               | `MTG-01`        | `elicitation/MTG-01-<date>.md`      |
 
-- Use two digits with zero padding. **IDs are never reused or renumbered.** Mark a dropped item `Status: Withdrawn` and keep its row.
+- Use two digits with zero padding. The pre-baseline 28-item draft was replaced by the finalized 15-item baseline under DEC-45. From use-case list v2.0 onward, **IDs are never reused or renumbered**; mark a dropped item `Status: Withdrawn` and keep its row.
 - Before creating an ID, check the highest existing one. If two people collide, the later commit renumbers.
 - Slugs are kebab-case, e.g. `UC-03-reject-job.md`.
 
@@ -57,7 +57,7 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
 | **Staff**                            | Field employees who receive Assignments: Drivers and Technicians. Managers are not Staff (DEC-18)                                                                        | employee, worker, user             |
 | **Manager**                          | Office-based user who records Jobs, forms Crews, allocates and publishes the Weekly Roster, and decides requests. May be several accounts with identical rights (DEC-18) | admin, supervisor                  |
-| **IT Administrator**                 | Manages accounts, roles, lockouts, public holidays and the audit log (Brief R11, DEC-17)                                                                                 | admin, sysadmin                    |
+| **IT Administrator**                 | Manages accounts, roles, lockouts and the audit log (Brief R11, DEC-17, DEC-45)                                                                                         | admin, sysadmin                    |
 | **Driver**                           | Staff member who drives a Van; the only role allowed to drive. There are 6                                                                                               | —                                  |
 | **Technician**                       | Staff member certified for one or both Brands; never drives. There are 11: 2 dual, 5 M Electric only, 4 Dicon only                                                       | engineer, installer                |
 | **Brand**                            | Aircon brand: `M Electric` or `Dicon` (exact spelling)                                                                                                                   | make, vendor                       |
