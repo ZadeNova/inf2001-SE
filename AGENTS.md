@@ -88,8 +88,40 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | **Workshop Servicing**               | Van maintenance day, generated from the two-monthly rotation (DEC-14)                                                                                                    | maintenance                        |
 | **Needs attention**                  | A Van-day whose Crew became invalid after a later event (DEC-19, FR-70)                                                                                                  | —                                  |
 | **Landing Page**                     | First page after login, role-specific (R2, R6, R7)                                                                                                                       | home, dashboard                    |
+| **Audit Log** | Records who, what and when for the changes specified in FR-66; only the IT Administrator may view it (DEC-17, DEC-53). | - |
+| **Notification** | A recipient's Landing Page item with handled state: Manager DashboardAlert (FR-56) or StaffMessage delivered through UC-15 (FR-64); channel-failure handling applies to Staff delivery (DEC-53, DEC-63). | - |
 
 When a new term is needed, add it here in the same commit and cite its source.
+
+### Sequence analysis classes (DEC-53)
+
+These boundary and control names identify analysis responsibilities used by the active sequence diagrams. They do not add stakeholder requirements or prescribe implementation services.
+
+| Class name | Responsibility and source |
+|---|---|
+| **LoginPage** | Login and password-reset interaction (UC-01, UC-02). Source: DEC-53; supplied sequence review section 3. |
+| **LandingPage** | Role-specific Landing Page interaction (UC-01, UC-10, UC-13). Source: DEC-53; supplied sequence review section 3. |
+| **AccountAdminPage** | Account creation and access-management interaction (UC-03, UC-04). Source: DEC-53; supplied sequence review section 3. |
+| **JobPage** | Manager Job-management interaction (UC-05). Source: DEC-53; supplied sequence review section 3. |
+| **VanPage** | Van and Workshop Servicing interaction (UC-06). Source: DEC-53; supplied sequence review section 3. |
+| **JobAllocationPage** | Weekly planning and Staff comparison interaction (UC-07, UC-08). Source: DEC-53; supplied sequence review section 3. |
+| **RequestReviewPage** | Manager Staff-request decision interaction (UC-09). Source: DEC-53; supplied sequence review section 3. |
+| **AvailabilityPage** | Staff Availability and Job Preference interaction (UC-11). Source: DEC-53; supplied sequence review section 3. |
+| **RequestPage** | Staff request-submission interaction (UC-12). Source: DEC-53; supplied sequence review section 3. |
+| **JobCompletionPage** | Technician Job-completion interaction (UC-14). Source: DEC-53; supplied sequence review section 3. |
+| **AuthController** | Coordinates login, reset and session flows (UC-01, UC-02). Source: DEC-53; supplied sequence review section 3. |
+| **AccountController** | Coordinates account creation and access changes (UC-03, UC-04). Source: DEC-53; supplied sequence review section 3. |
+| **JobController** | Coordinates Job create, link, edit and cancel flows (UC-05). Source: DEC-53; supplied sequence review section 3. |
+| **VanController** | Coordinates Van and Workshop Servicing flows (UC-06). Source: DEC-53; supplied sequence review section 3. |
+| **RosterController** | Coordinates Weekly Roster, Staff comparison and later Crew-event handling (UC-07, UC-08; SD-16). Source: DEC-53; supplied sequence review section 3. |
+| **RuleValidator** | Checks shared blocking rules and warnings (FR-44, FR-45). Source: DEC-53; supplied sequence review section 3. |
+| **RequestController** | Coordinates Staff request submission and Manager decisions (UC-09, UC-12). Source: DEC-53; supplied sequence review section 3. |
+| **DashboardController** | Coordinates Manager and Staff Landing Page data (UC-10, UC-13). Source: DEC-53; supplied sequence review section 3. |
+| **AvailabilityController** | Coordinates direct Availability and Job Preference submissions (UC-11). Source: DEC-53; supplied sequence review section 3. |
+| **CompletionController** | Coordinates Technician completion validation and saving (UC-14). Source: DEC-53; supplied sequence review section 3. |
+| **NotificationService** | Coordinates Landing Page, email and SMS notifications (UC-15). Source: DEC-53; supplied sequence review section 3. |
+
+External sequence actors: **Email Service** delivers email (UC-01/02/03/15; DEC-49/56). **SMS Gateway** delivers the SMS phone channel (UC-15; DEC-48/56). These realise the existing Email/Phone delivery actor and are not domain classes. **Clock** is the external system-event actor for Job start (SD-22) and daily Certification-expiry checks (SD-16); it is a secondary actor of UC-09 for lapse, and of FR-10/70 system behaviour for expiry; it is not a domain class or a separate use case (DEC-59, DEC-68).
 
 ## Diagram rules
 

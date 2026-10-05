@@ -1,0 +1,98 @@
+@startuml SD-13-view-my-assignments-and-workload
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-13: View My Assignments and Workload (UC-13)
+' Traces: UC-13; FR-25, FR-49, FR-53, FR-55, FR-58, FR-59, FR-63, FR-71; NFR-08
+' Sources: DEC-04, DEC-16, DEC-39, DEC-40, DEC-43; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Staff
+boundary ":LandingPage" as LDP
+control ":DashboardController" as DC
+entity "me:Staff" as ME
+entity ":WeeklyRoster" as WR
+entity ":Assignment" as ASG
+
+activate LDP
+alt online
+  Staff -> LDP : open()
+  LDP -> DC ++ : loadStaffHome(staff,currentWeek)
+  DC -> WR ++ : isPublished()
+  WR --> DC -- : true / false
+  DC -> ME ++ : leaveBalance(year)
+  ME --> DC -- : remaining days
+  alt current week Published
+    DC -> ME ++ : workload(week)
+    ME --> DC -- : weekly hours
+    DC -> ME ++ : monthlyWorkload(month)
+    ME --> DC -- : monthly hours
+    DC --> LDP : Published calendar and balances
+    LDP --> Staff : weekly calendar and Workload
+  else current week Draft
+    DC --> LDP : not yet published; Leave balance only
+    LDP --> Staff : no Draft Assignments shown
+  end
+  deactivate DC
+  opt switch to the next week
+    Staff -> LDP : selectWeek(nextWeek)
+    LDP -> DC ++ : loadStaffHome(staff, nextWeek)
+    DC -> WR ++ : isPublished()
+    WR --> DC -- : status
+    alt next week is Published
+      DC --> LDP : that week's Assignments
+    else next week is Draft
+      DC --> LDP : week not offered (FR-49)
+    end
+    deactivate DC
+  end
+  opt open a Published Assignment
+    Staff -> LDP : selectAssignment(assignment)
+    LDP -> DC ++ : assignmentDetails(assignment)
+    DC -> ASG ++ : getDetails()
+    ASG --> DC -- : Job, Van, Crew and request details
+    DC --> LDP -- : Assignment details (FR-59)
+  end
+else offline (NFR-08)
+  Staff -> LDP : open()
+  LDP -> LDP : loadCachedToday()
+  alt cache available
+    LDP --> Staff : today's Published Assignments
+  else no cache
+    LDP --> Staff : today's Assignments unavailable offline
+  end
+end
+deactivate LDP
+legend bottom
+Every Crew member receives Job credit: Planned for Assigned, Actual
+for Completed (FR-53).
+Standby counts 0 h until Crew placement; above 40 h is highlighted
+(FR-55, FR-71).
+endlegend
+@enduml

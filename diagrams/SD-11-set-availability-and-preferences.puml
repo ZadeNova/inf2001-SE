@@ -1,0 +1,103 @@
+@startuml SD-11-set-availability-and-preferences
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-11: Set Availability + Preferences (UC-11)
+' Traces: UC-11, UC-12; FR-13, FR-14, FR-16, FR-17, FR-21, FR-66
+' Sources: DEC-02, DEC-03, DEC-07, DEC-30; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Staff
+boundary ":RequestPage" as RP
+entity ":AuditLog" as AL
+boundary ":AvailabilityPage" as Page
+control ":AvailabilityController" as AVC
+entity ":Availability" as AV
+entity "new:Availability" as NEW
+entity ":JobPreference" as JP
+
+Staff -> Page : open(week)
+activate Page
+Page -> AVC ++ : loadWeek(staff, week)
+AVC --> Page -- : Slots, deadline and lock state
+alt week locked
+  Page --> Staff : direct edits refused
+  opt Staff requests a Late Availability Change
+    Staff -> Page : requestLateChange()
+    ref over Staff, RP, AL : SD-24
+    RP --> Page : request outcome
+  end
+else week open
+  loop for each edit
+    Staff -> Page : editAvailability(edit)
+    note right of Page : set a Slot; whole day sets both;\nclear removes an entry (FR-13)
+  end
+  opt Job Preference
+    Staff -> Page : setPreference(preference)
+  end
+  Staff -> Page : submit()
+  Page -> AVC ++ : save(edits, preference)
+  AVC -> AVC : checkWindowDeadline(dates,week)
+  alt invalid date or deadline passed
+    AVC --> Page : error; records unchanged
+  else valid
+    group atomic Availability and Job Preference save
+      loop for each changed Slot
+        alt clear entry
+          opt entry exists
+            AVC -> AV : clear()
+          end
+        else set Available / Unavailable
+          alt entry exists
+            AVC -> AV : setState(state)
+          else blank Slot
+            AVC -->> NEW ** : <<create>>(date, slot, state)
+          end
+        end
+      end
+      opt preference entered
+        AVC -> JP : save(areas, days, slot, jobType)
+      end
+      AVC -> AL : record(Staff, Availability changed)
+    end
+    AVC --> Page : saved
+  end
+  deactivate AVC
+  Page --> Staff : confirmation or error
+end
+deactivate Page
+legend bottom
+Today through the same date next month, inclusive; clamp at month end
+(FR-14).
+Lock: 18:00 Wednesday, 12 days before the week.
+Blank (Not submitted) counts as unavailable.
+Atomic save retains prior records on failure; retry handling follows
+NFR-09.
+endlegend
+@enduml

@@ -1,0 +1,110 @@
+@startuml SD-01-log-in-out
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-01: Log In/out (UC-01)
+' Traces: UC-01, UC-02; FR-01, FR-05, FR-07, FR-66; NFR-10, NFR-12
+' Round-2 detail sources: DEC-61.
+' Sources: DEC-17, DEC-18, DEC-41, DEC-45; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor User
+boundary ":LoginPage" as LP
+control ":AuthController" as AC
+entity ":Account" as ACC
+entity ":AuditLog" as AL
+actor "Email Service" as ES
+boundary ":LandingPage" as LDP
+
+opt forgot password
+  User -> LP : openReset()
+  ref over User, LP, AC, ACC, AL, ES : SD-02
+end
+User -> LP : logIn(email, password)
+activate LP
+LP -> AC ++ : logIn(email, password)
+AC -> AC : findAccountAndStatus(email)
+alt account missing, locked or inactive
+  AC --> LP : generic login failure
+else active, unlocked account
+  AC -> ACC ++ : checkCredentials(password)
+  ACC --> AC -- : valid / invalid
+  alt invalid password
+    AC -> ACC ++ : recordFailedAttempt()
+    ACC --> AC -- : failures in 15 min
+    opt 5 consecutive failures in 15 min
+      AC -> ACC : lock()
+      AC -> AL : record(User, account locked)
+    end
+    AC --> LP : generic login failure
+  else valid password
+    AC -> ACC ++ : isKnownDevice(device)
+    ACC --> AC -- : known / unknown
+    opt device not used in the last 30 days
+      AC -> ES : sendConfirmation(email)
+      ES --> AC : accepted / failed
+      alt email failed
+        AC --> LP : generic failure; retry later
+        LP --> User : retry login later
+      else email accepted
+        User -> LP : confirmDevice(code)
+        LP -> AC : confirmDevice(code)
+        AC -> AC : validateDeviceCode(code)
+      end
+    end
+    alt known device or email accepted and valid confirmation
+      opt new device
+        AC -> ACC : rememberDevice(device)
+      end
+      AC --> LP : session(role)
+      LP -> LDP : show(role)
+      LDP --> User : role-specific Landing Page
+    else email failed or confirmation code invalid or expired
+      AC --> LP : generic login failure; no session
+    end
+  end
+end
+deactivate AC
+LP --> User : login outcome
+deactivate LP
+opt authenticated session exists
+  User -> LDP : logOut()
+  activate LDP
+  LDP -> AC ++ : logOut(session)
+  AC --> LDP -- : session ended
+  LDP --> User : login page
+  deactivate LDP
+end
+legend bottom
+Email confirmation must succeed before a new-device login is
+authenticated (NFR-10).
+Confirmation-code lifetime remains open (DEC-61).
+Lockout lasts until the IT Administrator unlocks the Account (FR-07).
+endlegend
+@enduml

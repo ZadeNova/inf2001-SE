@@ -12,7 +12,7 @@
 | **Trigger** | Work on an Assigned Job has finished. |
 | **Linked requirements** | FR-38, FR-39, FR-53, NFR-08, NFR-09 |
 | **Source** | INT-DCT [Process Q1 follow-up: completion], [System Q3], [Conflicts Q3]; INT-MGR [Process Q1 follow-up: completion], [Clarification Q7]; DEC-40; DEC-47 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-14](../diagrams/SD-14-complete-job.puml) |
 | **Status** | Draft |
 
 ## Preconditions

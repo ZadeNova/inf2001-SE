@@ -1,0 +1,59 @@
+@startuml SD-30-confirm-roster-warnings
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 240
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-30: Confirm Roster Warnings (UC-07)
+' Traces: UC-07; FR-45, FR-53, FR-55, FR-66, FR-71
+' Sources: DEC-04, DEC-19, DEC-32, DEC-43, DEC-55, DEC-56; sequence-diagram-review.md.
+control ":Roster\nController" as RC
+control ":Rule\nValidator" as RV
+entity ":Staff" as ST
+
+[-> RC ++ : confirmWarnings(context)
+RC -> RV ++ : checkWarnings(context)
+RV -> ST ++ : workload(week)
+ST --> RV -- : existing hours
+RV -> RV : proposedWorkload(context, hours)
+RV --> RC -- : warnings / none
+alt warnings raised
+  RC -->] : warnings for Manager
+  [-> RC : confirmWarningChoice(choice)
+  RC -->] : override / cancel
+else no warnings
+  RC -->] : proceed
+end
+deactivate RC
+legend bottom
+Warning/choice gates connect to the Manager through
+JobAllocationPage in SD-07.
+FR-45: proposed Workload above 40 h, Job Preference, customer Slot,
+fewer than 3 Vans, incomplete Standby.
+This fragment saves nothing. Callers save and log overrides only
+after confirmation.
+endlegend
+@enduml

@@ -1,0 +1,104 @@
+@startuml SD-04-manage-user-access
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-04: Manage User Access (UC-04)
+' Traces: UC-04; FR-04, FR-05, FR-07, FR-49, FR-64, FR-66; NFR-09, NFR-12, NFR-13
+' Sources: DEC-17, DEC-34, DEC-45, DEC-53, DEC-56, DEC-58, DEC-60; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor "IT Administrator" as ITA
+boundary ":AccountAdminPage" as Page
+control ":AccountController" as AC
+entity ":Account" as ACC
+entity ":Crew" as Crew
+entity ":Assignment" as ASG
+entity ":Job" as Job
+control ":NotificationService" as NS
+entity ":AuditLog" as AL
+
+ITA -> Page : manageAccess(account, action)
+activate Page
+Page -> AC ++ : manageAccess(account, action)
+AC -> AC : checkAuthority()
+alt not IT Administrator
+  AC --> Page : refuse (NFR-12)
+else authorized
+  alt view audit log
+    AC -> AL ++ : search(filter)
+    AL --> AC -- : entries
+    AC --> Page : audit entries
+  else change access
+    group atomic account and future roster save
+      alt change role
+        AC -> ACC : setRole(newRole)
+        note right of ACC : new role takes effect at next login (FR-04)
+      else deactivate leaver
+        AC -> ACC : deactivate()
+      else unlock account
+        AC -> ACC : unlock()
+      end
+      opt deactivation or Staff becomes Manager
+        AC -> AC : findFutureCrews(user)
+        loop each future Crew containing the person
+          AC -> Crew : removeMember(user)
+          AC -> Crew : markNeedsAttention()
+          AC -> AL : record(IT Administrator, Crew removed; Needs attention)
+        end
+        AC -> AC : findFutureAssignments(user)
+        loop each future Assignment
+          AC -> ASG : endPlacement()
+          AC -> Job : markUnassigned()
+          AC -> AL : record(IT Administrator, Assignment ended; Unassigned)
+        end
+      end
+      AC -> AL : record(IT Administrator, account or role change)
+    end
+    alt save still fails after 3 retries
+      AC --> Page : Not saved; previous account and roster retained
+    else save committed
+      opt future Crew or Assignment changed
+        AC -> NS : notify(accountCleanup, affectedCrewAndStandby)
+        ref over NS : SD-15
+        NS --> AC : notification outcome
+      end
+      AC --> Page : updated state
+    end
+  end
+end
+deactivate AC
+Page --> ITA : result
+deactivate Page
+legend bottom
+Account cleanup unassigns future Jobs (FR-04/05); it does not use
+the FR-70 rule that keeps Jobs on the Van.
+Affected future Van-days are flagged Needs attention (DEC-60).
+SD-15 suppresses Draft roster delivery (FR-49, DEC-64).
+Past records remain for 12 months. Only IT Administrator can view Audit Log.
+endlegend
+@enduml

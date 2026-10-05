@@ -1,0 +1,160 @@
+@startuml CD-control
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam dpi 150
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor white
+skinparam classBorderColor black
+skinparam packageBackgroundColor white
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 30
+skinparam wrapWidth 210
+hide circle
+title CD-control: Sequence Control Classes
+' Traces: UC-01 to UC-15; CL IDs in traceability.md.
+' Round-3 sources: DEC-66, DEC-67, DEC-68.
+' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63.
+' Sources: DEC-53, DEC-55, DEC-56; adopted sequence-diagram review.
+class AuthController <<control>> {
+ +confirmDevice(code)
+ +findAccount(email)
+ +findAccountAndStatus(email)
+ +logIn(email, password)
+ +logOut(session)
+ +requestReset(email)
+ +resetPassword(token, password)
+ +validateDeviceCode(code)
+}
+class AccountController <<control>> {
+ +checkAuthority()
+ +createAccount(details)
+ +findFutureAssignments(user)
+ +manageAccess(account, action)
+ +validate(details)
+ +findFutureCrews(user)
+ +resendInitialLogin(account)
+}
+class JobController <<control>> {
+ +cancelJob(job)
+ +createJob(details)
+ +editJob(job, changes)
+ +linkJobs(job, otherJob)
+ +standardDuration(jobType, units)
+ +validate(details)
+ +checkLinkable(job, otherJob)
+ +expandLinkedJobs(job)
+}
+class VanController <<control>> {
+ +adjust(servicing, newDate)
+ +checkCrewsOn(van, generatedDate)
+ +checkOtherUnavailability(van, oldDate)
+ +generateServicing(month)
+ +markUnavailable(van, dates)
+ +moveToMonday(date)
+ +retainGeneratedMonth(month)
+ +rotationDate(van, month)
+ +saveVan(number, licencePlate)
+ +recordConflict(van, generatedDate)
+}
+class RosterController <<control>> {
+ +allocateJob(proposal)
+ +buildTimeline(week)
+ +checkAuthorityDate(proposal)
+ +compare(selection, date, week)
+ +confirmWarningChoice(choice)
+ +confirmWarnings(context)
+ +expandLinkedJobs(proposal)
+ +findEligibleStandby(date)
+ +formCrew(proposal)
+ +handleCrewInvalidation(staff, dates)
+ +loadWeek(week)
+ +locationOn(staff, date)
+ +nameStandby(proposal)
+ +publish(week)
+ +saveCrewOrStandby(proposal)
+ +checkCertificationExpiry(today)
+ +checkCrewsUsing(technician)
+ +findExpiredCertifications(today)
+ +retainPreviousState()
+}
+class RuleValidator <<control>> {
+ +checkAssignment(proposal)
+ +checkBlocking(job)
+ +checkCrew(proposal)
+ +checkStandby(staff, date)
+ +checkWarnings(context)
+ +proposedWorkload(context, hours)
+ +weekWorkload(week)
+}
+class RequestController <<control>> {
+ +approveLeave(request)
+ +checkAffectedCrews(staff, dates)
+ +checkLockedWeekAndSlots(changes)
+ +checkStillPending(request)
+ +confirm(choice)
+ +decideJobRejection(request, decision, reason)
+ +decideLateChange(request, decision, reason)
+ +decideLeave(request, decision, reason)
+ +findCrewsOn(staff, dates)
+ +hoursUntilStart(assignment)
+ +listPending()
+ +recheckStatusAndStart(request)
+ +rejectLeave(request, reason)
+ +submitLateChange(staff, changes, reason)
+ +submitLeave(staff, dates, note)
+ +submitRejection(staff, assignment, details)
+ +validateLeave(staff, dates)
+ +validateReasonAndExplanation(details)
+ +classifyShortNotice(hours)
+ +keepCurrentOutcome(request)
+ +onJobStart(assignment)
+ +pendingRejectionFor(assignment)
+ +expandLinkedJobs(assignment)
+ +refuseSubmission()
+ +retainPreviousState()
+}
+class DashboardController <<control>> {
+ +assignmentDetails(assignment)
+ +availabilityGrid(oneMonth)
+ +checkCrewsUsing(technician)
+ +collectAlerts(today)
+ +loadDashboard(currentWeek)
+ +loadStaffHome(staff, currentWeek)
+ +lowestThree(drivers, technicians)
+ +markHandled(alert)
+ +updateCertification(details)
+}
+class AvailabilityController <<control>> {
+ +checkWindowDeadline(dates, week)
+ +loadWeek(staff, week)
+ +save(edits, preference)
+}
+class CompletionController <<control>> {
+ +canComplete(user, job)
+ +checkRoleAndCrew(user, job)
+ +submitCompletion(job, details)
+ +validate(details)
+}
+class NotificationService <<control>> {
+ +notify(event, recipients)
+ +partitionByWeek(event, recipients)
+ +suppressDraftDelivery(event)
+}
+AuthController -[hidden]right-> AccountController
+AccountController -[hidden]right-> JobController
+AuthController -[hidden]down-> VanController
+VanController -[hidden]right-> RosterController
+RosterController -[hidden]right-> RuleValidator
+VanController -[hidden]down-> RequestController
+RequestController -[hidden]right-> DashboardController
+DashboardController -[hidden]right-> AvailabilityController
+RequestController -[hidden]down-> CompletionController
+CompletionController -[hidden]right-> NotificationService
+legend bottom
+Analysis responsibilities; domain entities are in CD-domain.
+Hidden links arrange boxes only; they are not domain associations.
+endlegend
+@enduml

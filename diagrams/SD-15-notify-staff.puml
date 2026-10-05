@@ -1,0 +1,85 @@
+@startuml SD-15-notify-staff
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-15: Notify Staff (UC-15)
+' Traces: UC-15; FR-49, FR-64, FR-71; NFR-01, NFR-09
+' Round-2 detail sources: DEC-62.
+' Sources: DEC-43, DEC-46, DEC-48, DEC-50; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+control ":NotificationService" as NS
+entity ":Notification" as NO
+actor "Email Service" as ES
+actor "SMS Gateway" as SMS
+
+[-> NS ++ : notify(event, recipients)
+NS -> NS : partitionByWeek(event, recipients)
+loop each affected week or non-roster event
+  alt roster-related event for a Draft week
+    NS -> NS : suppressDraftDelivery(event)
+  else affected week Published or event not roster-related
+    loop for each recipient
+      NS -->> NO ** : <<create>>(recipient, event)
+      note right of NO : Landing Page message is kept
+      NS -> ES : sendEmail(recipient, message)
+      ES --> NS : accepted / failed
+      loop up to 3 retries while email failed
+        NS -> ES : sendEmail(recipient, message)
+        ES --> NS : accepted / failed
+      end
+      opt email still failed
+        NS -> NO : markChannelFailed(email)
+      end
+      NS -> SMS : sendSMS(recipient, message)
+      SMS --> NS : accepted / failed
+      loop up to 3 retries while SMS failed
+        NS -> SMS : sendSMS(recipient, message)
+        SMS --> NS : accepted / failed
+      end
+      opt SMS still failed
+        NS -> NO : markChannelFailed(SMS)
+      end
+    end
+  end
+end
+[<-- NS -- : notification outcome
+legend bottom
+Mixed-date events are partitioned by affected week before delivery;
+Draft payloads and recipients never enter the delivery loop (DEC-64).
+Email Service and SMS Gateway realise the existing Email/Phone actor
+(DEC-48, DEC-56).
+Notify only after the business event is saved; delivery failure does
+not undo it.
+Saved changes are visible within 60 s (NFR-01);
+acknowledgement/deduplication remain open (DEC-62).
+Draft roster events create no Staff message and send no email/SMS.
+Publication sends the published roster notification (FR-49, DEC-64).
+endlegend
+@enduml

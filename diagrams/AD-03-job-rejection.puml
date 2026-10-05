@@ -1,0 +1,81 @@
+@startuml AD-03-job-rejection
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 145
+skinparam dpi 180
+title AD-03: Job Rejection and Subsequent Reassignment
+' Traces: UC-12 A3, UC-09 A3, UC-07, UC-13, UC-15; FR-41/44/45/46/62/63/64; NFR-09.
+' Sources: DEC-10, DEC-16, DEC-19, DEC-42, DEC-43, DEC-46.
+' User choices 2026-10-03: Short notice <48 h; exactly 48 h normal; SMS; lapse has status updates only.
+|Staff|
+start
+:Select Job; read warning;
+if (Proceed?) then (yes)
+  :Enter reason / explanation;
+else (cancel)
+  stop
+endif
+|System|
+:Save valid Pending request\n(UC-12);
+fork
+  |System|
+  :Wait until Job start;
+  if (Still Pending?) then (yes)
+    :Set Lapsed;
+  else (no)
+    :End timer;
+    end
+  endif
+fork again
+  |Manager|
+  :Review and choose\nApprove or Refuse (UC-09);
+  |System|
+  :Atomically save decision;\nif Approved, unassign Job;
+  if (Decision saved?) then (yes)
+  else (no)
+    :Show error / current status;
+    end
+  endif
+end merge
+|System|
+if (Outcome?) then (Approved)
+  :Update Workload;\nnotify affected Staff;
+  |Manager|
+  if (Reallocate now?) then (later)
+    |System|
+    :Keep Job Unassigned;
+  else (yes)
+    |Manager|
+    :Choose Van-day, Crew\nand start (UC-07);
+    |System|
+    :Validate and reassign;\nnotify Staff;
+  endif
+else (Refused / Lapsed)
+  |System|
+  :Keep Assignment;\nnotify if Refused;
+endif
+|Staff|
+:View outcome and\ncurrent Assignment (UC-13);
+stop
+legend bottom
+Own Published Assigned Job only. Other needs a comment; less than 48 h needs an explanation.
+Decision save requires Pending and before Job start; lapse competes atomically.
+No Pending request until saved. Save failures: 3 retries, then retry / contact IT Administrator.
+Update Staff / Manager views on lapse. Notifications: Landing Page, email and SMS.
+endlegend
+
+@enduml

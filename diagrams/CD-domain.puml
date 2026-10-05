@@ -1,0 +1,252 @@
+@startuml CD-domain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 190
+skinparam dpi 180
+title CD-domain: Workload Management Domain Classes
+' Traces: UC-01 to UC-15; SRS v3.3. Class IDs use CL- plus each alias below.
+' Sources: DEC-02/03/07/09/10/13/14/16/17/18/19/35/39/40/42/43/45/46/48/49/50/51/52/53/54/55/56.
+' logOut follows UC-01 and SD-01.
+' C3 operations: sequence-diagrams.md section 4; Audit Log FR-66; Notification FR-56/64.
+' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63; sequence-diagram-review-round-2.md.
+' Updated signatures follow the adopted sequence review (DEC-56).
+' User decisions 2026-10-03: FR-70 is the later-event exception; Short notice <48 h; email initial password; SMS.
+left to right direction
+hide circle
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor white
+skinparam classBorderColor black
+skinparam packageBackgroundColor white
+skinparam noteBackgroundColor white
+skinparam noteBorderColor black
+skinparam linetype ortho
+skinparam nodesep 65
+skinparam ranksep 90
+abstract class User {
+ -name: String
+ -email: String
+ -contactNumber: String
+ +logIn()
+ +logOut()
+}
+abstract class Staff {
+ +workload(week): Decimal
+ +leaveBalance(year): Integer
+ +monthlyWorkload(month): Decimal
+ +availabilityFor(week)
+ +preferenceFor(week)
+}
+class Manager {
+ +allocateJob()
+ +decideRequest()
+}
+class "IT Administrator" as ITAdministrator {
+ +createAccount()
+ +manageAccess()
+}
+class Driver
+class Technician {
+ +completeJob()
+ +certifications()
+}
+class Account {
+ -passwordHash: String
+ -role: Role
+ -active: Boolean
+ -locked: Boolean
+ +checkCredentials(password)
+ +isKnownDevice(device)
+ +rememberDevice(device)
+ +createResetToken()
+ +validateResetToken(token)
+ +setPassword(password)
+ +setRole(role)
+ +deactivate()
+ +unlock()
+ +recordFailedAttempt()
+ +lock()
+ +invalidateToken()
+}
+class Availability {
+ -date: Date
+ -slot: Slot
+ -state: AvailabilityState
+ +setState(state)
+ +clear()
+}
+class "Job Preference" as JobPreference {
+ -weekStartDate: Date
+ -areas: Set<String>
+ -days: Set<Date>
+ -slot: Slot [0..1]
+ -jobType: JobType [0..1]
+ +save(areas, days, slot, jobType)
+}
+class "Leave Request" as LeaveRequest {
+ -dates: Set<Date>
+ -status: RequestStatus
+ -decisionReason: String [0..1]
+ +approve()
+ +reject(reason)
+}
+class "Late Availability\nChange Request" as LateAvailabilityChangeRequest {
+ -slotChanges: Set<Availability>
+ -reason: String
+ -status: RequestStatus
+ +approve()
+ +reject(reason)
+}
+class "Job Rejection\nRequest" as JobRejectionRequest {
+ -reason: RejectionReason
+ -comment: String [0..1]
+ -explanation: String [0..1]
+ -shortNotice: Boolean
+ -status: RequestStatus
+ +approve()
+ +refuse(reason)
+ +lapse()
+}
+class Certification {
+ -brand: Brand
+ -number: String
+ -expiryDate: Date
+ +update(number, expiryDate)
+ +validOn(today)
+}
+class Van {
+ -number: Integer
+ -licencePlate: String
+ -unavailableDates: Set<Date>
+ +save(number, licencePlate)
+ +markUnavailable(dates)
+ +markAvailable(date)
+}
+class "Workshop Servicing" as WorkshopServicing {
+ -generatedDate: Date
+ -scheduledDate: Date [0..1]
+ +schedule(date)
+ +reschedule(date)
+}
+class Crew {
+ -date: Date
+ -needsAttention: Boolean
+ +removeMember(staff)
+ +changeMembers(members)
+ +markNeedsAttention()
+ +release()
+}
+class "Weekly Roster" as WeeklyRoster {
+ -weekStartDate: Date
+ -status: RosterStatus
+ +publish()
+ +isPublished()
+}
+class Assignment {
+ -startTime: Time
+ -currentPlacement: Boolean
+ +/date: Date
+ +endPlacement()
+ +isEligible(staff)
+ +getDetails()
+ +hasPendingRejection()
+}
+class Job {
+ -address: String
+ -brand: Brand
+ -jobType: JobType
+ -durationHours: Decimal
+ -status: JobStatus
+ -actualStart: Time [0..1]
+ -actualEnd: Time [0..1]
+ +plannedHours(): Decimal
+ +actualHours(): Decimal
+ +markAssigned()
+ +markUnassigned()
+ +changeDetails(changes)
+ +link(job)
+ +cancel()
+ +complete(details)
+}
+class Standby {
+ -date: Date
+ +endPlacement()
+}
+class "Audit Log" as AuditLog {
+ -who: String
+ -what: String
+ -when: DateTime
+ +record(actor, action, target)
+ +record(actor, action)
+ +search(filter)
+}
+enum NotificationKind {
+ DashboardAlert
+ StaffMessage
+}
+class Notification {
+ -kind: NotificationKind
+ -message: String
+ -handled: Boolean
+ +markHandled()
+ +markChannelFailed(channel)
+}
+User <|-- Staff
+User <|-- Manager
+User <|-- ITAdministrator
+Staff <|-- Driver
+Staff <|-- Technician
+User "1" -- "1" Account
+Staff "1" -- "0..*" Availability
+Staff "1" -- "0..*" JobPreference
+Staff "1" -- "0..*" LeaveRequest
+Staff "1" -- "0..*" LateAvailabilityChangeRequest
+Staff "1" -- "0..*" JobRejectionRequest
+Technician "1" -- "1..2" Certification
+Van "1" -- "0..*" WorkshopServicing
+Van "1" -- "0..*" Crew
+Crew "0..*" -- "0..1" Driver
+Crew "0..*" -- "0..2" Technician
+WeeklyRoster "1" -- "0..*" Crew
+WeeklyRoster "1" -- "0..*" Assignment
+Crew "1" -- "0..*" Assignment
+Job "1" -- "0..*" Assignment
+Assignment "0..*" -- "0..3" Staff : credited Staff
+Assignment "1" -- "0..*" JobRejectionRequest
+WeeklyRoster "1" -- "0..*" Standby
+Staff "1" -- "0..*" Standby
+Job "0..*" -- "0..*" Job : Linked Jobs
+Staff "1" -- "0..*" Notification : recipient {xor}
+Manager "1" -- "0..*" Notification : recipient {xor}
+note right of Notification
+ Each Notification has one recipient:
+ Staff or Manager, not both ({xor}).
+ DashboardAlert: Manager operational alert (SD-10).
+ StaffMessage: Staff delivery event (SD-15).
+ Only StaffMessage uses email/SMS delivery.
+ Sources: FR-56, FR-64; DEC-53, DEC-63.
+end note
+legend bottom
+One Crew per Van/date; one Weekly Roster per week; one Job Preference per Staff/week.
+At most one Pending Job Rejection Request per Assignment (DEC-58); decided requests remain history.
+Availability is unique per Staff/date/Slot. One current Assignment per Job; older placements are history.
+Valid Crew: 1 Driver + 1-2 Technicians. FR-70 allows temporary gaps marked Needs attention.
+Completed-work credit survives Crew changes. Standby is uncrewed, available all day and contributes 0 h.
+Boundary/control classes and operations are in CD-boundary and CD-control (DEC-53/55/56).
+See section 4.1 for responsibilities, remaining attributes and source references.
+endlegend
+
+@enduml

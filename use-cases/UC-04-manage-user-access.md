@@ -7,12 +7,12 @@
 | **ID** | UC-04 |
 | **Name** | Manage User Access |
 | **Primary actor** | IT Administrator |
-| **Secondary actors** | None |
+| **Secondary actors** | Email/Phone through UC-15 |
 | **Description** | The IT Administrator changes roles, unlocks accounts, deactivates leavers and reviews the access-related audit record. |
 | **Trigger** | An account's access, role or lock state requires administration. |
 | **Linked requirements** | FR-04, FR-05, FR-07, FR-66, NFR-12, NFR-13 |
-| **Source** | INT-ITA [Q: Permissions], [Q: Role change/leaver], [Q: Retention], [Q: Passwords], [Q: Audit]; DEC-17; DEC-34; DEC-45; DEC-47 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Source** | INT-ITA [Q: Permissions], [Q: Role change/leaver], [Q: Retention], [Q: Passwords], [Q: Audit]; DEC-17; DEC-34; DEC-45; DEC-47; DEC-58; DEC-60 |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-04](../diagrams/SD-04-manage-user-access.puml) |
 | **Status** | Draft |
 
 ## Preconditions
@@ -67,6 +67,8 @@
 
 - Historical records are retained for 12 months from their date (NFR-13).
 - The finalized list merges audit-log viewing into this access-management goal (DEC-45).
+
+- Account deactivation and Staff-to-Manager changes atomically remove future Crew membership, flag affected Van-days Needs attention, end future Assignments, make the Jobs Unassigned and audit the changes. Notify affected Crew/eligible Standby after commit; hide Draft roster events through SD-15 (DEC-58/60).
 
 ## Open questions
 

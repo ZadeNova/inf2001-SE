@@ -1,0 +1,89 @@
+@startuml SD-16-handle-invalidated-crew
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-16: Handle Invalidated Crew and Certification Expiry (FR-70, no UC)
+' Traces: UC-09, UC-10 shared fragment; FR-10, FR-49, FR-56, FR-64, FR-66, FR-70, FR-71; NFR-09
+' Sources: DEC-19, DEC-43, DEC-51, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor "Clock" as Clock <<system>>
+control ":RosterController" as RC
+entity ":Certification" as CE
+entity ":Crew" as Crew
+control ":NotificationService" as NS
+entity ":AuditLog" as AL
+
+alt clock event: start of day after Certification expiry
+  Clock -> RC ++ : checkCertificationExpiry(today)
+  RC -> RC : findExpiredCertifications(today)
+  loop each expired Certification
+    RC -> CE ++ : validOn(today)
+    CE --> RC -- : false (expiryDate < today)
+    RC -> RC : checkCrewsUsing(technician)
+    opt current or future Crew made invalid
+      group atomic expiry and Crew save
+        loop each affected Crew
+          RC -> Crew : removeMember(technician)
+          RC -> Crew : markNeedsAttention()
+          RC -> AL : record(Clock, Crew removed; Needs attention)
+          RC -> RC : findEligibleStandby(date)
+        end
+      end
+      alt save still fails after 3 retries
+        RC -> RC : retainPreviousState()
+      else transaction committed
+        RC -> NS : notify(crewEvents, removed Staff and eligible Standby)
+        ref over NS : SD-15
+        NS --> RC : notification outcome
+      end
+    end
+  end
+  RC --> Clock -- : check outcome
+else called by an approval or Certification edit
+  [-> RC ++ : handleCrewInvalidation(staff, dates)
+  group joins the caller's atomic save (SD-10, SD-20 or SD-21)
+    loop each affected Crew made invalid
+      RC -> Crew : removeMember(staff)
+      RC -> Crew : markNeedsAttention()
+      RC -> AL : record(actor, Crew removed; Needs attention)
+      RC -> RC : findEligibleStandby(date)
+    end
+  end
+  [<-- RC -- : Van-days flagged, crewEvents and recipients
+end
+legend bottom
+Clock checks at 00:00 after expiryDate; expiryDate itself is valid
+(FR-10, DEC-59). Only invalid Crews are changed; Jobs stay on the Van.
+Approval/edit callers commit Crew changes with their own changes,
+then deliver returned crewEvents through SD-15. No delivery here
+before the caller commits. The actor is carried in the call context.
+SD-15 hides Draft roster events.
+Account cleanup unassigns Jobs separately in SD-04 (DEC-60).
+endlegend
+@enduml

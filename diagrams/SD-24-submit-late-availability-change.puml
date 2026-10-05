@@ -1,0 +1,71 @@
+@startuml SD-24-submit-late-availability-change
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-24: Submit Late Availability Change (UC-12)
+' Traces: UC-12; FR-17, FR-56, FR-66; NFR-09
+' Sources: DEC-02; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Staff
+boundary ":RequestPage" as Page
+control ":RequestController" as RQ
+entity ":LateAvailabilityChangeRequest" as LAC
+entity ":AuditLog" as AL
+
+[-> Page : open(requestType, context)
+activate Page
+Page --> Staff : Late-change form and own request statuses
+Staff -> Page : submitLateChange(changes, reason)
+Page -> RQ ++ : submitLateChange(staff, changes, reason)
+RQ -> RQ : checkLockedWeekAndSlots(changes)
+alt missing reason or invalid Slots
+  RQ --> Page : refused; no request
+else valid
+  group atomic request save
+    RQ -->> LAC ** : <<create>>(staff, changes, reason)
+    RQ -> AL : record(Staff, Late change submitted)
+  end
+  alt save still fails after 3 retries
+    RQ --> Page : Not saved; retry / contact IT Administrator
+  else saved
+    RQ --> Page : Pending on Staff and Manager Landing Pages
+  end
+end
+deactivate RQ
+Page --> Staff : current outcome
+[<-- Page : request outcome
+deactivate Page
+legend bottom
+Entry gate: Staff navigation or the calling Availability page.
+Submitting leaves Availability unchanged. Only the Manager decides and
+applies the change (FR-17).
+Failed save creates no usable request; prior Availability remains.
+endlegend
+@enduml

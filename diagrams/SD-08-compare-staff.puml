@@ -1,0 +1,80 @@
+@startuml SD-08-compare-staff
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-08: Compare Staff (UC-08)
+' Traces: UC-08, UC-07; FR-43, FR-55
+' Sources: DEC-04, DEC-06, DEC-08, DEC-35; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":JobAllocationPage" as Page
+control ":RosterController" as RC
+entity "s:Staff" as ST
+
+[-> Page : compareStaff(selection, date)
+activate Page
+Page -> RC ++ : compare(selection, date, week)
+alt more than three Staff selected
+  RC --> Page : refuse fourth selection
+else one to three Staff selected
+  loop for each selected Staff member
+    RC -> ST ++ : availabilityFor(week)
+    ST --> RC -- : Slots for day and week
+    RC -> ST ++ : workload(week)
+    ST --> RC -- : hours
+    RC -> ST ++ : preferenceFor(week)
+    ST --> RC -- : Job Preference
+    opt Technician
+      RC -> ST ++ : certifications()
+      ST --> RC -- : Brands and expiry dates
+    end
+    RC -> RC : locationOn(staff, date)
+  end
+  RC --> Page : comparison data
+  Page --> Manager : comparison; highlight above 40 h
+  alt choose Staff
+    Manager -> Page : selectStaff(staff)
+  else close comparison
+    Manager -> Page : close()
+  end
+end
+deactivate RC
+[<-- Page : selected Staff / closed
+deactivate Page
+legend bottom
+Five items (FR-43): day/week Availability, week Workload,
+Certification expiry,
+Job Preference and postal districts of other Jobs that day, or No
+Jobs.
+When s is a Technician, certifications() is its Technician operation.
+The same Staff object supplies all comparison data.
+Comparison never allocates a Job automatically.
+endlegend
+@enduml

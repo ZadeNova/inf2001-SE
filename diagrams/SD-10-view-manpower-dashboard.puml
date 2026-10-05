@@ -1,0 +1,112 @@
+@startuml SD-10-view-manpower-dashboard
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-10: View Manpower Dashboard (UC-10)
+' Traces: UC-10; FR-10, FR-15, FR-55, FR-56, FR-66, FR-70; NFR-09
+' Round-2 detail sources: DEC-59, DEC-63.
+' Sources: DEC-04, DEC-05, DEC-30, DEC-35, DEC-51; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":LandingPage" as LDP
+control ":DashboardController" as DC
+entity ":Staff" as ST
+entity "alert:Notification" as NO
+control ":RosterController" as RC
+entity ":Certification" as CE
+control ":NotificationService" as NS
+entity ":AuditLog" as AL
+
+Manager -> LDP : open()
+activate LDP
+LDP -> DC ++ : loadDashboard(currentWeek)
+loop for each Driver and Technician
+  DC -> ST ++ : workload(week)
+  ST --> DC -- : hours
+end
+DC -> DC : lowestThree(drivers,technicians)
+DC -> DC : collectAlerts(today)
+DC --> LDP -- : dashboard data
+LDP --> Manager : Workload chart; 40 h line
+opt switch to Planning Week
+  Manager -> LDP : selectWeek(planningWeek)
+  LDP -> DC ++ : loadDashboard(planningWeek)
+  DC --> LDP -- : data
+end
+opt view Availability
+  Manager -> LDP : openAvailability()
+  LDP -> DC ++ : availabilityGrid(oneMonth)
+  DC --> LDP -- : five-state grid (FR-15)
+end
+opt handle an alert
+  Manager -> LDP : markHandled(alert)
+  LDP -> DC ++ : markHandled(alert)
+  DC -> NO : markHandled()
+  DC --> LDP -- : alert removed
+end
+opt maintain Certification
+  Manager -> LDP : updateCertification(details)
+  LDP -> DC ++ : updateCertification(details)
+  group atomic Certification and Crew save
+    DC -> CE : update(number, expiryDate)
+    DC -> DC : checkCrewsUsing(technician)
+    opt Crew invalid for its Jobs
+      DC -> RC : handleCrewInvalidation(staff, dates)
+      ref over RC, CE, NS, AL : SD-16
+      RC --> DC : crewEvents and recipients
+    end
+    DC -> AL : record(Manager, Certification edited)
+  end
+  alt save still fails after 3 retries
+    DC --> LDP : Not saved; previous Certification and Crew retained
+  else transaction committed
+    opt Crew changes saved
+      DC -> NS : notify(crewEvents, crewRecipients)
+      ref over NS : SD-15
+      NS --> DC : notification outcome
+    end
+    DC --> LDP : saved
+  end
+  deactivate DC
+end
+deactivate LDP
+legend bottom
+Lowest three excludes approved Leave; ties use name (FR-56).
+Alerts: Vans/Crews/Standby, Unassigned count, requests, Needs
+attention,
+account-change Unassigned Jobs and Certifications expiring within 1
+month.
+Alerts are Manager Notifications of kind DashboardAlert (DEC-63).
+These alerts are not sent through SD-15.
+Clock-driven Certification expiry is drawn in SD-16 (DEC-59).
+Expiry equal to Job date is valid (FR-10). Save failures follow
+NFR-09.
+endlegend
+@enduml

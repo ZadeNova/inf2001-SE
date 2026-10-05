@@ -1,0 +1,74 @@
+@startuml AD-01-weekly-roster
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 260
+skinparam dpi 180
+title AD-01: Weekly Roster Preparation and Publishing
+' Traces: UC-07, UC-08, UC-13, UC-15; FR-30/32/33/41-46/49-51/53/71.
+' Sources: DEC-09, DEC-10, DEC-16, DEC-19, DEC-31, DEC-32, DEC-39, DEC-43, DEC-45, DEC-46.
+' SMS chosen by user on 2026-10-03. Detailed guards and exceptions remain in UC-07.
+|Manager|
+start
+:Open Planning Week or
+current / future Published week;
+|System|
+:Show Availability, Workload,
+Vans and Unassigned Jobs;
+|Manager|
+repeat
+:Prepare Crew / Standby / Job changes,
+or choose Publish;
+if (Compare Staff?) then (yes)
+  :Compare up to three Staff (UC-08);
+else (no)
+endif
+|System|
+:Check authority and blocking rules;
+if (Blocking error?) then (yes)
+ :Explain error; retain roster;
+else (no)
+ :Show Workload and warnings;
+ |Manager|
+ :Confirm change and warning overrides;
+ |System|
+ :Save change / publication
+and audit successful changes;
+ if (Save successful?) then (yes)
+  :Notify Staff for Published events (UC-15)\nKeep Draft hidden from Staff;
+ else (no)
+  :Retain previous roster
+and show retry / support advice;
+ endif
+endif
+|Manager|
+repeat while (More roster actions?) is (yes) not (no)
+|System|
+if (Roster status?) then (Draft)
+ |Manager|
+ :Review saved Draft;
+else (Published)
+ |Staff|
+ :View Assignments, Standby
+and Workload (UC-13);
+endif
+stop
+legend bottom
+Planning starts Thursday; normal publication is Monday before the Planning Week.
+Standby must be Available all day and outside every Crew; missing cover only warns.
+Notifications: Landing Page, email and SMS. Save failures: up to 3 retries, then retry / IT Administrator.
+endlegend
+@enduml

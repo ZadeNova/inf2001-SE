@@ -1,0 +1,151 @@
+@startuml SD-05-manage-job
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-05: Manage Job (UC-05)
+' Traces: UC-05; FR-34 to FR-38, FR-44, FR-46, FR-64, FR-66, FR-67; NFR-09
+' Sources: DEC-11, DEC-19, DEC-40, DEC-42, DEC-50; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-67, DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":JobPage" as Page
+control ":JobController" as JC
+control ":RuleValidator" as RV
+control ":NotificationService" as NS
+entity ":Job" as Job
+entity ":Assignment" as ASG
+entity ":AuditLog" as AL
+
+activate Page
+alt create Job
+  Manager -> Page : enterJob(details)
+  Page -> JC ++ : standardDuration(jobType,units)
+  JC --> Page -- : hours
+  Manager -> Page : submit(details)
+  Page -> JC ++ : createJob(details)
+  JC -> JC : validate(details)
+  alt invalid field, units or date
+    JC --> Page : errors
+  else valid
+    JC -->> Job ** : <<create>>(details)
+    note right of Job : status = Unassigned (FR-46)
+    JC -> AL : record(Manager, Job created)
+    JC --> Page : saved
+  end
+  deactivate JC
+else link Jobs
+  Manager -> Page : linkJobs(job, otherJob)
+  Page -> JC ++ : linkJobs(job, otherJob)
+  JC -> JC : checkLinkable(job, otherJob)
+  alt same Brand, different address or conflicting placement
+    JC --> Page : refuse link; records unchanged
+  else linkable
+    group atomic Job link save
+      JC -> Job : link(otherJob)
+      JC -> AL : record(Manager, Jobs linked)
+    end
+    JC --> Page : linked
+  end
+  deactivate JC
+else edit Job
+  Manager -> Page : editJob(job, changes)
+  Page -> JC ++ : editJob(job, changes)
+  alt Completed or Cancelled
+    JC --> Page : refuse final-status change
+  else editable
+    group atomic Job edit
+      JC -> Job : changeDetails(changes)
+      opt Job was Assigned
+        JC -> RV ++ : checkBlocking(job)
+        RV --> JC -- : violations / none
+        opt edit breaks a rule
+          JC -> JC : expandLinkedJobs(job)
+          loop selected Job and each active Linked Job
+            opt current Assignment exists
+              JC -> ASG : endPlacement()
+            end
+            JC -> Job : markUnassigned()
+            JC -> AL : record(Manager, Linked Assignment removed)
+          end
+        end
+      end
+      JC -> AL : record(Manager, Job edited)
+    end
+    opt Job was Assigned
+      alt made Unassigned
+        JC -> NS : notify(linkedJobsUnassigned, affectedStaff)
+      else remains valid
+        JC -> NS : notify(Assignment changed,Crew)
+      end
+      ref over NS : SD-15
+      NS --> JC : notification outcome
+    end
+    JC --> Page : saved / Unassigned reason
+  end
+  deactivate JC
+else cancel Job
+  Manager -> Page : cancelJob(job)
+  Page -> JC ++ : cancelJob(job)
+  alt Completed or Cancelled
+    JC --> Page : refuse final-status change
+  else Unassigned or Assigned
+    group atomic Job cancellation
+      JC -> Job : cancel()
+      JC -> JC : expandLinkedJobs(job)
+      loop each affected current Assignment
+        JC -> ASG : endPlacement()
+        opt active Linked partner (not selected Job)
+          JC -> Job : markUnassigned()
+        end
+        JC -> AL : record(Manager, Linked Assignment ended)
+      end
+      JC -> AL : record(Manager, Job cancelled)
+    end
+    opt any affected Assignment existed before cancellation
+      JC -> NS : notify(jobCancelledAndPartnersUnassigned, affectedStaff)
+      ref over NS : SD-15
+      NS --> JC : notification outcome
+    end
+    JC --> Page : cancelled
+  end
+  deactivate JC
+end
+Page --> Manager : result
+deactivate Page
+legend bottom
+Details follow UC-05. Jobs are kept, never deleted (FR-67).
+Unassigning a Job also unassigns its active Linked partners (DEC-67).
+Cancellation cancels only the selected Job; active partners become
+Unassigned. Completed/Cancelled partners are unchanged.
+Loop lifelines represent each affected Job and its Assignment;
+collect affected Staff before ending placements.
+Mutation and audit calls commit atomically; notifications follow
+successful save. Save failures follow NFR-09.
+endlegend
+@enduml

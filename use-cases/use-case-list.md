@@ -1,6 +1,6 @@
 # Use-case list (M1)
 
-> **Status: FINAL v2.2 (2026-10-01).** This is the team's finalized 15-use-case structure (DEC-45 to DEC-47), aligned to the minimum SRS v3.3 baseline.
+> **Status: FINAL v2.3 (2026-10-03).** This is the team's finalized 15-use-case structure (DEC-45 to DEC-50), aligned to the minimum SRS v3.3 baseline.
 > Each use case has one formal file named `UC-nn-<slug>.md`. Names, IDs, actors and connections below are preserved from the supplied list.
 > **Totals:** 15 use cases: 12 Main, 2 Extends and 1 Included.
 
@@ -13,7 +13,7 @@
 | **Technician** | Primary | Adds UC-14 Complete Job |
 | **Manager** | Primary | Manages Jobs, Vans, Weekly Rosters, requests and manpower information |
 | **IT Administrator** | Primary | Manages accounts and access |
-| **Email Service** | Secondary | Delivers reset and confirmation emails for UC-01 and UC-02 |
+| **Email Service** | Secondary | Delivers reset and confirmation emails for UC-01 and UC-02, and initial login details for UC-03 |
 | **Email/Phone** | Primary for UC-15 | Delivers system-triggered Staff notifications by email and phone |
 
 ## Finalized use cases
@@ -41,10 +41,10 @@ The 50 active FRs map to the finalized use cases. Twenty-one retired FR IDs rema
 ## Relationships
 
 - **Generalisation:** Driver → Staff; Technician → Staff; Staff, Manager and IT Administrator → User.
-- **Secondary actor:** Email Service participates in UC-01 and UC-02.
+- **Secondary actor:** Email Service participates in UC-01, UC-02 and UC-03.
 - **Notification actor:** Email/Phone participates in UC-15.
 - **`<<extend>>`:** UC-02 extends UC-01; UC-08 extends UC-07.
-- **`<<include>>`:** UC-15 is included by UC-07 and UC-09 whenever their successful flows trigger FR-64 notifications. Other SRS events may also call it.
+- **`<<include>>`:** UC-15 is included by UC-05, UC-06, UC-07 and UC-09 whenever their successful flows trigger FR-64 notifications. Other SRS events may also call it.
 
 ## Merge record
 

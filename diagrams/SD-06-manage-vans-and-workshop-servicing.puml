@@ -1,0 +1,129 @@
+@startuml SD-06-manage-vans-and-workshop-servicing
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-06: Manage Vans and Workshop Servicing (UC-06)
+' Traces: UC-06; FR-27, FR-28, FR-29, FR-38, FR-64, FR-66; NFR-09
+' Sources: DEC-14, DEC-45, DEC-50, DEC-54; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":VanPage" as Page
+control ":VanController" as VC
+control ":NotificationService" as NS
+entity ":Van" as Van
+entity ":WorkshopServicing" as WS
+entity ":Crew" as Crew
+entity ":Assignment" as ASG
+entity ":Job" as Job
+entity ":AuditLog" as AL
+
+activate Page
+alt maintain Van record
+  Manager -> Page : saveVan(number, licencePlate)
+  Page -> VC ++ : saveVan(number, licencePlate)
+  VC -> Van : save(number, licencePlate)
+  VC --> Page -- : saved
+else review Workshop Servicing
+  Manager -> Page : openServicing(month)
+  Page -> VC ++ : generateServicing(month)
+  opt month not yet generated
+    loop for each Van in the rotation
+      VC -> VC : rotationDate(van, month)
+      opt date is Sunday
+        VC -> VC : moveToMonday(date)
+      end
+      VC -->> WS ** : <<create>>(van, generatedDate)
+      VC -> VC : checkCrewsOn(van,generatedDate)
+      alt Crew already exists on that date
+        VC -> VC : recordConflict(van, generatedDate)
+        note right of VC : keep Crew and Jobs unchanged;\nreturn conflicts after the loop (DEC-54)
+      else no Crew on date
+        VC -> WS : schedule(generatedDate)
+        VC -> Van : markUnavailable(generatedDate)
+      end
+    end
+    VC -> VC : retainGeneratedMonth(month)
+  end
+  VC --> Page -- : saved dates and conflicts
+  opt Manager adjusts a date
+    Manager -> Page : adjust(servicing, newDate)
+    Page -> VC ++ : adjust(servicing, newDate)
+    VC -> VC : checkCrewsOn(van, newDate)
+    alt Crew already exists on newDate
+      VC --> Page : block; retain old date
+    else no Crew on newDate
+      group atomic servicing change
+        VC -> WS : reschedule(newDate)
+        VC -> Van : markUnavailable(newDate)
+        VC -> VC : checkOtherUnavailability(van,oldDate)
+        opt oldDate exists and no other unavailability reason
+          VC -> Van : markAvailable(oldDate)
+        end
+      end
+      VC --> Page : updated
+    end
+    deactivate VC
+  end
+else breakdown or extra servicing days (FR-29)
+  Manager -> Page : markUnavailable(van, dates)
+  Page -> VC ++ : markUnavailable(van, dates)
+  group atomic Van unavailability save
+    VC -> Van : markUnavailable(dates)
+    loop for each Crew in the range
+      VC -> Crew : release()
+      VC -> AL : record(Manager, Crew released)
+      loop for each incomplete Assignment
+        VC -> ASG : endPlacement()
+        VC -> Job : markUnassigned()
+        VC -> AL : record(Manager,Assignment ended; Unassigned)
+      end
+    end
+  end
+  alt save still fails after 3 retries
+    VC --> Page : Not saved; Van and roster unchanged
+  else save committed
+    VC -> NS : notify(Van unavailable, released Staff)
+    ref over NS : SD-15
+    NS --> VC : notification outcome
+    VC --> Page : Van unavailable; Jobs Unassigned
+  end
+  deactivate VC
+end
+Page --> Manager : result
+deactivate Page
+legend bottom
+Odd months: Vans 1/2/3; even: 4/5/6; dates 1st/11th/21st. Sunday moves
+to Monday (FR-28).
+Blocked generated dates are unbooked proposals; the Manager adjusts
+them (DEC-54).
+Completed Jobs and unrelated unavailability remain intact. Atomic
+saves/retries follow NFR-09.
+endlegend
+@enduml

@@ -1,0 +1,104 @@
+@startuml CD-boundary
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam dpi 150
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor white
+skinparam classBorderColor black
+skinparam packageBackgroundColor white
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 30
+skinparam wrapWidth 210
+hide circle
+title CD-boundary: Sequence Boundary Classes
+' Traces: UC-01 to UC-15; CL IDs in traceability.md.
+' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63.
+' Sources: DEC-53, DEC-55, DEC-56, DEC-57; adopted sequence-diagram review.
+class LoginPage <<boundary>> {
+ +confirmDevice(code)
+ +logIn(email, password)
+ +openLink(token)
+ +openReset()
+ +requestReset(email)
+ +submitNewPassword(password)
+}
+class LandingPage <<boundary>> {
+ +loadCachedToday()
+ +logOut()
+ +markHandled(alert)
+ +open()
+ +openAvailability()
+ +selectAssignment(assignment)
+ +selectWeek(planningWeek)
+ +show(role)
+ +updateCertification(details)
+}
+class AccountAdminPage <<boundary>> {
+ +createAccount(details)
+ +manageAccess(account, action)
+ +resendInitialLogin(account)
+}
+class JobPage <<boundary>> {
+ +cancelJob(job)
+ +editJob(job, changes)
+ +enterJob(details)
+ +linkJobs(job, otherJob)
+ +submit(details)
+}
+class VanPage <<boundary>> {
+ +adjust(servicing, newDate)
+ +markUnavailable(van, dates)
+ +openServicing(month)
+ +saveVan(number, licencePlate)
+}
+class JobAllocationPage <<boundary>> {
+ +confirmWarningChoice(choice)
+ +allocateJob(proposal)
+ +close()
+ +compareStaff(selection, date)
+ +openPlanningWeek(week)
+ +prepareCrewOrStandby(proposal)
+ +publish(week)
+ +selectStaff(staff)
+}
+class RequestReviewPage <<boundary>> {
+ +confirm(choice)
+ +decideRequest(request, decision, reason)
+ +openPendingRequests()
+}
+class AvailabilityPage <<boundary>> {
+ +editAvailability(edit)
+ +open(week)
+ +setPreference(preference)
+ +submit()
+ +requestLateChange()
+}
+class RequestPage <<boundary>> {
+ +open(requestType, context)
+ +selectJob(assignment)
+ +submitLateChange(changes, reason)
+ +submitLeave(dates, note)
+ +submitRejection(details)
+}
+class JobCompletionPage <<boundary>> {
+ +completeJob(job)
+ +enter(completionDetails)
+ +queueCompletion(job, details)
+}
+LoginPage -[hidden]right-> LandingPage
+LandingPage -[hidden]right-> AccountAdminPage
+LoginPage -[hidden]down-> JobPage
+JobPage -[hidden]right-> VanPage
+VanPage -[hidden]right-> JobAllocationPage
+JobPage -[hidden]down-> RequestReviewPage
+RequestReviewPage -[hidden]right-> AvailabilityPage
+AvailabilityPage -[hidden]right-> RequestPage
+RequestReviewPage -[hidden]down-> JobCompletionPage
+legend bottom
+Analysis responsibilities; domain entities are in CD-domain.
+Hidden links arrange boxes only; they are not domain associations.
+endlegend
+@enduml

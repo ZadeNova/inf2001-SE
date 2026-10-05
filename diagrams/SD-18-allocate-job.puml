@@ -1,0 +1,112 @@
+@startuml SD-18-allocate-job
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-18: Allocate Job (UC-07)
+' Traces: UC-07; FR-36, FR-41, FR-42, FR-44, FR-45, FR-50, FR-53, FR-55, FR-64, FR-66, FR-71, NFR-09
+' Sources: DEC-10, DEC-11, DEC-19, DEC-31, DEC-32, DEC-39; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":JobAllocationPage" as Page
+control ":RosterController" as RC
+control ":RuleValidator" as RV
+control ":NotificationService" as NS
+entity "current:Assignment" as OLD
+entity ":Assignment" as ASG
+entity ":Job" as Job
+entity ":AuditLog" as AL
+
+Manager -> Page : allocateJob(proposal)
+activate Page
+Page -> RC ++ : allocateJob(proposal)
+RC -> RC : checkAuthorityDate(proposal)
+RC -> RC : expandLinkedJobs(proposal)
+RC -> RV ++ : checkAssignment(proposal)
+RV --> RC -- : blocking violations / none
+alt blocking violation
+  RC --> Page : refuse; save nothing
+else no blocking violation
+  RC -> RV ++ : checkWarnings(proposal)
+  RV -> RV : proposedWorkload(proposal, hours)
+  RV --> RC -- : warnings / none
+  opt warnings raised
+    RC --> Page : warnings
+    Page --> Manager : warnings; choose override or cancel
+    Manager -> Page : confirmWarningChoice(choice)
+    Page -> RC : confirmWarningChoice(choice)
+  end
+  alt warnings raised and Manager cancels
+    RC --> Page : cancelled; records unchanged
+  else no warnings or Manager overrides
+    group atomic allocation save
+      loop selected Job and required Linked Jobs
+        opt replacing or removing current placement
+          RC -> OLD : endPlacement()
+          RC -> AL : record(Manager,Assignment ended)
+        end
+        alt add or move
+          RC -->> ASG ** : <<create>>(placement)
+          RC -> Job : markAssigned()
+          RC -> AL : record(Manager, Assignment created)
+        else unassign
+          RC -> Job : markUnassigned()
+          RC -> AL : record(Manager, Job Unassigned)
+        end
+      end
+      opt warnings overridden
+        RC -> AL : record(Manager,warnings overridden)
+      end
+    end
+    alt save still fails after 3 retries
+      RC --> Page : Not saved; previous records retained
+    else save committed
+      opt week already Published
+  ' Notification payload: Assignment added, moved or unassigned; removed/added Staff
+        RC -> NS : notify(event,recipients)
+        ref over NS : SD-15
+        NS --> RC : notification outcome
+      end
+      RC --> Page : saved; Workload updated
+    end
+  end
+end
+deactivate RC
+Page --> Manager : current outcome
+deactivate Page
+legend bottom
+Warnings: Workload >40 h, Job Preference, customer Slot,
+fewer than 3 Vans, incomplete Standby (FR-45).
+Proposed Workload includes current hours from the planning context.
+Confirmation precedes save; cancellation keeps records unchanged.
+Only saved Published changes notify Staff.
+Draft data stays hidden; past dates are read-only.
+Atomic saves and up to 3 failed-submission retries follow NFR-09.
+endlegend
+@enduml
