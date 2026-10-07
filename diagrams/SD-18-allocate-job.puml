@@ -27,12 +27,15 @@ skinparam maxMessageSize 420
 skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
+skinparam ParticipantPadding 12
 autonumber
 title SD-18: Allocate Job (UC-07)
-' Traces: UC-07; FR-36, FR-41, FR-42, FR-44, FR-45, FR-50, FR-53, FR-55, FR-64, FR-66, FR-71, NFR-09
+' Traces: UC-07, UC-08; FR-36, FR-41, FR-42, FR-43, FR-44, FR-45, FR-50, FR-53, FR-55, FR-64, FR-66, FR-71, NFR-09
 ' Sources: DEC-10, DEC-11, DEC-19, DEC-31, DEC-32, DEC-39; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+' Consistency fix 2026-10-07: compare option (UC-07 A1); recheck inside the atomic save (DEC-18, as SD-20);
+' FR-42 timing stated in the legend; outcome wording aligned with SD-17 and SD-19.
 actor Manager
 boundary ":JobAllocationPage" as Page
 control ":RosterController" as RC
@@ -43,6 +46,11 @@ entity ":Assignment" as ASG
 entity ":Job" as Job
 entity ":AuditLog" as AL
 
+opt compare candidates
+  Manager -> Page : compareStaff(selection, date)
+  ref over Manager, Page, RC : SD-08
+  Page --> Manager : selected Staff / closed
+end
 Manager -> Page : allocateJob(proposal)
 activate Page
 Page -> RC ++ : allocateJob(proposal)
@@ -51,7 +59,7 @@ RC -> RC : expandLinkedJobs(proposal)
 RC -> RV ++ : checkAssignment(proposal)
 RV --> RC -- : blocking violations / none
 alt blocking violation
-  RC --> Page : refuse; save nothing
+  RC --> Page : refused; records unchanged
 else no blocking violation
   RC -> RV ++ : checkWarnings(proposal)
   RV -> RV : proposedWorkload(proposal, hours)
@@ -65,26 +73,34 @@ else no blocking violation
   alt warnings raised and Manager cancels
     RC --> Page : cancelled; records unchanged
   else no warnings or Manager overrides
-    group atomic allocation save
-      loop selected Job and required Linked Jobs
-        opt replacing or removing current placement
-          RC -> OLD : endPlacement()
-          RC -> AL : record(Manager,Assignment ended)
+    group atomic recheck and allocation save
+      RC -> RV ++ : checkAssignment(proposal)
+      RV --> RC -- : blocking violations / none
+      alt blocking violation at save time
+        RC -> RC : retainPreviousState()
+      else still valid
+        loop selected Job and required Linked Jobs
+          opt replacing or removing current placement
+            RC -> OLD : endPlacement()
+            RC -> AL : record(Manager, Assignment ended)
+          end
+          alt add or move
+            RC -->> ASG ** : <<create>>(placement)
+            RC -> Job : markAssigned()
+            RC -> AL : record(Manager, Assignment created)
+          else unassign
+            RC -> Job : markUnassigned()
+            RC -> AL : record(Manager, Job Unassigned)
+          end
         end
-        alt add or move
-          RC -->> ASG ** : <<create>>(placement)
-          RC -> Job : markAssigned()
-          RC -> AL : record(Manager, Assignment created)
-        else unassign
-          RC -> Job : markUnassigned()
-          RC -> AL : record(Manager, Job Unassigned)
+        opt warnings overridden
+          RC -> AL : record(Manager, warnings overridden)
         end
-      end
-      opt warnings overridden
-        RC -> AL : record(Manager,warnings overridden)
       end
     end
-    alt save still fails after 3 retries
+    alt save validation refused
+      RC --> Page : refused; records unchanged
+    else save still fails after 3 retries
       RC --> Page : Not saved; previous records retained
     else save committed
       opt week already Published
@@ -108,5 +124,8 @@ Confirmation precedes save; cancellation keeps records unchanged.
 Only saved Published changes notify Staff.
 Draft data stays hidden; past dates are read-only.
 Atomic saves and up to 3 failed-submission retries follow NFR-09.
+checkAssignment includes FR-42 timing: 09:00-18:00, lunch 13:00-14:00 skipped,
+0.5 h Travel Allowance gap, no overlap on the Van.
+Blocking rules are rechecked inside the save (another Manager may edit, DEC-18).
 endlegend
 @enduml

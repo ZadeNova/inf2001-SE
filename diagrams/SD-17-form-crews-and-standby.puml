@@ -32,6 +32,8 @@ title SD-17: Form Crews and Standby (UC-07)
 ' Traces: UC-07, UC-08; FR-30, FR-32, FR-33, FR-41, FR-43, FR-44, FR-46, FR-50, FR-51, FR-55, FR-64, FR-66, FR-71; NFR-09
 ' Sources: DEC-09, DEC-19, DEC-39, DEC-43, DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Consistency fix 2026-10-07: authoritative checks inside the atomic save (DEC-18, as SD-25);
+' Standby moved into a Crew (DEC-43); Standby cover gaps shown, overridden at publication (FR-45, FR-71, DEC-19).
 actor Manager
 boundary ":JobAllocationPage" as Page
 control ":RosterController" as RC
@@ -57,17 +59,17 @@ end
 Manager -> Page : prepareCrewOrStandby(proposal)
 Page -> RC ++ : saveCrewOrStandby(proposal)
 RC -> RC : checkAuthorityDate(proposal)
-activate RV
-alt Crew proposal
-  RC -> RV : checkCrew(proposal)
-else Standby proposal
-  RC -> RV : checkStandby(staff, date)
-end
-RV --> RC -- : violations / none
-alt blocking violation or no date/role authority
-  RC --> Page : refused; records unchanged
-else valid
-  group atomic Crew / Standby save
+group atomic validation and Crew / Standby save
+  alt Crew proposal
+    RC -> RV ++ : checkCrew(proposal)
+    RV --> RC -- : violations / none; Standby cover gaps
+  else Standby proposal
+    RC -> RV ++ : checkStandby(staff, date)
+    RV --> RC -- : violations / none; Standby cover gaps
+  end
+  alt blocking violation or no date/role authority
+    RC -> RC : retainPreviousState()
+  else valid at save time
     alt Crew proposal
       alt new Crew
         RC -->> Crew ** : <<create>>(proposal)
@@ -78,22 +80,25 @@ else valid
       end
       opt member was Standby that day
         RC -> CSB : endPlacement()
+        RC -> AL : record(Manager, Standby ended)
       end
     else Standby proposal
       RC -->> SB ** : <<create>>(date, staff)
       RC -> AL : record(Manager, Standby named)
     end
   end
-  alt save still fails after 3 retries
-    RC --> Page : Not saved; retry / contact IT Administrator
-  else save committed
-    opt week already Published
-      RC -> NS : notify(event, affectedStaff)
-      ref over NS : SD-15
-      NS --> RC : notification outcome
-    end
-    RC --> Page : saved
+end
+alt save validation refused
+  RC --> Page : refused; records unchanged
+else save still fails after 3 retries
+  RC --> Page : Not saved; previous records retained
+else save committed
+  opt week already Published
+    RC -> NS : notify(event, affectedStaff)
+    ref over NS : SD-15
+    NS --> RC : notification outcome
   end
+  RC --> Page : saved; Standby cover gaps shown
 end
 deactivate RC
 Page --> Manager : current outcome
@@ -106,5 +111,9 @@ Standby: uncrewed, available all day; 0 h until Crew placement.
 Current/future Published changes notify removed/added Staff;
 Standby naming notifies the named Staff. Draft notifications wait for publication.
 Completed-work credit is preserved. Failed save keeps prior records (NFR-09).
+Checks are authoritative inside the atomic save (another Manager may edit, DEC-18).
+checkCrew lets that day's Standby join a Crew and ends the Standby (DEC-43);
+any other Crew + Standby overlap is blocked (FR-44).
+Standby cover gaps are shown here; override and logging happen at publication (SD-19).
 endlegend
 @enduml
