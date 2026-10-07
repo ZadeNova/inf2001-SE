@@ -23,6 +23,7 @@ title CD-domain: Workload Management Domain Classes
 ' logOut follows UC-01 and SD-01.
 ' C3 operations: sequence-diagrams.md section 4; Audit Log FR-66; Notification FR-56/64.
 ' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63; sequence-diagram-review-round-2.md.
+' Current Pending-request policy: DEC-66.
 ' Updated signatures follow the adopted sequence review (DEC-56).
 ' User decisions 2026-10-03: FR-70 is the later-event exception; Short notice <48 h; email initial password; SMS.
 left to right direction
@@ -241,7 +242,7 @@ note right of Notification
 end note
 legend bottom
 One Crew per Van/date; one Weekly Roster per week; one Job Preference per Staff/week.
-At most one Pending Job Rejection Request per Assignment (DEC-58); decided requests remain history.
+At most one Pending Job Rejection Request per Assignment (DEC-66); decided requests remain history.
 Availability is unique per Staff/date/Slot. One current Assignment per Job; older placements are history.
 Valid Crew: 1 Driver + 1-2 Technicians. FR-70 allows temporary gaps marked Needs attention.
 Completed-work credit survives Crew changes. Standby is uncrewed, available all day and contributes 0 h.

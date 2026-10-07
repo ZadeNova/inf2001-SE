@@ -21,7 +21,8 @@ title UCD-system: Aircon Retailer Workload Management System
 ' Traces: UC-01 to UC-15; finalized use-case-list v2.3.
 ' Sources: DEC-17, DEC-18, DEC-45, DEC-46, DEC-47; Brief R1-R11.
 ' Phone mechanism: SMS (DEC-48); initial credentials: email (DEC-49); includes: DEC-50.
-left to right direction
+top to bottom direction
+skinparam linetype polyline
 skinparam nodesep 22
 skinparam ranksep 40
 skinparam usecaseBackgroundColor white

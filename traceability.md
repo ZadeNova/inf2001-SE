@@ -178,10 +178,11 @@ This table is maintained in [requirements.md](requirements.md#coverage-check-bri
 
 | Source | Review status | Sources |
 |---|---|---|
-| [UCD-system](diagrams/UCD-system.puml) | Local round-3 Clock footnote added; Google Docs figure unchanged | DEC-68; DEC-45, DEC-46, DEC-48, DEC-49, DEC-50 |
-| [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) | Member reports Opus approval; exact approved sources | Formal UC sources and decisions in each file |
-| [CD-domain](diagrams/CD-domain.puml), [CD-boundary](diagrams/CD-boundary.puml), [CD-control](diagrams/CD-control.puml) | Corrected 43-class model in three views; approved report CD remains unchanged | DEC-51 to DEC-63; adopted round-2 review |
-| 22 active sequence diagrams (linked above and below) | Round-3 corrections; Opus review pending | Each source header; DEC-48 to DEC-63 |
+| [UCD-system](diagrams/UCD-system.puml) | Member reports round-3 Opus pass; current Clock note and readable layout in Report Figure 3.1 | DEC-68; DEC-45, DEC-46, DEC-48, DEC-49, DEC-50 |
+| [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-04](diagrams/AD-04-create-user-account.puml) | Member reports Opus approval; sources unchanged; Report captions aligned | Formal UC sources and decisions in each file |
+| [AD-03](diagrams/AD-03-job-rejection.puml) | Synchronized at member request with the later approved lapse and Linked-partner rules; Report Figure 3.4 updated | UC-09 A3, UC-12 A3; DEC-59, DEC-66, DEC-67, DEC-68; header sources |
+| [CD-domain](diagrams/CD-domain.puml), [CD-boundary](diagrams/CD-boundary.puml), [CD-control](diagrams/CD-control.puml) | Member reports Opus pass; current 43-class model in Report Figures 4.1a-c | DEC-51 to DEC-63, DEC-66; adopted round-2/3 reviews |
+| 22 active sequence diagrams (linked above and below) | Member reports round-3 Opus pass; Report Figures 4.2-4.23 inserted and verified; sources unchanged in this refresh | Each source header; DEC-48 to DEC-68 |
 
 ## Sequence source index
 
