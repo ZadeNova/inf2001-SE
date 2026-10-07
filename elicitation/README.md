@@ -9,7 +9,8 @@
 | File | What it is | Role | Date | Interviewer | Interviewee |
 |---|---|---|---|---|---|
 | [interviews/manager.md](interviews/manager.md) | Interview transcript, "Part A: Manager interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Manager (introduces themselves as "the operations manager") | TBC | TBC | TBC |
-| [interviews/dct.md](interviews/dct.md) | Interview transcript, "Part B: Dual Certified Technician interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Dual Certified Technician (DCT) | TBC | TBC | TBC |
+| [interviews/technician-questionnaire.md](interviews/technician-questionnaire.md) | Current Google Form question set, response IDs and exact evidence excerpts; primary responses remain in the read-only Sheet | Dual-Brand and Single-Brand Technicians | Timestamp display `10/1/2026`; locale unconfirmed | TBC | DB01/DB02; ME01-ME05; DI01-DI04 |
+| [interviews/dct.md](interviews/dct.md) | Historical, superseded for current Technician findings. Interview transcript, "Part B: Dual Certified Technician interview". The file says the session was recorded and transcribed on Zoom. It ends with an **Answer key** table | Dual Certified Technician (DCT) | TBC | TBC | TBC |
 | [interviews/driver.md](interviews/driver.md) | Interview answers to 17 numbered questions, with no opening or closing dialogue | Driver | TBC | TBC | TBC |
 | [interviews/ita.md](interviews/ita.md) | Interview transcript (Interviewer / IT admin dialogue) | IT Administrator (ITA) | TBC | TBC | TBC |
 | [planned-interview.md](planned-interview.md) | **Plan** (not yet held) for follow-up validation sessions on SRS v3.0: Manager (MTG-01), IT Administrator (MTG-02), Staff (MTG-03), with the items to validate and how results feed back into the SRS | Manager, IT Administrator, DCT or Driver | Planned | — | — |

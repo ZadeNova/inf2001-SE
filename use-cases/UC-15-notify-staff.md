@@ -11,7 +11,7 @@
 | **Description** | The system delivers required Landing Page, email and phone notifications to Staff after roster, Crew, Assignment, Standby or request-decision events. |
 | **Trigger** | A calling use case commits an FR-64 or FR-71 notification event. |
 | **Linked requirements** | FR-49, FR-64, FR-71, NFR-01, NFR-09 |
-| **Source** | INT-MGR [added follow-up: notifications], [Conflicts Q5], [added follow-up: cancellations]; INT-DCT [Process Q1 follow-up: updates], [Conflicts Q2]; INT-DRV [Q7]; DEC-42; DEC-43; DEC-45; DEC-46; DEC-47; DEC-48; DEC-50; DEC-56; DEC-58; DEC-59; DEC-62 |
+| **Source** | INT-MGR [added follow-up: notifications], [Conflicts Q5], [added follow-up: cancellations]; INT-DCT [Questionnaire C16], [Questionnaire C15/C16]; INT-DRV [Q7]; DEC-42; DEC-43; DEC-45; DEC-46; DEC-47; DEC-48; DEC-50; DEC-56; DEC-58; DEC-59; DEC-62; DEC-69 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-15](../diagrams/SD-15-notify-staff.puml) |
 | **Status** | Draft |
 
@@ -24,7 +24,7 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Calling use case supplies the event and recipients. | Builds the notification from the saved event. |
+| 1 | Calling use case supplies the event and recipients. | Builds the notification from the saved event: affected Job/request and date, saved outcome, relevant changed timing/Crew, any supplied decision reason and a link to current details (FR-64; DEC-69). |
 | 2 | - | Adds the notification to each recipient's Landing Page (FR-64). |
 | 3 | Email/Phone accepts the outbound notification request. | Generates an email and a phone notification for each recipient (FR-64). |
 | 4 | Email/Phone reports whether each delivery request was accepted. | Records the result for both external channels and makes the saved change visible within 60 seconds (NFR-01). |
@@ -77,4 +77,5 @@
 
 ## Open questions
 
-- External acknowledgement and delivery deduplication remain open in DEC-62.
+- External acknowledgement and delivery deduplication remain open in DEC-62. This is separate from preventing duplicate Job completion in UC-14.
+- Confirm whether Late Availability rejection and Job Rejection refusal reasons become mandatory; existing optional reasons are delivered when supplied (DEC-70).

@@ -30,7 +30,7 @@ skinparam sequenceActorFontSize 12
 autonumber
 title SD-14: Complete Job (UC-14)
 ' Traces: UC-14; FR-39, FR-53, FR-66; NFR-08, NFR-09, NFR-12
-' Sources: DEC-39, DEC-40; DEC-55, DEC-56; sequence-diagram-review.md.
+' Sources: DEC-69; INT-DCT [Questionnaire C18: DB01/DB02]; DEC-39, DEC-40; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 actor Technician
 boundary ":JobCompletionPage" as Page
@@ -41,38 +41,61 @@ entity ":AuditLog" as AL
 Technician -> Page : completeJob(job)
 activate Page
 Page -> CC ++ : canComplete(user, job)
-CC -> CC : checkRoleAndCrew(user, job)
+CC -> CC : checkCurrentState(user, job)
 CC --> Page -- : allowed / refused
-alt Driver or not in the Crew
-  Page --> Technician : refuse (FR-39)
-else Technician on the Crew
+alt Driver, outside Crew or Job not Assigned
+  Page --> Technician : refuse; show current state
+else eligible Technician
   Technician -> Page : enter(completionDetails)
-  note over Page, CC : actual start/end, remark,\nfollow-up needed, invoice photo
-  alt online
+  note over Page, CC : actual times, remark, follow-up, invoice photo
+  alt offline
+    Page -> Page : queueCompletion(job, details)
+    Page --> Technician : saved locally / waiting; photo status
+  else online
+    Page --> Technician : submitting; not yet confirmed
+  end
+  opt online submission, automatic reconnect or queued retry
+    opt explicit retry of a retained item
+      Technician -> Page : retryUpload(job)
+    end
+    Page --> Technician : uploading; retain details and photo
     Page -> CC ++ : submitCompletion(job, details)
     CC -> CC : validate(details)
-    alt invalid time, date or missing photo
-      CC --> Page : refuse; show error
-    else valid
-      group atomic completion save
+    group atomic validation and completion save
+      CC -> CC : checkCurrentState(user, job)
+      alt already Completed
+        CC --> Page : current completion; no second credit
+      else no authority, not Assigned or invalid details/photo
+        CC --> Page : refused; current state / error
+      else still eligible and valid
         CC -> Job : complete(details)
         Job -> Job : actualHours()
-        CC -> AL : record(Technician,Job completed)
+        CC -> AL : record(Technician, Job completed)
       end
-      CC --> Page : Completed; Workload updated
+    end
+    alt eligible completion committed with photo
+      CC --> Page : received; Completed; Workload updated
+      Page --> Technician : details and photo received
+    else transport/photo/save fails after NFR-09 retries
+      CC --> Page : Not saved; identify failed part
+      Page --> Technician : failed; retained for retry
+    else refused or already Completed
+      Page --> Technician : current outcome; queued item retained for review
     end
     deactivate CC
-  else offline (NFR-08)
-    Page -> Page : queueCompletion(job, details)
-    Page --> Technician : queued until reconnect
   end
 end
+
 deactivate Page
 legend bottom
-On reconnect, queued completion uses the same online validation/save
-path.
-Actual Hours replace Planned Hours; credit goes to the Crew at
-completion.
-Failed online save follows NFR-09.
+Each queued Job shows local/waiting, uploading, received or failed,
+and its invoice-photo status. A local save is not a server completion.
+On reconnect, queued items submit automatically through the same path.
+Failure retains details/photo for retry; no retyping is required.
+Repeated taps/retries cannot complete the Job or credit hours twice.
+Confirm success only after both details and required photo are saved.
+Changed-Job/Crew or another Technician's completion remains an open
+reconciliation question; do not silently overwrite or discard the item.
+Actual Hours replace Planned Hours; completed-work credit is preserved.
 endlegend
 @enduml

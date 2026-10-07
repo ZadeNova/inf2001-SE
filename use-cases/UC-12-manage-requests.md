@@ -11,7 +11,7 @@
 | **Description** | Staff submit and review their Leave, Late Availability Change and Job Rejection Requests. |
 | **Trigger** | A Staff member needs Leave, needs to change a locked week's Availability, or wants a Job removed from the Crew's Van. |
 | **Linked requirements** | FR-17, FR-22, FR-25, FR-58, FR-62 |
-| **Source** | Brief R10, §Company ¶1, ¶4; INT-MGR [Process Q4], [Conflicts Q2], [Conflicts Q3]; INT-DCT [Process Q2], [Process Q3]; INT-DRV [Q15], [Q17]; DEC-02; DEC-13; DEC-42; DEC-45; DEC-52; DEC-58; DEC-59 |
+| **Source** | Brief R10, §Company ¶1, ¶4; INT-MGR [Process Q4], [Conflicts Q2], [Conflicts Q3]; INT-DCT [Questionnaire C14/C15], [Questionnaire C11]; INT-DRV [Q15], [Q17]; DEC-02; DEC-13; DEC-42; DEC-45; DEC-52; DEC-58; DEC-59; DEC-69 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-02](../diagrams/AD-02-set-availability.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-23](../diagrams/SD-23-submit-leave-request.puml); [SD-24](../diagrams/SD-24-submit-late-availability-change.puml); [SD-25](../diagrams/SD-25-submit-job-rejection-request.puml) |
 | **Status** | Draft |
 
@@ -23,7 +23,7 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens Requests and selects the request type. | Displays the corresponding form and current request statuses. |
+| 1 | Opens Requests and selects the request type. | Displays the corresponding form and current request statuses; late changes show current Availability beside the proposed Slots. |
 | 2 | Enters the required dates, Slots, Job and/or reason. | Validates request-type rules. |
 | 3 | Reviews the summary and submits. | Creates a pending request shown on the Manager's Landing Page (FR-56). |
 | 4 | Reviews the pending status. | Keeps operational data unchanged until UC-09 decides the request. |
@@ -39,6 +39,7 @@
 
 1. The Staff member selects one or more locked-week Slots, the new Availability and a reason.
 2. The system requires the reason and creates a pending request (FR-17).
+3. It keeps current Availability visible beside the proposed Slots and Pending label. After a decision, it shows the outcome and any supplied reason; only approval changes Availability (DEC-69).
 
 ### A3: Submit Job Rejection Request (branches at step 1)
 
@@ -75,4 +76,4 @@
 
 ## Open questions
 
-- Resolved by DEC-52: exactly 48 hours is normal; Short notice means strictly less than 48 hours. No remaining open question in this draft.
+- Exactly 48 hours remains normal under DEC-52. Confirm additional request-history/decision-time fields and whether Late Availability rejection or Job Rejection refusal must require an explanation (DEC-70).

@@ -11,7 +11,7 @@
 | **Description** | The Manager creates, edits, links or cancels a Job while the system preserves valid status transitions and records. |
 | **Trigger** | Customer work must be recorded or an existing Job must change. |
 | **Linked requirements** | FR-34 to FR-38, FR-44, FR-64, FR-67, NFR-09 |
-| **Source** | INT-MGR [Process Q2], [Process Q2 follow-up: hours], [added follow-up: cancellations], [Conflicts Q3], [Conflicts Q4]; INT-DCT [Process Q1 follow-up: job info]; INT-DRV [Q2]; DEC-11; DEC-19; DEC-22; DEC-34; DEC-40; DEC-42; DEC-58 |
+| **Source** | INT-MGR [Process Q2], [Process Q2 follow-up: hours], [added follow-up: cancellations], [Conflicts Q3], [Conflicts Q4]; INT-DCT [Questionnaire C5]; INT-DRV [Q2]; DEC-11; DEC-19; DEC-22; DEC-34; DEC-40; DEC-42; DEC-58 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-05](../diagrams/SD-05-manage-job.puml) |
 | **Status** | Draft |
 

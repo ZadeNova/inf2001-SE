@@ -11,7 +11,7 @@
 | **Description** | Staff record per-Slot Availability and optional weekly Job Preference before the Availability Deadline. |
 | **Trigger** | A Staff member needs to declare or revise Availability or Job Preference for an open week. |
 | **Linked requirements** | FR-13, FR-14, FR-16, FR-21 |
-| **Source** | Brief R5, R8, R9 and Lecturer clarification; INT-MGR [Clarification Q4], [Clarification Q6 follow-up]; INT-DCT [Clarification Q2], [Clarification Q4]; INT-DRV [Q10]; DEC-01; DEC-02; DEC-03; DEC-07; DEC-30; DEC-45; DEC-47; DEC-58 |
+| **Source** | Brief R5, R8, R9 and Lecturer clarification; INT-MGR [Clarification Q4], [Clarification Q6 follow-up]; INT-DCT [Questionnaire C6], [Questionnaire C7]; INT-DRV [Q10]; DEC-01; DEC-02; DEC-03; DEC-07; DEC-30; DEC-45; DEC-47; DEC-58 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-02](../diagrams/AD-02-set-availability.puml); [SD-11](../diagrams/SD-11-set-availability-and-preferences.puml); [SD-24](../diagrams/SD-24-submit-late-availability-change.puml) |
 | **Status** | Draft |
 
@@ -67,4 +67,5 @@
 
 ## Open questions
 
-- None identified for the current draft.
+- Confirm whether pre-deadline reminders are in scope, their recipients, timing and channels. The existing displayed deadline remains; no reminder schedule is assumed (DEC-70).
+- Confirm how respondents who currently provide exact hours should map these to the adopted Morning/Afternoon Slots; the Slot model is unchanged (DEC-70).

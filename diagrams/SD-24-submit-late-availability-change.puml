@@ -32,16 +32,22 @@ title SD-24: Submit Late Availability Change (UC-12)
 ' Traces: UC-12; FR-17, FR-56, FR-66; NFR-09
 ' Sources: DEC-02; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Current source: INT-DCT [Questionnaire C13: DB01/DB02]; DEC-69.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
 actor Staff
 boundary ":RequestPage" as Page
 control ":RequestController" as RQ
 entity ":LateAvailabilityChangeRequest" as LAC
+entity "requester:Staff" as ST
 entity ":AuditLog" as AL
 
 [-> Page : open(requestType, context)
 activate Page
-Page --> Staff : Late-change form and own request statuses
+Page -> RQ ++ : loadRequestContext(staff, requestType, context)
+RQ -> ST ++ : availabilityFor(week)
+ST --> RQ -- : current Slots
+RQ --> Page -- : current Slots and own request statuses
+Page --> Staff : current Availability and own request statuses
 Staff -> Page : submitLateChange(changes, reason)
 Page -> RQ ++ : submitLateChange(staff, changes, reason)
 RQ -> RQ : checkLockedWeekAndSlots(changes)
@@ -55,15 +61,16 @@ else valid
   alt save still fails after 3 retries
     RQ --> Page : Not saved; retry / contact IT Administrator
   else saved
-    RQ --> Page : Pending on Staff and Manager Landing Pages
+    RQ --> Page : saved Pending request; current and proposed Slots
   end
 end
 deactivate RQ
-Page --> Staff : current outcome
+Page --> Staff : current Availability, requested Slots and status
 [<-- Page : request outcome
 deactivate Page
 legend bottom
 Entry gate: Staff navigation or the calling Availability page.
+Current Availability stays visible beside the requested change.
 Submitting leaves Availability unchanged. Only the Manager decides and
 applies the change (FR-17).
 Failed save creates no usable request; prior Availability remains.
