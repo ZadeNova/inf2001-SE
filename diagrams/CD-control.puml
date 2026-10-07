@@ -82,7 +82,7 @@ class RosterController <<control>> {
 }
 class RuleValidator <<control>> {
  +checkAssignment(proposal)
- +checkBlocking(job)
+ +checkBlocking(target)
  +checkCrew(proposal)
  +checkStandby(staff, date)
  +checkWarnings(context)

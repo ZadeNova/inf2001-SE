@@ -33,6 +33,8 @@ title SD-19: Publish Weekly Roster (UC-07)
 ' Sources: DEC-16, DEC-19, DEC-32, DEC-43; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+' Consistency fix 2026-10-07: week check as in SD-17/18 (FR-41, DEC-16); recheck inside the atomic save (DEC-18, as SD-20);
+' outcome wording aligned with SD-17 and SD-18.
 actor Manager
 boundary ":JobAllocationPage" as Page
 control ":RosterController" as RC
@@ -44,10 +46,11 @@ entity ":AuditLog" as AL
 Manager -> Page : publish(week)
 activate Page
 Page -> RC ++ : publish(week)
+RC -> RC : checkAuthorityDate(week)
 RC -> RV ++ : checkBlocking(week)
 RV --> RC -- : violations / none
-alt blocking violation
-  RC --> Page : refuse publication
+alt blocking violation or week not publishable
+  RC --> Page : refused; records unchanged
 else no blocking violation
   RC -> RV ++ : checkWarnings(week)
   RV -> RV : weekWorkload(week)
@@ -59,17 +62,25 @@ else no blocking violation
     Page -> RC : confirmWarningChoice(choice)
   end
   alt warnings raised and Manager cancels
-    RC --> Page : retain Draft
+    RC --> Page : cancelled; records unchanged
   else confirmed / no warnings
-    group atomic publication save
-      opt overrides confirmed
-        RC -> AL : record(Manager,warnings overridden)
+    group atomic recheck and publication save
+      RC -> RV ++ : checkBlocking(week)
+      RV --> RC -- : violations / none
+      alt blocking violation at save time
+        RC -> RC : retainPreviousState()
+      else still valid
+        opt overrides confirmed
+          RC -> AL : record(Manager, warnings overridden)
+        end
+        RC -> WR : publish()
+        RC -> AL : record(Manager, Weekly Roster published)
       end
-      RC -> WR : publish()
-      RC -> AL : record(Manager,Weekly Roster published)
     end
-    alt save still fails after 3 retries
-      RC --> Page : Not saved; retain Draft
+    alt save validation refused
+      RC --> Page : refused; records unchanged
+    else save still fails after 3 retries
+      RC --> Page : Not saved; previous records retained
     else save committed
   ' Notification payload: Weekly Roster published, assigned and Standby Staff
       RC -> NS : notify(event,recipients)
@@ -90,5 +101,7 @@ Confirmation precedes save; cancellation keeps records unchanged.
 Successful publication notifies every Crew member and Standby
 of that week. Failed publication keeps the Weekly Roster Draft.
 Atomic saves and up to 3 failed-submission retries follow NFR-09.
+Only the next unpublished Planning Week can be published (FR-41, DEC-16).
+Blocking rules are rechecked inside the save (another Manager may edit, DEC-18).
 endlegend
 @enduml
