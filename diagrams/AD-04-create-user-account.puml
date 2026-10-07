@@ -1,0 +1,60 @@
+@startuml AD-04-create-user-account
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 260
+skinparam dpi 180
+title AD-04: Staff / Manager Account Creation
+' Traces: UC-03; FR-02/10/66; NFR-09/11/12.
+' Sources: Brief R11; DEC-17, DEC-18, DEC-35, DEC-45; INT-ITA [Q: Account info], [Q: Audit], [Q: Safeguards].
+' User decision 2026-10-03: deliver initial password by email; password change remains optional.
+|IT Administrator|
+start
+:Open Create User Account\n(UC-03);
+repeat
+:Enter details and role;
+if (Technician?) then (yes)
+  :Enter Certifications;
+else (no)
+endif
+|System|
+:Validate fields, email and role;
+if (Details valid?) then (yes)
+  :Prepare account / Certifications;\nhash initial password;
+  :Save; retry failures up to 3 times;
+  if (Save successful?) then (yes)
+    :Audit creation;\nemail initial login details;
+    |IT Administrator|
+    :Review creation confirmation;
+    stop
+  else (no)
+    |System|
+    :Show not saved;\nretry or contact IT Administrator;
+    stop
+  endif
+else (no)
+  |System|
+  :Show errors; create no account;
+endif
+|IT Administrator|
+repeat while (Correct and resubmit?) is (yes) not (cancel)
+stop
+legend bottom
+Authenticated IT Administrator. Roles: Driver, Technician or Manager; email is unique.
+Certification: Brand, number, expiry. Initial password is emailed; change is optional.
+endlegend
+
+@enduml

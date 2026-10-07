@@ -1,0 +1,73 @@
+@startuml SD-23-submit-leave-request
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 300
+skinparam wrapWidth 300
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-23: Submit Leave Request (UC-12)
+' Traces: UC-12; FR-22, FR-25, FR-56, FR-66; NFR-09
+' Sources: DEC-13; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+actor Staff
+boundary ":RequestPage" as Page
+control ":RequestController" as RQ
+entity "requester:Staff" as ST
+entity ":LeaveRequest" as LR
+entity ":AuditLog" as AL
+
+Staff -> Page : open(requestType, context)
+activate Page
+Page --> Staff : Leave form and own request statuses
+Staff -> Page : submitLeave(dates, note)
+Page -> RQ ++ : submitLeave(staff, dates, note)
+RQ -> ST ++ : leaveBalance(year)
+ST --> RQ -- : remaining days
+RQ -> RQ : validateLeave(staff, dates)
+alt exceeds balance or overlaps request
+  RQ --> Page : refused; no request
+else valid
+  group atomic request save
+    RQ -->> LR ** : <<create>>(staff, dates, note)
+    RQ -> AL : record(Staff,Leave Request submitted)
+  end
+  alt save still fails after 3 retries
+    RQ --> Page : Not saved; retry / contact IT Administrator
+  else saved
+    RQ --> Page : Pending on Staff and Manager Landing Pages
+  end
+end
+deactivate RQ
+Page --> Staff : current outcome
+deactivate Page
+legend bottom
+Entry gate: Staff navigation.
+Full working days only; exclude Sunday; pending/approved overlap is
+refused (FR-22).
+Balance is deducted on approval, not submission (FR-25). Failed save
+creates no usable request.
+endlegend
+@enduml

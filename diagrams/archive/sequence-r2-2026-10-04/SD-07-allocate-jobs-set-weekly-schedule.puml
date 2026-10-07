@@ -1,0 +1,73 @@
+@startuml SD-07-allocate-jobs-set-weekly-schedule
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 240
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-07: Weekly Roster Workflow (UC-07)
+' Traces: UC-07, UC-08; FR-33, FR-41, FR-44, FR-45, FR-49, FR-50, FR-64, FR-71
+' Sources: DEC-09, DEC-10, DEC-16, DEC-19, DEC-39, DEC-43; DEC-55, DEC-56; sequence-diagram-review.md.
+actor Manager
+boundary ":JobAllocation\nPage" as Page
+control ":Roster\nController" as RC
+
+Manager -> Page : openPlanningWeek(week)
+activate Page
+Page -> RC ++ : loadWeek(week)
+RC -> RC : buildTimeline(week)
+RC --> Page -- : timeline, Jobs and eligible Staff
+loop until planning is complete
+  opt compare candidates
+    Manager -> Page : compareStaff(selection, date)
+    Page -> RC : compare(selection, date, week)
+    ref over RC : SD-08
+    RC --> Page : comparison
+  end
+  alt form Crew or name Standby
+    Manager -> Page : prepareCrewOrStandby(proposal)
+    Page -> RC : saveCrewOrStandby(proposal)
+    ref over RC : SD-17
+    RC --> Page : saved / refused
+  else allocate Job
+    Manager -> Page : allocateJob(proposal)
+    Page -> RC : allocateJob(proposal)
+    ref over RC : SD-18
+    RC --> Page : saved / refused / cancelled
+  end
+end
+Manager -> Page : publish(week)
+Page -> RC : publish(week)
+ref over RC : SD-19
+RC --> Page : Published / refused / cancelled
+Page --> Manager : current roster
+deactivate Page
+legend bottom
+SD-17/18 also apply to permitted changes on current/future Published
+dates (FR-33, FR-50).
+Past dates are read-only; Draft Assignments remain hidden from Staff
+(FR-49).
+endlegend
+@enduml

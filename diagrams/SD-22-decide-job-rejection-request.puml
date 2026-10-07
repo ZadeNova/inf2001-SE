@@ -1,0 +1,121 @@
+@startuml SD-22-decide-job-rejection-request
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-22: Decide or Lapse Job Rejection Request (UC-09)
+' Traces: UC-09; FR-36, FR-46, FR-49, FR-56, FR-63, FR-64, FR-66; NFR-09
+' Sources: DEC-10, DEC-42, DEC-43, DEC-52, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-66, DEC-67, DEC-68; sequence-diagram-review-round-3.md.
+actor "Clock" as Clock <<system>>
+actor Manager
+boundary ":RequestReviewPage" as Page
+control ":RequestController" as RQ
+entity ":JobRejectionRequest" as JRR
+entity ":Assignment" as ASG
+entity ":Job" as Job
+control ":NotificationService" as NS
+entity ":AuditLog" as AL
+
+alt clock event at Job start (no Manager action needed)
+  Clock -> RQ : onJobStart(assignment)
+  RQ -> RQ : pendingRejectionFor(assignment)
+else Manager decides one selected request
+  Manager -> Page : openPendingRequests()
+  activate Page
+  Page -> RQ ++ : listPending()
+  RQ --> Page -- : requests; Short notice highlighted
+  Page --> Manager : pending list and selected request
+  Manager -> Page : decideRequest(request, decision, reason)
+  Page -> RQ : decideJobRejection(request, decision, reason)
+end
+activate RQ
+loop selected request, if any (at most one per Assignment)
+  group atomic request, Assignment and Job save
+    RQ -> RQ : recheckStatusAndStart(request)
+    alt already decided or Lapsed
+      RQ -> RQ : keepCurrentOutcome(request)
+    else Job has started while still Pending
+      RQ -> JRR : lapse()
+      RQ -> AL : record(actor, Rejection Lapsed)
+      note right of ASG : Assignment stands
+    else still Pending before Job start
+      alt Manager approved
+        RQ -> JRR : approve()
+        RQ -> RQ : expandLinkedJobs(assignment)
+        loop requested Job and each active Linked Job
+          opt current Assignment exists
+            RQ -> ASG : endPlacement()
+          end
+          RQ -> Job : markUnassigned()
+          RQ -> AL : record(Manager, Linked Assignment removed)
+        end
+      else Manager refused
+        RQ -> JRR : refuse(reason)
+      end
+      RQ -> AL : record(Manager, Rejection decided)
+    end
+  end
+  opt new decision or lapse prepared
+    alt save still fails after 3 retries
+      RQ -> RQ : retainPreviousState()
+    else transaction committed
+      alt Approved
+        RQ -> NS : notify(approvedLinkedGroup, affectedRecipients)
+      else Refused
+        RQ -> NS : notify(refusedWithReason, requester)
+      else newly Lapsed
+        RQ -> NS : notify(lapsed, requester)
+      end
+      ref over NS : SD-15
+      NS --> RQ : notification outcome
+    end
+  end
+end
+alt clock-triggered check
+  RQ --> Clock : check outcome
+else Manager interaction
+  RQ --> Page : current outcome; failed save leaves prior state
+  Page --> Manager : current outcome
+  deactivate Page
+end
+deactivate RQ
+legend bottom
+Clock fires at Job start; a still-Pending request lapses even when
+the Manager never opens it (FR-63, DEC-59). A new lapse is audited
+and the requester notified after commit. Race checks are atomic:
+an already-decided request gets no second decision or notification.
+Approval unassigns the requested Job and active Linked partners
+atomically (DEC-67). Each iteration uses that Job and Assignment.
+Notify requester, affected Crews and eligible Standby after commit;
+count and Workload derive from saved state. Refusal/lapse retain placement.
+At most one Pending request per shared Assignment (DEC-66);
+the Clock lookup returns zero or one, never multiple Pending requests.
+Optional refusal reason is passed through. Reallocation is UC-07.
+endlegend
+@enduml

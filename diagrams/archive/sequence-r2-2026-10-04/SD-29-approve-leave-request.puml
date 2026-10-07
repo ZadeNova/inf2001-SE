@@ -1,0 +1,75 @@
+@startuml SD-29-approve-leave-request
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 240
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-29: Approve Leave Request (UC-09)
+' Traces: UC-09; FR-24, FR-25, FR-64, FR-66, FR-70
+' Sources: DEC-13, DEC-51, DEC-55, DEC-56; sequence-diagram-review.md.
+control ":Request\nController" as RQ
+control ":Roster\nController" as RC
+control ":Notification\nService" as NS
+entity ":Leave Request" as LR
+entity ":Audit Log" as AL
+
+[-> RQ ++ : approveLeave(request)
+RQ -> RQ : findCrewsOn(staff, dates)
+opt existing Crew affected
+  RQ -->] : Crew warning for Manager (FR-24)
+  [-> RQ : confirm(choice)
+end
+alt Manager cancels
+  RQ -->] : unchanged
+else confirmed / no Crew affected
+  RQ -> RQ : checkStillPending(request)
+  alt request changed while confirming
+    RQ -->] : current status; no second decision
+  else still Pending
+    group atomic approval save
+      RQ -> LR : approve()
+      RQ -> AL : record(Manager, Leave approved)
+    end
+    opt existing Crew affected
+      RQ -> RC : handleCrewInvalidation(staff, dates)
+      ref over RC : SD-16
+      RC --> RQ : Van-days flagged
+    end
+    RQ -> NS : notify(LeaveApproved, requester)
+    ref over NS : SD-15
+    NS --> RQ : delivery recorded
+    RQ -->] : Approved
+  end
+end
+deactivate RQ
+legend bottom
+The warning/confirmation gates connect to the Manager via
+RequestReviewPage in SD-09.
+Approval deducts working days and makes Staff unavailable
+(FR-24/25). FR-70 keeps the Van Jobs.
+Failed save retains Pending and prior data (NFR-09).
+endlegend
+@enduml

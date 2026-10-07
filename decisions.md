@@ -61,6 +61,9 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-45 | Final 15-use-case structure and scope alignment | Team decision | Team | **Decided** |
 | DEC-46 | UC-15 uses Email/Phone | Team decision | Team | **Decided** |
 | DEC-47 | Consolidate requirements to minimum active baseline | Team decision | Team | **Decided** |
+| DEC-48 | UC-15 phone channel is SMS | Team decision | Team | **Decided** |
+| DEC-49 | Initial password delivered by email | Team decision | Team | **Decided** |
+| DEC-50 | UC-05 and UC-06 notifications use UC-15 | Team decision | Team | **Decided** |
 
 ---
 
@@ -1190,6 +1193,57 @@ These entries were made by the team on 2026-09-30 while reviewing SRS v2. They a
 
 ---
 
+### DEC-48: UC-15 phone channel is SMS
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-03 by the requesting member (identity TBC).
+
+**Source text:** DEC-46: "The exact phone mechanism remains open for team review." UC-15 open question: "Confirm what the phone channel means operationally (for example SMS, application push notification or voice call)." The requesting member specified "SMS" in the diagram-review conversation.
+
+**Question:** What does the phone channel of UC-15 mean?
+
+**Decision:** The phone channel is SMS. Staff notifications are delivered on the Landing Page, by email and by SMS. The UC-15 actor keeps the name Email/Phone (DEC-46).
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-03 - **Decision source:** direct user instruction in the diagram-review conversation, reaffirmed by the instruction to apply the review fixes. Recorded as UC-15 draft v0.4; the SRS v3.3 phone-channel requirement is refined, not replaced.
+
+---
+
+### DEC-49: Initial password delivered by email
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-03 by the requesting member (identity TBC).
+
+**Source text:** FR-02: "The account starts with an initial password that the user can change." UC-03 open question: "Confirm how the initial password is delivered." The requesting member specified "receieve through email" in the diagram-review conversation.
+
+**Question:** How does a new user receive the initial password?
+
+**Decision:** After the account is saved, the system emails the initial login details to the user's company email through Email Service. Changing the password stays optional (FR-02). Initial credential delivery belongs to UC-03, not UC-15.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-03 - **Decision source:** direct user instruction in the diagram-review conversation, reaffirmed by the instruction to apply the review fixes. Recorded as UC-03 draft v0.3 and use-case list v2.3.
+
+---
+
+### DEC-50: UC-05 and UC-06 notifications use UC-15
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-03 by the requesting member (identity TBC).
+
+**Source text:** UC-05 A3 step 2: "The system sets Cancelled, removes it from active allocation, and notifies affected Crew members through UC-15 (FR-37, FR-38, FR-64)." UC-06 A1 step 3: "The system invokes UC-15 for released Crew members (FR-64)." The supplied diagram-fixes.md recommends option A: add the two missing include relationships.
+
+**Question:** Should the diagram and use-case list show the UC-15 calls already specified in UC-05 and UC-06?
+
+**Decision:** Adopt option A. UC-05, UC-06, UC-07 and UC-09 include UC-15 when their successful flows trigger FR-64 notifications. Add UC-05 and UC-06 include arrows to UC-15; preserve their existing formal flow wording. No new use case or notification event is introduced.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-03 - **Decision source:** instruction to apply the supplied review, using its recommended option consistent with the existing formal flows. Recorded as use-case list v2.3 and UC-15 draft v0.4.
+
+---
+
 ## Entry template (copy for new entries)
 
 ### DEC-nn: <short title>
@@ -1210,3 +1264,352 @@ These entries were made by the team on 2026-09-30 while reviewing SRS v2. They a
 2.
 
 **Decision:** — · **Decided by:** — · **Decision source:** — (MTG-nn / lecturer email / team meeting, with date)
+
+
+## K. Sequence diagram decisions
+
+| ID | Topic | Category | Ask whom | Status |
+|---|---|---|---|---|
+| DEC-51 | FR-70 is the later-event exception to FR-44 | Team decision | Team | **Decided** |
+| DEC-52 | Short notice means less than 48 hours | Team decision | Team | **Decided** |
+| DEC-53 | Boundary, control and entity sequence lifelines | Analysis design | Team | **Decided** |
+
+### DEC-51: FR-70 is the later-event exception to FR-44
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC).
+
+**Source text:** SRS v3.3 FR-44: "The system shall **block** any allocation, Crew change, Job edit or approval that would cause: an invalid or expired Certification for a Job's Brand (FR-32); a double booking (a person in two Crews on one day, a person both in a Crew and on Standby on one day, or overlapping Jobs on a Van); a Crew member unavailable, not submitted or on Leave for a Slot the Van works; an invalid Crew (FR-30); Linked Jobs split across Vans (FR-36); a Van that is unavailable; or a Sunday" SRS v3.3 FR-70: "When approved Leave, an approved Late Availability Change Request or a Certification expiry makes an existing Crew invalid, the system shall remove the affected person from that Crew for the affected dates, mark each affected Van-day **Needs attention** on the Manager's Landing Page, and notify the removed person and that day's eligible Standby Staff. The Manager decides the replacement. The Van's Jobs stay on the Van until the Manager fixes the Crew. A Van becoming unavailable is handled by FR-29" The supplied `sequence-diagrams.md` condition C2 says: "FR-70 is the later-event exception to FR-44".
+
+**Question:** Does FR-44 prevent a later approved request or Certification event from invalidating an existing Crew?
+
+**Why it matters:** UC-07 explicitly required this precedence to be settled before finalizing sequence diagrams.
+
+**Decision:** FR-44 blocks a proposed allocation or Crew change. FR-70 is the exception for later approved Leave, an approved Late Availability Change Request or a Certification expiry/change that invalidates an existing Crew: remove the affected person, mark the Van-day Needs attention, notify the removed person and eligible Standby, and retain the Van's Jobs while the Manager chooses the replacement. A Van becoming unavailable remains FR-29.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** the member's previously accepted least-impact recommendation and direct instruction to implement condition C2 of the supplied review. This records that choice; it does not add a new workflow.
+
+---
+
+### DEC-52: Short notice means less than 48 hours
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC).
+
+**Source text:** SRS v3.3 FR-62: "If the Job starts within 48 hours, a written explanation is also required and the request is marked **Short notice**." The requesting member specified "less than 48 hours". The supplied review condition C2 says: "Short notice means the Job starts in less than 48 h; exactly 48 h is normal."
+
+**Question:** Is a Job Rejection Request submitted exactly 48 hours before the Job starts Short notice?
+
+**Why it matters:** UC-09 and UC-12 kept this boundary open.
+
+**Decision:** Short notice applies when the Job starts in strictly less than 48 hours. Exactly 48 hours is a normal request. The Other reason still requires a comment; a Short-notice request also requires a written explanation. Manager approval and pending/lapsed behaviour remain DEC-42 and FR-63.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** direct user choice in the diagram-review conversation, reaffirmed by the instruction to implement condition C2.
+
+---
+
+### DEC-53: Boundary, control and entity sequence lifelines
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC), from the supplied Claude Opus review.
+
+**Source text:** `sequence-diagrams.md` condition C3: "sequence diagrams use boundary, control and entity lifelines"; section 3 lists ten boundary classes and eleven control classes; section 4 lists the required entity operations. `diagrams/README.md`: "actor, then boundary/control/entity lifelines, activation bars, dashed return messages, and `alt`/`opt`/`loop` fragments with guards."
+
+**Question:** Which analysis classes connect the formal use cases to the sequence diagrams?
+
+**Why it matters:** The sequence lifelines and entity messages must match the identified classes and their operations.
+
+**Decision:** Adopt the ten boundary and eleven control classes named in the supplied section 3 as analysis responsibilities, with CL IDs in traceability and glossary entries. Add Audit Log (FR-66) and Notification (FR-56, FR-64) and section 4's operations to the local CD-domain model. Keep the 16 supplied sequence sources verbatim. Boundary/control responsibilities are design choices, not new stakeholder requirements or database/service implementation commitments.
+
+- The supplied sequences call `Audit Log.record(actor, action)` while section 4 also requires `record(actor, action, target)`; show both overloads in the class model.
+- SD-09 calls the late-change request's `reject()` while section 4 also specifies `reject(reason)`; show both overloads without making a rejection reason mandatory for that request.
+- The Notification recipient associations requested in section 4 are mutually exclusive ({xor}); SD-15 creates one Notification for each recipient. A Notification belongs to Staff or Manager, not both.
+- Existing class attributes and associations are preserved. The expanded class diagram and sequence package remain subject to review; Google Docs receives only the already-approved six images until further approval.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** direct instruction to follow the supplied `sequence-diagrams.md` build instructions. Human PR review and Opus review of rendered outputs remain pending.
+
+---
+
+
+## L. Sequence review corrections
+
+| ID | Topic | Category | Ask whom | Status |
+|---|---|---|---|---|
+| DEC-54 | Workshop Servicing conflicts preserve existing Crews | Team decision | Team | **Decided** |
+| DEC-55 | Split sequence workflows and analysis class views | Analysis design | Team | **Decided** |
+| DEC-56 | Adopted sequence review corrections and operation signatures | Analysis design | Team | **Decided** |
+
+### DEC-54: Workshop Servicing conflicts preserve existing Crews
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC).
+
+**Source text:** SRS v3.3 FR-28: "The system shall **generate** Workshop Servicing dates from the rotation: odd months Vans 1, 2 and 3; even months Vans 4, 5 and 6; on the 1st, 11th and 21st respectively. A date that falls on a Sunday moves to Monday. The Van is unavailable all that day. The Manager may adjust a generated date. If servicing needs more than one day, the Manager records the extra days as Van unavailability (FR-29)". The supplied sequence-diagram-review.md M2 says: "either reuses the FR-29 release loop or blocks with a warning". The member selected: "Block that servicing date and show a warning (recommended: least impact on existing Assignments)."
+
+**Question:** What happens if a proposed Workshop Servicing date already has a Crew?
+
+**Decision:** Check for an existing Crew before booking the servicing date or making the Van unavailable. Block a conflicting proposed date, warn the Manager and preserve the Crew and Jobs. A generated conflicting date remains an unbooked proposal for the Manager to adjust; the analysis class represents this with an optional scheduledDate. Generate each month's rotation once, retaining both booked dates and conflicting proposals. When an adjusted date has no Crew, book it and mark the Van unavailable; free the previous booked date only if it exists and no other unavailability reason still applies. Breakdown and extra-day unavailability continue to follow FR-29.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** direct answer to the review's M2 question. Draft UC-06 and SD-06 record the chosen exception without changing SRS v3.3.
+
+---
+
+### DEC-55: Split sequence workflows and analysis class views
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC), from the supplied review.
+
+**Source text:** sequence-diagram-review.md M5: "New IDs are allowed. Do not reuse SD-16; use SD-17 onwards or the a/b/c suffixes, and record the split in a DEC."
+
+**Decision:** Retain SD-01 to SD-16. SD-07 becomes the Weekly Roster overview and calls SD-17 (Crew/Standby overview), SD-18 (Job allocation) and SD-19 (publication). SD-17 calls SD-26 (form/change Crew) and SD-27 (name Standby). SD-18/19 call SD-30 (confirm warnings before save). SD-09 becomes the request-decision overview and calls SD-20 (Leave overview), SD-21 (Late Availability Change) and SD-22 (Job Rejection). SD-20 calls SD-28 (reject Leave) or SD-29 (approve Leave). SD-12 becomes the submission overview and calls SD-23 (Leave), SD-24 (Late Availability Change) and SD-25 (Job Rejection). SD-16 remains the shared FR-70 fragment with no separate use case.
+
+Class definitions remain one identified model with 43 classes. Keep the 22 entity classes in CD-domain and show the ten boundary classes in CD-boundary and eleven controls in CD-control for readability. The views introduce no new domain associations. All sequence lifelines and operations must agree with these views.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** instruction to apply the supplied review, including its permitted split. Human review of the rendered revision remains pending.
+
+---
+
+### DEC-56: Adopted sequence review corrections and operation signatures
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC), from the supplied review.
+
+**Source text:** SRS v3.3 FR-45: "The system shall **warn**, allow an override and log it, when an allocation or a publication would cause: a Staff member's Workload above 40 h in the Planning Week; a Job Preference not met; a Job starting outside the customer's preferred Slot; fewer than 3 Vans on service on a working day; or a working day without Standby cover (FR-71). Overtime has no approval step". FR-66: "The system shall log, with who, what and when: account and role changes, password change requests, and every change to Availability, Crews, Assignments, Jobs and Leave, including overridden warnings. Only the IT Administrator can view the audit log". Review m3 says "add" the operations "invalidateToken()" and "record(user, password changed)" after "setPassword"; m9 says "Split into" the separate "Email Service" and "SMS Gateway" lifelines.
+
+**Decision:** Adopt B2/B3, M1/M3/M4 and m1-m10 as corrections to the DEC-53 draft. Validate and obtain warning confirmation before creating/changing Assignments; cancellation saves nothing. Linked Jobs share the proposed Van/date and are validated together. End previous placements before published moves/unassignments (FR-50). Missing Leave rejection reason makes no change and sends no decision notification. Notify the Crew after a valid Assigned-Job edit, or tell it that an invalidating edit made the Job Unassigned. Record the specified mutations and submitted requests in Audit Log. Referenced fragments use the matching receiving lifeline and an explicit entry message; human confirmation gates connect to the overview's page.
+
+Show status checks before credentials, failed-attempt recording/lockout, authority refusal, concrete account subclasses, single-use reset-token invalidation and password-change audit. Token lifetime and password complexity remain open. Replace alternative labels with guarded branches or a generic edit(details). Propagate optional Late-change/Job-refusal reasons without making them mandatory; apply Late changes per Slot. Check affected Crews before SD-16. Email Service and SMS Gateway realise the existing Email/Phone actor (DEC-48) with separate initial sends and up to three retries on each failed channel. Acknowledgement, deduplication and lapse-notification questions remain open.
+
+Update the class operations to the messages actually used. reject(reason) and refuse(reason) supersede the zero-argument draft calls; no extra mandatory reasons are introduced. complete(details) groups the existing completion fields shown in SD-14. Formatting changes and splits supersede DEC-53's verbatim-source retention for this revision. Boundary/control classes remain analysis responsibilities rather than implementation or stakeholder facts.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** direct instruction to fix the supplied Opus review. Local draft corrections and class views await Opus and human PR review; no commit, push or Google Docs change is performed for this revision.
+
+---
+
+
+### DEC-57: Consolidate the sequence review into 22 active diagrams
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-04 by the requesting member (identity TBC).
+
+**Source text:** Direct member instruction: "create the consolidated 22 SD instead and output here as a zip file for opus review".
+
+**Decision:** Supersede the 30-diagram presentation in DEC-55 with 22 active diagrams. Withdraw the redundant SD-07, SD-09 and SD-12 overview interactions, retaining their opening/listing steps in the detailed workflows. Fold SD-26 and SD-27 into SD-17 (Form Crews and Standby), SD-28 and SD-29 into SD-20 (Decide Leave Request), and SD-30 warning confirmation into SD-18 (allocation) and SD-19 (publication). Retain SD-17/18/19 for UC-07, SD-20/21/22 for UC-09 and SD-23/24/25 for UC-12. SD-11 calls SD-24 directly for the locked-week route. SD-15 remains reusable notification delivery and SD-16 remains the shared FR-70 interaction with no separate use case.
+
+The active IDs are SD-01 to SD-06, SD-08, SD-10, SD-11 and SD-13 to SD-25. Do not reuse or renumber withdrawn IDs. Their exact earlier sources are archived in diagrams/archive/sequence-r2-2026-10-04/ and listed as Withdrawn in traceability.md. The review ZIP contains only the 22 active sequence sources and their PNG/SVG exports; archive files stay in the repository.
+
+Preserve the adopted Opus corrections in DEC-54/56, including warning confirmation before save, cancellation without changes, the missing Leave rejection reason guard, valid Assigned-Job edit notifications, audit coverage, matched interaction-entry messages and Workshop Servicing conflict handling. Detailed workflows show the applicable human actor and page. Add the corresponding page confirmation operations in CD-boundary; keep the 43 identified classes and domain relationships. These are analysis presentation changes, not additional stakeholder facts. Google Docs, the binding brief and the SRS remain unchanged.
+
+**Decided by:** Requesting member (identity TBC) - **Decision date:** 2026-10-04 - **Decision source:** explicit consolidation request. Opus review and human PR review remain pending; no commit, push or report update.
+
+---
+
+
+### DEC-58: Adopt round-2 consistency, atomicity and UML corrections
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** diagrams/sequence-diagram-review-round-2.md B1, M1, M3-M5, m1-m11; direct request to follow the review; FR-10/13/17/22/24/25/36/49/62/63/66/70; DEC-53/56/57.
+
+**Decision:** Adopt B1, M1, M3-M5 and m1-m11 in the supplied round-2 critique as corrections to the existing analysis model. SD-15 partitions multi-week events by the affected week and suppresses Draft roster payloads before creating Staff messages or sending email/SMS (FR-49); non-roster request decisions remain visible. Publication delivers after the roster becomes Published.
+
+Leave approval rechecks the remaining working-day balance inside the same atomic save as request status, balance deduction and Crew removal/Needs attention. Serialize the approval check and deduction for each Staff/calendar year, so two non-overlapping four-day requests against seven days cannot both approve (FR-22/25). Validation excludes the selected request from checking overlap with other pending/approved requests. Approved Leave counts as Unavailable (FR-24).
+
+Late-change approval and Certification edit also include affected Crew changes and audit entries in their own atomic save. The callable SD-16 branch joins that transaction and returns events; callers deliver only after commit. Failed submissions preserve prior data under NFR-09. Atomic guards prevent a second decision.
+
+Adopt the review's duplicate rule: at most one Pending Job Rejection Request per Assignment, across Crew members. Decided request history remains unconstrained. SD-25 checks and rechecks eligibility and this constraint inside the save, recomputes less-than-48-hour Short notice and stores its flag. This is an adopted team rule from m9, not a claim that the SRS specified the duplicate policy.
+
+Correct interaction-use scopes, single-line canonical lifeline names, input gates, generic login refusal and invalid confirmation-code handling, initial-email failure/resend, link validation, blank Availability creation, and Draft current-week visibility. Boundary/control operation additions are analysis responsibilities under DEC-53, not infrastructure requirements.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-59: Draw clock-driven events within the existing 22 diagrams
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** Direct member reply on 2026-10-05; supplied round-2 review M2/m9; FR-10/63/70; DEC-19/42/51/57.
+
+**Confirmed member choice:** "Keep 22 and add the clock flows to SD-22 and SD-16 (recommended: least impact)".
+
+**Decision:** Keep exactly the active IDs in DEC-57; do not reuse retired SD-26 or introduce SD-31. Clock is an external system-event actor, not a domain class or human User. SD-22 receives a Job-start event at the Job's start time and atomically lapses requests still Pending; it does not wait for Manager action or a polling interval. The Assignment stands. Record a newly saved lapse and notify its requester after commit, adopting M2/m9 and closing the lapse-notification question noted in DEC-56.
+
+SD-16 draws a daily 00:00 Certification-expiry check. The expiry date itself remains valid; the check concerns expiryDate earlier than today (FR-10). Check current/future Crews using the affected Technician and apply FR-70 only where a Crew became invalid. Save Crew removal, Needs attention and audit together; deliver only after commit, subject to SD-15 Draft privacy. The schedule is an analysis choice adopted from the review's 00:00 example, not an interview fact. Retries follow NFR-09.
+
+Clock-driven branches share the existing controllers and interactions. They add no new use case and do not change the 22-diagram count.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-60: Remove future Crew membership during account cleanup
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** Direct member reply on 2026-10-05; supplied round-2 review M7; FR-04/05/49/66/70; DEC-17/34/51.
+
+**Confirmed member choice:** "Mark Needs attention (recommended: reuse the existing flag)".
+
+**Decision:** For account deactivation or a Staff-to-Manager role change, remove the person from affected future Crews and mark those Van-days Needs attention. SD-04 saves account changes, future Crew removal, future Assignment removal, Jobs becoming Unassigned and the relevant audit entries atomically. Notify affected Crew members and eligible Standby after commit; SD-15 suppresses any Draft-week roster information.
+
+Keep FR-04/05's removal of future Assignments and Unassigned Jobs. This differs from the FR-70 Leave/Availability/Certification handler, which keeps the Van's Jobs. Therefore SD-04 shares the flag and notification mechanism but does not blindly invoke SD-16. Retain past records (NFR-13); role access still takes effect at next login (FR-04). Existing active-session handling remains an open UC-04 question.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-61: Authentication token lifetimes and password complexity
+
+| Category | Analysis design | Ask whom | IT Administrator / Team | Status | **Open** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** Supplied round-2 review B1/m4; UC-01/02; FR-06, NFR-10/11; DEC-41/56.
+
+**Question:** What reset-link lifetime, email-confirmation-code lifetime and password-complexity rules should apply?
+
+**Why it remains open:** FR-06 and NFR-10/11 specify reset/email confirmation and salted password hashing, but do not specify these values. UC-02 and DEC-56 already identify the reset/password questions; the wrong/expired-code branch in SD-01 also needs a configured expiry policy.
+
+**Current representation:** SD-01 and SD-02 validate against the eventual policy without choosing a duration or complexity threshold. Single-use reset tokens remain the adopted DEC-56 behaviour. Resolve with the IT Administrator/team before implementation; the diagrams do not invent values.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-62: External notification acknowledgement and deduplication
+
+| Category | Analysis design | Ask whom | Manager / IT Administrator / Team | Status | **Open** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** Supplied round-2 review B1; UC-15; FR-64, NFR-09; DEC-46/48/56.
+
+**Question:** Is accepting an outbound email/SMS request enough, or must delivery acknowledgement be tracked? What identity/time window should suppress duplicate delivery attempts?
+
+**Why it remains open:** FR-64 and NFR-09 define channels and retries, not these transport policies. DEC-56 retained the question.
+
+**Current representation:** SD-15 records accepted/failed channel submission and preserves the Landing Page message after channel failure. It assigns no delivery-acknowledgement or deduplication values. This transport question is separate from DEC-58's adopted one-Pending-request-per-Assignment business constraint and atomic no-second-decision guards. Resolve with the Manager/IT Administrator/team before implementation.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-63: Reuse Notification for typed Manager dashboard alerts
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** Supplied round-2 review m12; direct request to adopt review fixes; FR-56/64; DEC-53.
+
+**Decision:** Choose review m12's existing-class option. Notification represents a recipient-specific item with a handled state. Add NotificationKind values DashboardAlert and StaffMessage to the analysis class view.
+
+DashboardAlert represents FR-56 Manager operational alerts, such as Needs attention or Jobs made Unassigned by account changes; SD-10 marks the selected alert handled through alert:Notification. StaffMessage represents the Staff Landing Page event delivered through SD-15 with existing email/SMS channels (FR-64). Typing a Manager alert does not trigger Staff delivery or add a new email/SMS policy.
+
+Keep the per-recipient Staff-or-Manager xor association and the existing 43 identified classes (22 domain, ten boundary, eleven control). An enumeration is a value type, not a new Alert class. Names and traceability are aligned in the same local revision.
+
+**Recorded by:** OpenAI Codex from the member's instruction to apply Opus round-2 review. Member identity remains TBC. This is a local review draft on CL/sequence-diagrams; no commit, push, merge or Google Docs edit.
+
+---
+
+### DEC-64: Suppress delivery of Draft roster events
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** DEC-16, DEC-50, DEC-58; FR-49; supplied round-3 B1; member instruction to apply the review.
+
+**Decision:** Split this rule out of the historical combined DEC-58 decision. Partition notifications by affected week. A roster-related Draft event creates no Staff message and sends no email/SMS. Published roster events and non-roster request decisions deliver after commit. This is a traceability clarification, not a new rule.
+
+**Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
+
+---
+
+### DEC-65: Serialize Leave approval balance checks
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** DEC-13, DEC-58; FR-22/24/25; supplied round-3 B1; member instruction to apply the review.
+
+**Decision:** Split this rule out of DEC-58. Check remaining Leave balance and deduct working days within one serialized approval transaction per Staff/calendar year, together with request status and affected Crew changes. Two four-day requests against seven remaining days cannot both be approved. Insufficient balance leaves the request Pending; this is refusal to approve, not rejection of the request.
+
+**Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
+
+---
+
+### DEC-66: One Pending Job Rejection Request per shared Assignment
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** DEC-39, DEC-42, DEC-58; FR-62/63; supplied round-3 m19; direct member reply on 2026-10-05.
+
+**Decision:** The member confirmed: "One Pending request per Assignment (recommended)". The limit is across the Crew, not per Staff member. Other Crew members see the existing Pending status. SD-25 checks and creates atomically; SD-22 pendingRejectionFor returns zero or one request. Historical decided requests remain. This explicitly confirmed team policy replaces the duplicate-rule citation to the combined DEC-58; it is not claimed to be an interview fact.
+
+**Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
+
+---
+
+### DEC-67: Propagate unassignment to active Linked partners
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** DEC-11, DEC-42; FR-36/37/38/63; supplied round-3 M9; direct member reply on 2026-10-05.
+
+**Decision:** The member confirmed: "Also unassign the active Linked partner (recommended)". If an invalid edit or approved Job Rejection Request unassigns a Job, atomically end the current placements of that Job and its active Linked partners and mark them Unassigned. Cancellation cancels only the selected Job, ends its placement, and unassigns active Linked partners. Completed and already Cancelled partners remain unchanged. Audit each affected placement; notify the requester where applicable, affected Crew and eligible Standby after commit, subject to DEC-64. Keep the links for future same-Van/date allocation. This resolves the Linked-partner ambiguity; it is a member-approved team rule, not a stakeholder quotation.
+
+**Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
+
+---
+
+### DEC-68: Align Clock, UML references and round-3 presentation
+
+| Category | Analysis design | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-05 by the requesting member (identity TBC).
+
+**Source:** DEC-53, DEC-57, DEC-59; supplied round-3 M6/M8 and m1/m13-m22; member instruction to apply the latest review.
+
+**Decision:** Append-only clarification of DEC-59: Clock is the secondary system-event actor for UC-09 Job-start lapse and for FR-10/70 Certification-expiry behaviour. Include it in UC-09 secondary actors and a UCD footnote; no extra use case or sequence diagram. SD-16 is explicitly system behaviour with no UC owner. Keep all existing Withdrawn ID rows under DEC-57. Apply the review's atomic Van-breakdown save/failure handling, publication weekWorkload operation, failed-confirmation-email branch, contiguous reference scopes and single Staff comparison lifeline. The Technician-only certifications operation is dynamically dispatched on that same Staff object when it is a Technician. Shorten presentation labels without changing audit content (who, what, when). DEC-58 remains historical; its three separate business-rule citations are now DEC-64/65/66. No commit, push, main merge or Google Docs change is authorized by this correction work.
+
+**Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
+
+---

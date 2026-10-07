@@ -11,8 +11,8 @@
 | **Description** | Staff view Published Assignments, Standby days, Crew and Job details, weekly and monthly Workload, request status and Leave balance. |
 | **Trigger** | A Staff member opens their Landing Page or selects an Assignment. |
 | **Linked requirements** | FR-49, FR-53, FR-55, FR-58, FR-59, NFR-08 |
-| **Source** | Brief R7; INT-DCT [System Q1], [System Q2], [System Q3], [Process Q1 follow-up: job info]; INT-DRV [Q1], [Q2], [Q13]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-04; DEC-16; DEC-31; DEC-37; DEC-39; DEC-40; DEC-42; DEC-43; DEC-47 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Source** | Brief R7; INT-DCT [System Q1], [System Q2], [System Q3], [Process Q1 follow-up: job info]; INT-DRV [Q1], [Q2], [Q13]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-04; DEC-16; DEC-31; DEC-37; DEC-39; DEC-40; DEC-42; DEC-43; DEC-47; DEC-58 |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-13](../diagrams/SD-13-view-my-assignments-and-workload.puml) |
 | **Status** | Draft |
 
 ## Preconditions
@@ -40,6 +40,10 @@
 
 1. The system shows the pending status while keeping the Assignment visible (FR-58, FR-63).
 
+### A3: Current week is Draft (branches at step 1)
+
+1. Show not yet published and the Leave balance, without exposing Draft Assignments (FR-49, DEC-58).
+
 ## Exception flows
 
 ### E1: Next week is Draft (branches at step 2)
@@ -59,6 +63,8 @@
 
 - Overtime is strictly above 40 hours per Planning Week.
 - Standby contributes zero Workload unless the Staff member is placed into a Crew (FR-71).
+
+- If the current week is Draft, show not yet published and the Leave balance; disclose no Draft Assignments. Published-week and cached Published-today views remain read-only (DEC-58).
 
 ## Open questions
 

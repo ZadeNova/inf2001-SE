@@ -1,0 +1,92 @@
+@startuml SD-03-create-user-account
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 300
+skinparam wrapWidth 300
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-03: Create User Account (UC-03)
+' Traces: UC-03; FR-02, FR-10, FR-66; NFR-09, NFR-11, NFR-12
+' Sources: DEC-17, DEC-35, DEC-45, DEC-49; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+actor "IT Administrator" as ITA
+boundary ":AccountAdminPage" as Page
+control ":AccountController" as AC
+entity "newUser:User" as U
+entity ":Certification" as Cert
+entity ":Account" as ACC
+entity ":AuditLog" as AL
+actor "Email Service" as ES
+
+ITA -> Page : createAccount(details)
+activate Page
+Page -> AC ++ : createAccount(details)
+AC -> AC : checkAuthority()
+alt not IT Administrator
+  AC --> Page : refuse (NFR-12)
+else authorized
+  AC -> AC : validate(details)
+  alt invalid fields or duplicate email
+    AC --> Page : errors; create nothing
+  else valid
+    group atomic account save (NFR-09)
+      AC -->> U ** : <<create>>(userDetails)
+      note right of U : concrete subclass per role:\nDriver, Technician or Manager
+      opt role = Technician
+        loop for each Certification (1..2)
+          AC -->> Cert ** : <<create>>(certification)
+        end
+      end
+      AC -->> ACC ** : <<create>>(newUser, role, passwordHash)
+      AC -> AL : record(IT Administrator,account created)
+    end
+    AC -> ES : sendInitialLogin(email)
+    ES --> AC : accepted / failed
+    opt email failed
+      AC --> Page : account saved; initial email failed
+      Page --> ITA : warn; offer resend
+      opt IT Administrator chooses resend
+        ITA -> Page : resendInitialLogin(account)
+        Page -> AC : resendInitialLogin(account)
+        AC -> ES : sendInitialLogin(email)
+        ES --> AC : accepted / failed
+        AC --> Page : delivery status
+      end
+    end
+    AC --> Page : account ready for UC-01
+  end
+end
+deactivate AC
+Page --> ITA : confirmation or error
+deactivate Page
+legend bottom
+Details: name, email, contact number, permitted role and initial
+Technician Certifications.
+Initial login details use email (DEC-49); password change is optional
+(FR-02).
+Failed save creates no usable partial account; retries follow NFR-09.
+endlegend
+@enduml

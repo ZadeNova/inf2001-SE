@@ -1,0 +1,87 @@
+@startuml AD-03-job-rejection
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 145
+skinparam dpi 180
+title AD-03: Job Rejection and Subsequent Reassignment
+' Traces: UC-12 A3, UC-09 A3, UC-07, UC-13, UC-15; FR-36/38/41/44/45/46/53/62/63/64/66; NFR-09.
+' Sources: DEC-10, DEC-16, DEC-19, DEC-42, DEC-43, DEC-46, DEC-52, DEC-59, DEC-66, DEC-67, DEC-68.
+' Lapse notification follows the later approved DEC-59; Linked partner handling follows DEC-67.
+|Staff|
+start
+:Select Job; read warning;
+if (Proceed?) then (yes)
+  :Enter reason / explanation;
+else (cancel)
+  stop
+endif
+|System|
+:Save valid Pending request\n(UC-12);
+fork
+  |System|
+  :Await Clock Job-start event;
+  if (Still Pending?) then (yes)
+    :Atomically save Lapsed\nand audit;
+    if (Lapse saved?) then (yes)
+    else (no)
+      :Keep current outcome;
+      end
+    endif
+  else (no)
+    :End timer;
+    end
+  endif
+fork again
+  |Manager|
+  :Review and choose\nApprove or Refuse (UC-09);
+  |System|
+  :Atomically save decision\nand audit; if Approved,\nunassign Job and\nactive Linked partners;
+  if (Decision saved?) then (yes)
+  else (no)
+    :Show error / current status;
+    end
+  endif
+end merge
+|System|
+if (Outcome?) then (Approved)
+  :Update Unassigned count\nand Workload; notify requester,\naffected Crew and eligible Standby\n(UC-15);
+  |Manager|
+  if (Reallocate now?) then (later)
+    |System|
+    :Keep affected Jobs Unassigned;
+  else (yes)
+    |Manager|
+    :Choose Van-day, Crew\nand start (UC-07);
+    |System|
+    :Validate and reassign;\nnotify Staff;
+  endif
+else (Refused / Lapsed)
+  |System|
+  :Keep Assignment;\nnotify requester (UC-15);
+endif
+|Staff|
+:View outcome and\ncurrent Assignment (UC-13);
+stop
+legend bottom
+Own Published Assigned Job only. Other needs a comment; less than 48 h needs an explanation.
+Decision requires Pending and before Job start; Clock lapse competes atomically (DEC-59).
+No Pending request until saved. Save failures: 3 retries, then retry / contact IT Administrator.
+One Pending request per shared Assignment (DEC-66). Completed / Cancelled Linked partners stay unchanged (DEC-67).
+All saved outcomes update views; notifications follow commit via Landing Page, email and SMS.
+endlegend
+
+@enduml

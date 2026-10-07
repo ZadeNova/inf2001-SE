@@ -12,7 +12,7 @@
 | **Trigger** | The Manager requests a comparison while performing UC-07. |
 | **Linked requirements** | FR-43, FR-53, FR-55 |
 | **Source** | Brief R4, R5; INT-MGR [System Q3]; DEC-06; DEC-08; corrected finalized connection supplied 2026-10-01 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [SD-08](../diagrams/SD-08-compare-staff.puml) |
 | **Status** | Draft |
 
 ## Preconditions

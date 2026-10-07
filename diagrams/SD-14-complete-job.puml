@@ -1,0 +1,78 @@
+@startuml SD-14-complete-job
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 300
+skinparam wrapWidth 300
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-14: Complete Job (UC-14)
+' Traces: UC-14; FR-39, FR-53, FR-66; NFR-08, NFR-09, NFR-12
+' Sources: DEC-39, DEC-40; DEC-55, DEC-56; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+actor Technician
+boundary ":JobCompletionPage" as Page
+control ":CompletionController" as CC
+entity ":Job" as Job
+entity ":AuditLog" as AL
+
+Technician -> Page : completeJob(job)
+activate Page
+Page -> CC ++ : canComplete(user, job)
+CC -> CC : checkRoleAndCrew(user, job)
+CC --> Page -- : allowed / refused
+alt Driver or not in the Crew
+  Page --> Technician : refuse (FR-39)
+else Technician on the Crew
+  Technician -> Page : enter(completionDetails)
+  note over Page, CC : actual start/end, remark,\nfollow-up needed, invoice photo
+  alt online
+    Page -> CC ++ : submitCompletion(job, details)
+    CC -> CC : validate(details)
+    alt invalid time, date or missing photo
+      CC --> Page : refuse; show error
+    else valid
+      group atomic completion save
+        CC -> Job : complete(details)
+        Job -> Job : actualHours()
+        CC -> AL : record(Technician,Job completed)
+      end
+      CC --> Page : Completed; Workload updated
+    end
+    deactivate CC
+  else offline (NFR-08)
+    Page -> Page : queueCompletion(job, details)
+    Page --> Technician : queued until reconnect
+  end
+end
+deactivate Page
+legend bottom
+On reconnect, queued completion uses the same online validation/save
+path.
+Actual Hours replace Planned Hours; credit goes to the Crew at
+completion.
+Failed online save follows NFR-09.
+endlegend
+@enduml

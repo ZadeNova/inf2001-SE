@@ -1,0 +1,105 @@
+@startuml SD-21-decide-late-availability-change
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-21: Decide Late Availability Change (UC-09)
+' Traces: UC-09; FR-17, FR-49, FR-56, FR-64, FR-66, FR-70; NFR-09
+' Sources: DEC-02, DEC-51, DEC-53, DEC-56, DEC-57, DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":RequestReviewPage" as Page
+control ":RequestController" as RQ
+entity ":LateAvailabilityChangeRequest" as LAC
+entity ":Availability" as AV
+entity "new:Availability" as NEW
+control ":RosterController" as RC
+control ":NotificationService" as NS
+entity ":AuditLog" as AL
+
+Manager -> Page : openPendingRequests()
+activate Page
+Page -> RQ ++ : listPending()
+RQ --> Page -- : Pending requests; Short notice highlighted
+Page --> Manager : request details and roster impact
+Manager -> Page : decideRequest(request, decision, reason)
+Page -> RQ ++ : decideLateChange(request, decision, reason)
+group atomic request, Availability and Crew save
+  RQ -> RQ : checkStillPending(request)
+  alt no longer Pending
+    RQ --> Page : current state; no second decision
+  else Pending
+    alt approve
+      RQ -> LAC : approve()
+      loop each requested Slot
+        alt Availability entry exists
+              RQ -> AV : setState(state)
+            else previously blank Slot
+              RQ -->> NEW ** : <<create>>(date, slot, state)
+            end
+        RQ -> AL : record(Manager, Availability changed)
+      end
+      RQ -> RQ : checkAffectedCrews(staff, dates)
+      opt existing Crew becomes invalid
+        RQ -> RC : handleCrewInvalidation(staff, dates)
+        ref over RC, NS, AL : SD-16
+        RC --> RQ : crewEvents and recipients
+      end
+      RQ -> AL : record(Manager, Late change approved)
+    else reject
+      RQ -> LAC : reject(reason)
+      RQ -> AL : record(Manager, Late change rejected)
+    end
+  end
+end
+opt valid decision save attempted
+  alt save still fails after 3 retries
+    RQ --> Page : Not saved; Pending; prior data retained
+  else transaction committed
+    opt Crew changes saved
+      RQ -> NS : notify(crewEvents, crewRecipients)
+      ref over NS : SD-15
+      NS --> RQ : notification outcome
+    end
+    RQ -> NS : notify(requestDecision, requester)
+    ref over NS : SD-15
+    NS --> RQ : notification outcome
+    RQ --> Page : saved decision
+  end
+end
+deactivate RQ
+Page --> Manager : current outcome
+deactivate Page
+legend bottom
+Rejection leaves Availability unchanged; a supplied reason is retained
+but is not mandatory.
+Approval, per-Slot changes and Crew invalidation commit together.
+SD-16 returns events; notification delivery follows commit.
+SD-15 withholds Draft Crew events and delivers the request decision.
+endlegend
+@enduml

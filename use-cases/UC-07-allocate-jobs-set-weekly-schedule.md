@@ -1,6 +1,6 @@
 # UC-07: Allocate Jobs/set weekly schedule (includes forming Van Crew and publishing Weekly Roster)
 
-> **Status: Draft v0.2 (2026-10-01).** This merged use case includes forming Van Crews and publishing the Weekly Roster.
+> **Status: Draft v0.3 (2026-10-04).** This merged use case includes forming Van Crews and publishing the Weekly Roster.
 
 | Field | Value |
 |---|---|
@@ -11,8 +11,8 @@
 | **Description** | The Manager prepares one Planning Week by forming daily Crews, naming Standby Staff, assigning and timing Jobs, resolving validation results and publishing the Weekly Roster. |
 | **Trigger** | Planning begins for the next unpublished Planning Week or a current/future Published roster needs revision. |
 | **Linked requirements** | FR-30, FR-32, FR-33, FR-41 to FR-46, FR-49 to FR-51, FR-53, FR-55, FR-64, FR-71 |
-| **Source** | Brief R3 to R6; INT-MGR [Process Q1], [System Q2], [System Q4], [Conflicts Q1], [Conflicts Q2 follow-up: standby], [Conflicts Q5]; INT-DRV [Q5], [Q7]; DEC-09; DEC-10; DEC-16; DEC-19; DEC-31; DEC-32; DEC-39; DEC-43; DEC-45; DEC-47 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Source** | Brief R3 to R6; INT-MGR [Process Q1], [System Q2], [System Q4], [Conflicts Q1], [Conflicts Q2 follow-up: standby], [Conflicts Q5]; INT-DRV [Q5], [Q7]; DEC-09; DEC-10; DEC-16; DEC-19; DEC-31; DEC-32; DEC-39; DEC-43; DEC-45; DEC-47; DEC-51 |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [SD-17](../diagrams/SD-17-form-crews-and-standby.puml); [SD-18](../diagrams/SD-18-allocate-job.puml); [SD-19](../diagrams/SD-19-publish-weekly-roster.puml) |
 | **Status** | Draft |
 
 ## Preconditions
@@ -75,8 +75,9 @@
 
 - The Crew is fixed for a Van-day except for the FR-33 emergency change.
 - Past roster dates are read-only.
+- FR-70 is the later-event exception to FR-44; later approved Leave, approved Availability changes or Certification changes may leave an existing Crew marked Needs attention (DEC-51).
 - Validation is embedded in this merged use case rather than represented as a separate use case (DEC-45).
 
 ## Open questions
 
-- Confirm the precedence between FR-44 blocking and FR-70 later-event handling before sequence diagrams are finalized.
+- Resolved by DEC-51: FR-70 is the later-event exception to FR-44. No remaining open question in this draft.

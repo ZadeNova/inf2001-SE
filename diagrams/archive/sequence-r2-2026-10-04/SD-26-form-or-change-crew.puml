@@ -1,0 +1,71 @@
+@startuml SD-26-form-or-change-crew
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 240
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-26: Form or Change Crew (UC-07)
+' Traces: UC-07; FR-30, FR-32, FR-33, FR-44, FR-50, FR-64, FR-66, FR-71.
+' Sources: DEC-09, DEC-19, DEC-39, DEC-43, DEC-55, DEC-56; sequence-diagram-review.md.
+control ":Roster\nController" as RC
+control ":Rule\nValidator" as RV
+control ":Notification\nService" as NS
+entity ":Crew" as Crew
+entity ":Standby" as SB
+entity ":Audit Log" as AL
+
+[-> RC ++ : formCrew(proposal)
+RC -> RV ++ : checkCrew(proposal)
+RV --> RC -- : violations / none
+alt blocking violation
+  RC -->] : refuse; keep records
+else valid
+  group atomic Crew save
+    alt new Crew
+      RC -->> Crew ** : <<create>>(proposal)
+      RC -> AL : record(Manager, Crew created)
+    else change existing Crew
+      RC -> Crew : changeMembers(members)
+      RC -> AL : record(Manager, Crew changed)
+    end
+    opt member was Standby that day
+      RC -> SB : endPlacement()
+    end
+  end
+  opt week already Published
+    RC -> NS : notify(\nCrew changed,\nremoved and added Staff)
+    ref over NS : SD-15
+    NS --> RC : delivery recorded
+  end
+  RC -->] : Crew saved
+end
+deactivate RC
+legend bottom
+Completed-work credit is preserved. Crew validation covers all worked Slots and Job Brands.
+Draft notification waits for publication; Published changes notify immediately.
+Changes and audit commit atomically; failed save retains previous records (NFR-09).
+endlegend
+@enduml

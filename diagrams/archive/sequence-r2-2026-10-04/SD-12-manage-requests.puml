@@ -1,0 +1,70 @@
+@startuml SD-12-manage-requests
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 240
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-12: Submit Staff Requests (UC-12)
+' Traces: UC-12; FR-17, FR-22, FR-62, FR-63, FR-66
+' Sources: DEC-02, DEC-13, DEC-42, DEC-52; DEC-55, DEC-56; sequence-diagram-review.md.
+actor Staff
+boundary ":Request\nPage" as Page
+control ":Request\nController" as RQ
+
+[-> Page : open(requestType, context)
+activate Page
+Page --> Staff : selected request form
+alt Leave Request
+  Staff -> Page : submitLeave(dates, note)
+  Page -> RQ : submitLeave(\nstaff,\ndates,\nnote)
+  ref over RQ : SD-23
+  RQ --> Page : Pending / refused / not saved
+else Late Availability Change Request
+  Staff -> Page : submitLateChange(\nchanges,\nreason)
+  Page -> RQ : submitLateChange(\nstaff,\nchanges,\nreason)
+  ref over RQ : SD-24
+  RQ --> Page : Pending / refused / not saved
+else Job Rejection Request
+  Staff -> Page : selectJob(assignment)
+  Page --> Staff : discuss with the Manager first
+  alt cancel at warning
+    Page --> Staff : no request; Assignment unchanged
+  else proceed
+    Staff -> Page : submitRejection(details)
+    Page -> RQ : submitRejection(\nstaff,\nassignment,\ndetails)
+    ref over RQ : SD-25
+    RQ --> Page : Pending / refused / not saved
+  end
+end
+Page --> Staff : current outcome
+deactivate Page
+legend bottom
+Pending requests appear on the Manager Landing Page; decisions are
+SD-09.
+The Job stays Assigned while a Job Rejection Request is Pending
+(FR-63).
+endlegend
+@enduml

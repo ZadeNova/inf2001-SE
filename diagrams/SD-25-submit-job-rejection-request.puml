@@ -1,0 +1,90 @@
+@startuml SD-25-submit-job-rejection-request
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-25: Submit Job Rejection Request (UC-12)
+' Traces: UC-12; FR-49, FR-56, FR-62, FR-63, FR-66; NFR-09
+' Sources: DEC-42, DEC-43, DEC-52, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-66, DEC-68; sequence-diagram-review-round-3.md.
+actor Staff
+boundary ":RequestPage" as Page
+control ":RequestController" as RQ
+entity ":Assignment" as ASG
+entity ":JobRejectionRequest" as JRR
+entity ":AuditLog" as AL
+
+Staff -> Page : open(requestType, context)
+activate Page
+Page --> Staff : Published Assignments; request status
+Staff -> Page : selectJob(assignment)
+Page --> Staff : discuss with the Manager first
+alt cancel at warning
+  Page --> Staff : no request; Assignment unchanged
+else proceed
+  Staff -> Page : submitRejection(details)
+  Page -> RQ ++ : submitRejection(staff, assignment, details)
+  group atomic eligibility check and request save
+    RQ -> ASG ++ : isEligible(staff)
+    ASG --> RQ -- : eligible / ineligible
+    RQ -> ASG ++ : hasPendingRejection()
+    ASG --> RQ -- : existing Pending request?
+    RQ -> RQ : hoursUntilStart(assignment)
+    RQ -> RQ : classifyShortNotice(hours)
+    RQ -> RQ : validateReasonAndExplanation(details)
+    alt ineligible, existing Pending or required input missing
+      RQ -> RQ : refuseSubmission()
+    else valid at save time
+      RQ -->> JRR ** : <<create>>(staff, assignment, details, shortNotice)
+      RQ -> AL : record(Staff, Rejection submitted)
+    end
+  end
+  alt save validation refused
+    RQ --> Page : no request; eligibility or input error
+  else save still fails after 3 retries
+    RQ --> Page : Not saved; retry / contact IT Administrator
+  else transaction committed
+    RQ --> Page : Pending; Job stays Assigned
+  end
+  deactivate RQ
+end
+Page --> Staff : current outcome
+deactivate Page
+legend bottom
+Staff opens the request page.
+Eligibility includes own Van, Published week, Assigned status,
+before Job start and no Pending request for that Assignment.
+At most one Pending request per Assignment; history may contain
+many decided requests (DEC-66). All Crew members share this limit.
+Other Crew members see the existing Pending status.
+The page may pre-validate; authoritative checks and creation are atomic.
+Reasons: Personal emergency; Missing equipment or parts; Other
+(comment required). Less than 48 h needs an explanation and sets
+shortNotice; exactly 48 h is normal (DEC-52). Lapse is drawn in SD-22.
+endlegend
+@enduml

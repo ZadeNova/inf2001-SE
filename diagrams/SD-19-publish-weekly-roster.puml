@@ -1,0 +1,94 @@
+@startuml SD-19-publish-weekly-roster
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ParticipantBackgroundColor white
+skinparam ParticipantBorderColor black
+skinparam ActorBackgroundColor white
+skinparam ActorBorderColor black
+skinparam BoundaryBackgroundColor white
+skinparam BoundaryBorderColor black
+skinparam ControlBackgroundColor white
+skinparam ControlBorderColor black
+skinparam EntityBackgroundColor white
+skinparam EntityBorderColor black
+skinparam SequenceLifeLineBorderColor black
+skinparam SequenceGroupBorderColor black
+skinparam SequenceGroupBackgroundColor white
+skinparam SequenceReferenceBackgroundColor white
+skinparam SequenceReferenceBorderColor black
+skinparam NoteBackgroundColor white
+skinparam NoteBorderColor black
+skinparam dpi 150
+hide footbox
+skinparam maxMessageSize 420
+skinparam wrapWidth 420
+skinparam sequenceParticipantFontSize 12
+skinparam sequenceActorFontSize 12
+autonumber
+title SD-19: Publish Weekly Roster (UC-07)
+' Traces: UC-07; FR-44, FR-45, FR-49, FR-53, FR-55, FR-64, FR-66, FR-71, NFR-09
+' Sources: DEC-16, DEC-19, DEC-32, DEC-43; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
+' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
+actor Manager
+boundary ":JobAllocationPage" as Page
+control ":RosterController" as RC
+control ":RuleValidator" as RV
+control ":NotificationService" as NS
+entity ":WeeklyRoster" as WR
+entity ":AuditLog" as AL
+
+Manager -> Page : publish(week)
+activate Page
+Page -> RC ++ : publish(week)
+RC -> RV ++ : checkBlocking(week)
+RV --> RC -- : violations / none
+alt blocking violation
+  RC --> Page : refuse publication
+else no blocking violation
+  RC -> RV ++ : checkWarnings(week)
+  RV -> RV : weekWorkload(week)
+  RV --> RC -- : warnings / none
+  opt warnings raised
+    RC --> Page : warnings
+    Page --> Manager : warnings; choose override or cancel
+    Manager -> Page : confirmWarningChoice(choice)
+    Page -> RC : confirmWarningChoice(choice)
+  end
+  alt warnings raised and Manager cancels
+    RC --> Page : retain Draft
+  else confirmed / no warnings
+    group atomic publication save
+      opt overrides confirmed
+        RC -> AL : record(Manager,warnings overridden)
+      end
+      RC -> WR : publish()
+      RC -> AL : record(Manager,Weekly Roster published)
+    end
+    alt save still fails after 3 retries
+      RC --> Page : Not saved; retain Draft
+    else save committed
+  ' Notification payload: Weekly Roster published, assigned and Standby Staff
+      RC -> NS : notify(event,recipients)
+      ref over NS : SD-15
+      NS --> RC : notification outcome
+      RC --> Page : Weekly Roster Published
+    end
+  end
+end
+deactivate RC
+Page --> Manager : current outcome
+deactivate Page
+legend bottom
+Warnings: Workload >40 h, Job Preference, customer Slot,
+fewer than 3 Vans, incomplete Standby (FR-45).
+Week Workload is calculated from the saved Weekly Roster.
+Confirmation precedes save; cancellation keeps records unchanged.
+Successful publication notifies every Crew member and Standby
+of that week. Failed publication keeps the Weekly Roster Draft.
+Atomic saves and up to 3 failed-submission retries follow NFR-09.
+endlegend
+@enduml

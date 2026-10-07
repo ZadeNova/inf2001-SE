@@ -1,6 +1,6 @@
 # UC-10: View Manpower Dashboard
 
-> **Status: Draft v0.2 (2026-10-01).**
+> **Status: Draft v0.3 (2026-10-04).**
 
 | Field | Value |
 |---|---|
@@ -11,8 +11,8 @@
 | **Description** | The Manager views Availability, Workload and operational alerts, and maintains Technician Certifications from the dashboard context. |
 | **Trigger** | The Manager opens the Landing Page or Availability view. |
 | **Linked requirements** | FR-10, FR-15, FR-46, FR-53, FR-55, FR-56 |
-| **Source** | Brief R2, R6; INT-MGR [System Q1], [System Q2], [Clarification Q2 follow-up], [Clarification Q7]; INT-DCT [System Q1]; DEC-04; DEC-05; DEC-18; DEC-30; DEC-35; DEC-39; DEC-40; DEC-42; DEC-43; DEC-45; DEC-47 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Source** | Brief R2, R6; INT-MGR [System Q1], [System Q2], [Clarification Q2 follow-up], [Clarification Q7]; INT-DCT [System Q1]; DEC-04; DEC-05; DEC-18; DEC-30; DEC-35; DEC-39; DEC-40; DEC-42; DEC-43; DEC-45; DEC-47; DEC-51; DEC-58; DEC-59; DEC-63 |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-10](../diagrams/SD-10-view-manpower-dashboard.puml); [SD-16](../diagrams/SD-16-handle-invalidated-crew.puml) |
 | **Status** | Draft |
 
 ## Preconditions
@@ -58,6 +58,8 @@
 - Overtime is strictly above 40 hours in a Planning Week (FR-55).
 - Certification maintenance is placed here because the finalized list merged away its standalone use case (DEC-45).
 
+- Manager alerts use Notification kind DashboardAlert; handling an alert sends no Staff message. Certification edit and invalidating Crew changes save together. Clock-driven expiry is drawn in SD-16, not dependent on opening the dashboard (DEC-58/59/63).
+
 ## Open questions
 
-- Confirm whether the team prefers Certification maintenance as a dashboard subflow or within another finalized Manager use case before diagrams are drawn.
+- Resolved by DEC-45: Certification maintenance is a UC-10 dashboard subflow. No remaining open question in this draft.

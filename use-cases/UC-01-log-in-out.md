@@ -11,8 +11,8 @@
 | **Description** | A User authenticates to reach the role-specific Landing Page and ends the authenticated session when finished. |
 | **Trigger** | The User opens the web application or chooses Log Out. |
 | **Linked requirements** | FR-01, FR-07, NFR-10, NFR-12, NFR-14 |
-| **Source** | Brief R1, R2, R7, R11; INT-ITA [Q: Passwords], [Q: Safeguards], [Q: Permissions]; DEC-17; DEC-18; DEC-41; DEC-45 |
-| **Related diagrams** | Pending OOA and diagram selection |
+| **Source** | Brief R1, R2, R7, R11; INT-ITA [Q: Passwords], [Q: Safeguards], [Q: Permissions]; DEC-17; DEC-18; DEC-41; DEC-45; DEC-58; DEC-61 |
+| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-01](../diagrams/SD-01-log-in-out.puml) |
 | **Status** | Draft |
 
 ## Preconditions
@@ -35,7 +35,7 @@
 
 1. The system sends an email confirmation and pauses login (NFR-10).
 2. The User follows the confirmation step.
-3. The system authenticates the User and continues at step 3.
+3. The system validates the email confirmation before authenticating; a wrong or expired code creates no session (DEC-58).
 
 ### A2: Forgotten password (branches at step 1)
 
@@ -64,6 +64,8 @@
 - Password-reset behaviour belongs to UC-02.
 - Logout was added by the finalized team structure and is traced to DEC-45.
 
+- Generic failure wording covers missing, locked, inactive and invalid-password accounts. Invalid or expired new-device confirmation creates no session (DEC-58). Confirmation-code lifetime is open in DEC-61.
+
 ## Open questions
 
-- None identified for the current draft.
+- Confirmation-code lifetime remains open in DEC-61.

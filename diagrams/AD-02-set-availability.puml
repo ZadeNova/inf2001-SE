@@ -1,0 +1,63 @@
+@startuml AD-02-set-availability
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam ArrowColor black
+skinparam activity {
+ BackgroundColor white
+ BorderColor black
+ DiamondBackgroundColor white
+ DiamondBorderColor black
+ StartColor black
+ EndColor black
+}
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontStyle bold
+skinparam conditionStyle InsideDiamond
+skinparam wrapWidth 250
+skinparam dpi 180
+title AD-02: Availability and Job Preference Submission
+' Traces: UC-11; FR-13/14/16/17/21/66; NFR-09.
+' Sources: DEC-01, DEC-02, DEC-03, DEC-07, DEC-30, DEC-45; INT-ITA [Q: Audit], [Q: Connection failure].
+|Staff|
+start
+:Open Availability and\nJob Preferences (UC-11);
+|System|
+:Show permitted dates, Slots\nand Availability Deadline;
+if (Week locked?) then (yes)
+  :Refuse direct changes;\noffer late-change request (UC-12);
+  |Staff|
+  if (Submit Late Availability\nChange Request?) then (yes)
+    :Submit changed Slots\nwith reason (UC-12);
+    |Manager|
+    :Approve or reject request\nthrough UC-09;
+    |System|
+    :Record decision; apply only approved\nchanges; notify Staff (UC-15);
+  else (no)
+  endif
+  stop
+else (no)
+endif
+|Staff|
+repeat
+:Set Available / Unavailable\nper Slot; optionally add preferences;
+:Review and submit;
+|System|
+:Validate dates and values;\nrecheck Deadline at save;
+if (Valid and still open?) then (yes)
+  :Save Availability and preferences;\naudit and confirm only on success;
+else (no)
+  :Show error; retain records;\nif locked, direct to UC-12;
+endif
+|Staff|
+repeat while (Correct / edit and resubmit?) is (yes) not (no)
+stop
+legend bottom
+Dates: today through the same date next month, inclusive and month-end clamped.
+Morning / Afternoon; whole-day shortcut; blank = Not submitted = unavailable.
+Locks Wednesday 18:00, 12 days before the week. Late requests cannot change preferences.
+Failed saves: up to 3 retries, then advise retry / contact IT Administrator.
+endlegend
+
+@enduml
