@@ -11,7 +11,7 @@
 | **Description** | The Manager views Availability, Workload and operational alerts, and maintains Technician Certifications from the dashboard context. |
 | **Trigger** | The Manager opens the Landing Page or Availability view. |
 | **Linked requirements** | FR-10, FR-15, FR-46, FR-53, FR-55, FR-56 |
-| **Source** | Brief R2, R6; INT-MGR [System Q1], [System Q2], [Clarification Q2 follow-up], [Clarification Q7]; INT-DCT [System Q1]; DEC-04; DEC-05; DEC-18; DEC-30; DEC-35; DEC-39; DEC-40; DEC-42; DEC-43; DEC-45; DEC-47; DEC-51; DEC-58; DEC-59; DEC-63 |
+| **Source** | Brief R2, R6; INT-MGR [System Q1], [System Q2], [Clarification Q2 follow-up], [Clarification Q7]; INT-DCT [Questionnaire C9]; DEC-04; DEC-05; DEC-18; DEC-30; DEC-35; DEC-39; DEC-40; DEC-42; DEC-43; DEC-45; DEC-47; DEC-51; DEC-58; DEC-59; DEC-63 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-10](../diagrams/SD-10-view-manpower-dashboard.puml); [SD-16](../diagrams/SD-16-handle-invalidated-crew.puml) |
 | **Status** | Draft |
 

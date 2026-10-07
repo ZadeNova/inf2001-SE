@@ -11,7 +11,7 @@
 | **Description** | The Manager prepares one Planning Week by forming daily Crews, naming Standby Staff, assigning and timing Jobs, resolving validation results and publishing the Weekly Roster. |
 | **Trigger** | Planning begins for the next unpublished Planning Week or a current/future Published roster needs revision. |
 | **Linked requirements** | FR-30, FR-32, FR-33, FR-41 to FR-46, FR-49 to FR-51, FR-53, FR-55, FR-64, FR-71 |
-| **Source** | Brief R3 to R6; INT-MGR [Process Q1], [System Q2], [System Q4], [Conflicts Q1], [Conflicts Q2 follow-up: standby], [Conflicts Q5]; INT-DRV [Q5], [Q7]; DEC-09; DEC-10; DEC-16; DEC-19; DEC-31; DEC-32; DEC-39; DEC-43; DEC-45; DEC-47; DEC-51 |
+| **Source** | Brief R3 to R6; INT-MGR [Process Q1], [System Q2], [System Q4], [Conflicts Q1], [Conflicts Q2 follow-up: standby], [Conflicts Q5]; INT-DRV [Q5], [Q7]; DEC-09; DEC-10; DEC-16; DEC-19; DEC-31; DEC-32; DEC-39; DEC-43; DEC-45; DEC-47; DEC-51; DEC-69 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [SD-17](../diagrams/SD-17-form-crews-and-standby.puml); [SD-18](../diagrams/SD-18-allocate-job.puml); [SD-19](../diagrams/SD-19-publish-weekly-roster.puml) |
 | **Status** | Draft |
 
@@ -44,7 +44,7 @@
 ### A2: Change a Crew during the day (branches at step 2)
 
 1. The Manager removes and adds Staff.
-2. The system rechecks FR-30, FR-32 and FR-44, preserves completed-work credit, and invokes UC-15 (FR-33, FR-64).
+2. The system rechecks FR-30, FR-32 and FR-44 for every affected Crew, including the original Crew when a Technician is moved. It preserves completed-work credit and invokes UC-15 (FR-33, FR-64; INT-DCT [Questionnaire D2: DB01]; DEC-69).
 
 ### A3: Revise a Published roster (branches at step 1)
 

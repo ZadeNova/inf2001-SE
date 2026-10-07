@@ -11,7 +11,7 @@
 | **Description** | Staff view Published Assignments, Standby days, Crew and Job details, weekly and monthly Workload, request status and Leave balance. |
 | **Trigger** | A Staff member opens their Landing Page or selects an Assignment. |
 | **Linked requirements** | FR-49, FR-53, FR-55, FR-58, FR-59, NFR-08 |
-| **Source** | Brief R7; INT-DCT [System Q1], [System Q2], [System Q3], [Process Q1 follow-up: job info]; INT-DRV [Q1], [Q2], [Q13]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-04; DEC-16; DEC-31; DEC-37; DEC-39; DEC-40; DEC-42; DEC-43; DEC-47; DEC-58 |
+| **Source** | Brief R7; INT-DCT [Questionnaire C9], [Questionnaire C10/C11], [Questionnaire C18/C19], [Questionnaire C5]; INT-DRV [Q1], [Q2], [Q13]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-04; DEC-16; DEC-31; DEC-37; DEC-39; DEC-40; DEC-42; DEC-43; DEC-47; DEC-58 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-13](../diagrams/SD-13-view-my-assignments-and-workload.puml) |
 | **Status** | Draft |
 
@@ -69,3 +69,4 @@
 ## Open questions
 
 - Confirm how and when today's offline cache is prepared.
+- Confirm whether daily totals, assigned/completed Job counts or Availability/Leave overlays are added to the Staff calendar. Weekly/monthly Workload and Leave balance remain the adopted scope; extra statistics are not silently reinstated (DEC-70).

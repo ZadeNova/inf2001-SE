@@ -14,6 +14,7 @@ skinparam ranksep 30
 skinparam wrapWidth 210
 hide circle
 title CD-control: Sequence Control Classes
+' Current questionnaire refinements: DEC-69; UC-12/14/15.
 ' Traces: UC-01 to UC-15; CL IDs in traceability.md.
 ' Round-3 sources: DEC-66, DEC-67, DEC-68.
 ' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63.
@@ -101,6 +102,7 @@ class RequestController <<control>> {
  +findCrewsOn(staff, dates)
  +hoursUntilStart(assignment)
  +listPending()
+ +loadRequestContext(staff, requestType, context)
  +recheckStatusAndStart(request)
  +rejectLeave(request, reason)
  +submitLateChange(staff, changes, reason)
@@ -135,11 +137,13 @@ class AvailabilityController <<control>> {
 class CompletionController <<control>> {
  +canComplete(user, job)
  +checkRoleAndCrew(user, job)
+ +checkCurrentState(user, job)
  +submitCompletion(job, details)
  +validate(details)
 }
 class NotificationService <<control>> {
  +notify(event, recipients)
+ +buildMessage(savedEvent)
  +partitionByWeek(event, recipients)
  +suppressDraftDelivery(event)
 }

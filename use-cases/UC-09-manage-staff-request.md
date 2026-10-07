@@ -11,7 +11,7 @@
 | **Description** | The Manager reviews and decides Leave, Late Availability Change and Job Rejection Requests submitted by Staff. |
 | **Trigger** | A pending Staff request appears on the Manager's Landing Page, or Clock signals Job start for a Pending Job Rejection Request. |
 | **Linked requirements** | FR-17, FR-23 to FR-25, FR-46, FR-63, FR-64, FR-70 |
-| **Source** | Brief R10; INT-MGR [Process Q4], [Conflicts Q2], [Conflicts Q3], [System Q1 follow-up: landing page]; INT-DRV [Q15]; DEC-02; DEC-13; DEC-19; DEC-42; DEC-43; DEC-45; DEC-47; DEC-51; DEC-52; DEC-58; DEC-59 |
+| **Source** | Brief R10; INT-MGR [Process Q4], [Conflicts Q2], [Conflicts Q3], [System Q1 follow-up: landing page]; INT-DRV [Q15]; DEC-02; DEC-13; DEC-19; DEC-42; DEC-43; DEC-45; DEC-47; DEC-51; DEC-52; DEC-58; DEC-59; DEC-69 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-16](../diagrams/SD-16-handle-invalidated-crew.puml); [SD-20](../diagrams/SD-20-decide-leave-request.puml); [SD-21](../diagrams/SD-21-decide-late-availability-change.puml); [SD-22](../diagrams/SD-22-decide-job-rejection-request.puml) |
 | **Status** | Draft |
 
@@ -25,7 +25,7 @@
 | Step | Actor | System |
 |---|---|---|
 | 1 | Opens pending requests. | Lists Leave, Late Availability Change and Job Rejection Requests; Short-notice rejection requests are highlighted (FR-56). |
-| 2 | Selects a request. | Shows request details and the current roster impact. |
+| 2 | Selects a request. | Shows request details and the current roster impact; for a Late Availability Change Request, shows current Availability beside the proposed Slots and Pending status. |
 | 3 | Chooses Approve or Reject/Refuse and supplies a reason where required. | Validates the decision and checks affected roster rules (FR-23, FR-24, FR-44). |
 | 4 | Confirms the decision. | Applies the request-specific outcome and records the decision. |
 | 5 | — | Invokes UC-15 for the requester and any other affected Staff (FR-64). |
@@ -40,7 +40,7 @@
 ### A2: Decide Late Availability Change (branches at step 4)
 
 1. Approval updates the requested Slots and applies FR-70 if a Crew becomes invalid.
-2. Rejection leaves Availability unchanged (FR-17).
+2. Rejection leaves Availability unchanged (FR-17). Show the decision alongside the requested Slots and current Availability, including a reason when supplied (DEC-69).
 
 ### A3: Decide Job Rejection Request (branches at step 4)
 
@@ -78,7 +78,7 @@
 
 ## Open questions
 
-- Resolved by DEC-52: exactly 48 hours is normal; Short notice means strictly less than 48 hours. No remaining open question in this draft.
+- Exactly 48 hours remains normal under DEC-52. Confirm whether Late Availability rejection and Job Rejection refusal reasons become mandatory, and whether request decision timestamps/history need additional fields (DEC-70). Leave rejection reasons remain required by FR-23.
 
 ## Round-3 clarification
 

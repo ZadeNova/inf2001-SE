@@ -14,6 +14,7 @@ skinparam ranksep 30
 skinparam wrapWidth 210
 hide circle
 title CD-boundary: Sequence Boundary Classes
+' Current questionnaire refinements: DEC-69; UC-12/14/15.
 ' Traces: UC-01 to UC-15; CL IDs in traceability.md.
 ' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63.
 ' Sources: DEC-53, DEC-55, DEC-56, DEC-57; adopted sequence-diagram review.
@@ -87,6 +88,7 @@ class JobCompletionPage <<boundary>> {
  +completeJob(job)
  +enter(completionDetails)
  +queueCompletion(job, details)
+ +retryUpload(job)
 }
 LoginPage -[hidden]right-> LandingPage
 LandingPage -[hidden]right-> AccountAdminPage

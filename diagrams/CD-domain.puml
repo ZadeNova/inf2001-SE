@@ -18,7 +18,8 @@ skinparam conditionStyle InsideDiamond
 skinparam wrapWidth 190
 skinparam dpi 180
 title CD-domain: Workload Management Domain Classes
-' Traces: UC-01 to UC-15; SRS v3.3. Class IDs use CL- plus each alias below.
+' Reset-token policy: DEC-71; UC-02.
+' Traces: UC-01 to UC-15; SRS v3.4. Class IDs use CL- plus each alias below.
 ' Sources: DEC-02/03/07/09/10/13/14/16/17/18/19/35/39/40/42/43/45/46/48/49/50/51/52/53/54/55/56.
 ' logOut follows UC-01 and SD-01.
 ' C3 operations: sequence-diagrams.md section 4; Audit Log FR-66; Notification FR-56/64.
@@ -80,7 +81,7 @@ class Account {
  +unlock()
  +recordFailedAttempt()
  +lock()
- +invalidateToken()
+ +invalidateResetTokens()
 }
 class Availability {
  -date: Date

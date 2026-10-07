@@ -1613,3 +1613,50 @@ Keep the per-recipient Staff-or-Manager xor association and the existing 43 iden
 **Recorded by:** OpenAI Codex for the member-requested round-3 correction draft. Local branch only; human integration/review pending.
 
 ---
+
+### DEC-69: Current Technician questionnaire and focused refinements
+
+| Category | Team adoption / analysis refinement | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-07 by the requesting member (identity TBC).
+
+**Source:** [Current Technician questionnaire](elicitation/interviews/technician-questionnaire.md), primary Sheet A1:AA12; D2/C13/C16/C18, especially DB01/DB02. The member instructed: "perform the updates" and "focused on only the necessary diagrams/content" after the read-only impact assessment.
+
+**Decision:** Use the latest questionnaire for current Technician findings; retain the old DCT transcript and historic decisions as history. Adopt original/proposed Availability and Pending/decision visibility, contextual notification content with a current-details link, and per-Job completion/photo upload feedback with retained retry data and no duplicate completion or Workload credit. A completion is confirmed only when its required evidence is saved. Recheck completion state/authority at save time and distinguish local queuing from server completion. Clarify that an emergency move validates all affected Crews, including the original Crew. These refine FR-17, FR-64, NFR-08 and existing FR-30/32/38/39/44/53 without new UCs, actors, domain classes or numeric thresholds. Preserve optional refusal reasons and existing offline-conflict questions until DEC-70 is answered.
+
+**Recorded by:** OpenAI Codex for the member-authorized focused update. No fabricated interview metadata, commit or push.
+
+---
+
+### DEC-70: Additional questionnaire requests outside the retained baseline
+
+| Category | Scope / policy clarification | Ask whom | Manager / team | Status | **Open** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-07 while reconciling the latest Technician questionnaire.
+
+**Source:** Current questionnaire C6/C8/C10/C11/C13/C16/C18; existing DEC-47/56/61/62 and UC-13/14 open questions.
+
+**Questions:** Are pre-deadline reminders required, and with what timing, recipients and channels? Should daily Workload totals, assigned/completed counts or Availability/Leave overlays be added after optional statistics were removed? Should request-history timestamps and mandatory Late Availability rejection/Job Rejection refusal reasons be added? How should exact-hour Availability responses map to the adopted half-day Slots? How is an offline queued completion reconciled if its Job or Crew changes, or another Technician completes it before upload? Confirm questionnaire timestamp locale and the participant-ID-to-attendance mapping before asserting names or dates.
+
+**Current boundary:** Displayed deadlines, existing weekly/monthly totals, required Leave rejection reasons, optional other refusal reasons and the current Slot model remain. Do not invent reminder schedules, statistics, conflict-resolution policy or attendance. Per-Job upload states and duplicate prevention adopted in DEC-69 do not settle the remaining conflict policy.
+
+**Recorded by:** OpenAI Codex; awaiting a team decision.
+
+---
+
+### DEC-71: Invalidate all outstanding reset tokens after successful password reset
+
+| Category | Account safeguard / team policy | Ask whom | Team / IT Administrator | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-10-07 by the requesting member (identity TBC).
+
+**Source:** Member's UC-02 resubmission review and explicit instruction to "follow through with the reccomendation and update the diagram"; FR-06, DEC-56 and DEC-61.
+
+**Decision:** A successful password reset atomically validates the supplied reset token, saves the new salted password hash and invalidates **all outstanding password-reset tokens for that Account**, including earlier emails. The password change is audited. Resubmission can issue another reset link; it does not itself revoke previous links. Once any reset succeeds, no token issued before that save can reset the password again. Concurrent reset attempts recheck validity within the same atomic save, so an already invalidated token cannot commit. A failed transaction preserves the prior password and token state. Token lifetime, password complexity and device-confirmation-code policy remain open under DEC-61. This is a member-approved safeguard, not an attributed stakeholder statement.
+
+**Recorded by:** OpenAI Codex for the authorized focused update; no commit or push.
+
+---

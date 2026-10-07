@@ -33,6 +33,7 @@ title SD-15: Notify Staff (UC-15)
 ' Round-2 detail sources: DEC-62.
 ' Sources: DEC-43, DEC-46, DEC-48, DEC-50; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
+' Current source: INT-DCT [Questionnaire C16: DB01]; DEC-69.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
 control ":NotificationService" as NS
 entity ":Notification" as NO
@@ -46,8 +47,13 @@ loop each affected week or non-roster event
     NS -> NS : suppressDraftDelivery(event)
   else affected week Published or event not roster-related
     loop for each recipient
-      NS -->> NO ** : <<create>>(recipient, event)
-      note right of NO : Landing Page message is kept
+      NS -> NS : buildMessage(savedEvent)
+      NS -->> NO ** : <<create>>(recipient, message)
+      note right of NO
+        Job/request, date and saved outcome;
+        changed time/Crew where relevant, any decision reason,
+        and link to current details. Landing Page message is kept.
+      end note
       NS -> ES : sendEmail(recipient, message)
       ES --> NS : accepted / failed
       loop up to 3 retries while email failed
