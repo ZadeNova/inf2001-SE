@@ -1,79 +1,58 @@
-# UC-12: Manage Requests
+# UC-12: Submit Job Rejection Request
 
-> **Status: Draft v0.2 (2026-10-04).**
+> **Status: M2 v1.0 (2026-11-06).** Renamed from "Manage Requests". Leave and late-change submissions are removed, and Short notice is retired (DEC-73, DEC-83, DEC-90, DEC-91). File name kept for link stability.
 
 | Field | Value |
 |---|---|
 | **ID** | UC-12 |
-| **Name** | Manage Requests |
+| **Name** | Submit Job Rejection Request |
 | **Primary actor** | Staff |
-| **Secondary actors** | None |
-| **Description** | Staff submit and review their Leave, Late Availability Change and Job Rejection Requests. |
-| **Trigger** | A Staff member needs Leave, needs to change a locked week's Availability, or wants a Job removed from the Crew's Van. |
-| **Linked requirements** | FR-17, FR-22, FR-25, FR-58, FR-62 |
-| **Source** | Brief R10, §Company ¶1, ¶4; INT-MGR [Process Q4], [Conflicts Q2], [Conflicts Q3]; INT-DCT [Questionnaire C14/C15], [Questionnaire C11]; INT-DRV [Q15], [Q17]; DEC-02; DEC-13; DEC-42; DEC-45; DEC-52; DEC-58; DEC-59; DEC-69 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-02](../diagrams/AD-02-set-availability.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-23](../diagrams/SD-23-submit-leave-request.puml); [SD-24](../diagrams/SD-24-submit-late-availability-change.puml); [SD-25](../diagrams/SD-25-submit-job-rejection-request.puml) |
-| **Status** | Draft |
+| **Secondary actors** | Email Service, SMS Gateway «system» through UC-15 (Manager alert) |
+| **Description** | A Crew member asks for a Job to be taken off their Crew, after a warning to discuss it with the Manager first. |
+| **Trigger** | A Crew member cannot do an assigned Job, or knows ahead of time that it can't be done. |
+| **Linked requirements** | FR-41, FR-37, NFR-12 |
+| **Source** | Brief R10, §Intro ¶3; INT-MGR [Conflicts Q3]; INT-DRV [Q17]; DEC-42; DEC-66 |
+| **Classes** | RequestPage, RequestController, JobRejectionRequest, Assignment, NotificationService |
+| **Wireframe** | W-15 Job rejection (warning dialog) |
+| **Status** | Agreed |
 
 ## Preconditions
 
-1. The Staff member is logged in.
+1. The Staff member is logged in and holds the Assignment in a Published week.
+2. The Job has not started.
 
 ## Main flow (basic path)
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens Requests and selects the request type. | Displays the corresponding form and current request statuses; late changes show current Availability beside the proposed Slots. |
-| 2 | Enters the required dates, Slots, Job and/or reason. | Validates request-type rules. |
-| 3 | Reviews the summary and submits. | Creates a pending request shown on the Manager's Landing Page (FR-56). |
-| 4 | Reviews the pending status. | Keeps operational data unchanged until UC-09 decides the request. |
-
-## Alternative flows
-
-### A1: Submit Leave Request (branches at step 1)
-
-1. The Staff member selects full working days and may add a note.
-2. The system rejects overlap or a request exceeding the remaining seven-day annual balance (FR-22, FR-25).
-
-### A2: Submit Late Availability Change Request (branches at step 1)
-
-1. The Staff member selects one or more locked-week Slots, the new Availability and a reason.
-2. The system requires the reason and creates a pending request (FR-17).
-3. It keeps current Availability visible beside the proposed Slots and Pending label. After a decision, it shows the outcome and any supplied reason; only approval changes Availability (DEC-69).
-
-### A3: Submit Job Rejection Request (branches at step 1)
-
-1. The Staff member selects a Job assigned to the Crew's Van in a Published week.
-2. The system warns the Staff member to discuss it with the Manager first.
-3. The Staff member selects Personal emergency, Missing equipment or parts, or Other; Other requires a comment.
-4. When the Job starts in strictly less than 48 hours, the system requires a written explanation and marks the request Short notice; exactly 48 hours is normal (FR-62, DEC-52).
+| 1 | Opens the Assignment and chooses Reject. | Shows a warning: "Please discuss this with your Manager before rejecting." |
+| 2 | Confirms the warning. | Shows the reasons: Personal emergency, Missing equipment or parts, Other. |
+| 3 | Picks a reason (with a comment if Other) and submits. | `RequestController.submitRejection()` creates a Pending `JobRejectionRequest` and notifies the Manager (FR-37). |
+| 4 | — | Shows the status "Pending" on the Staff Landing Page (FR-41). The Job stays Assigned until UC-09. |
 
 ## Exception flows
 
-### E1: Required information is missing (branches at step 2)
+### E1: Cancels at the warning (step 2)
 
-1. The system identifies the missing reason, comment, explanation or date and refuses submission.
+1. Nothing is saved.
 
-### E2: Job is not eligible (branches at A3 step 1)
+### E2: "Other" without a comment (step 3)
 
-1. Refuse a Job outside the Staff member's Crew/Published week, no longer Assigned, already started, or with another Pending request for the same Assignment (FR-62/63, DEC-66).
+1. Submission is refused.
 
-### E3: Submission fails
+### E3: Job is not eligible (step 1 or 3)
 
-1. The system follows NFR-09 and does not show a pending request unless saved.
+1. Refuse a Job outside the Staff member's Crew or Published week, no longer Assigned, or already started (FR-37).
+
+### E4: Another request is already Pending for this Assignment (step 3)
+
+1. Submission is refused and the existing request's status is shown (DEC-66).
+
+### E5: Submission fails
+
+1. The system follows NFR-06 and does not show a Pending request unless saved.
 
 ## Postconditions
 
-- **Success:** A valid request is pending for UC-09 and visible to the Staff member.
-- **Failure:** No request is created and Availability, Leave and Assignments remain unchanged.
-
-## Business rules / notes
-
-- Staff submit; the Manager decides through UC-09.
-- While a Job Rejection Request is pending, the Job stays Assigned (FR-63).
-
-- A second Pending Job Rejection Request for the same Assignment is refused, even from another Crew member; recheck under the atomic save. Store the less-than-48-hour Short-notice flag. Historical decided requests remain. SD-23/25 start from Staff navigation; Job-start lapse is drawn in SD-22 (DEC-66/59).
-
-## Open questions
-
-- Exactly 48 hours remains normal under DEC-52. Confirm additional request-history/decision-time fields and whether Late Availability rejection or Job Rejection refusal must require an explanation (DEC-70).
+- **Success:** A Pending request exists for UC-09.
+- **Failure:** Nothing changes.

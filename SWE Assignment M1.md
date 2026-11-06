@@ -1,3 +1,5 @@
+> **Not authoritative.** This is the 7 Oct 2026 draft export of the M1 report. The submitted report (9 Oct 2026) is the source of truth, and the repo follows its IDs (DEC-72). This draft uses earlier requirement and diagram numbers.
+
 **INF2001 Introduction to Software Engineering**
 
 **Milestone 1 Report**

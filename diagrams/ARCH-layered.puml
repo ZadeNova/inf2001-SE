@@ -1,0 +1,44 @@
+@startuml ARCH-layered
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam dpi 150
+skinparam ArrowColor black
+skinparam rectangleBackgroundColor white
+skinparam rectangleBorderColor black
+skinparam componentStyle rectangle
+skinparam packageBackgroundColor white
+title ARCH-layered: Layered (3-tier) Architecture with MVC in the Web Tier (M2)
+' Traces: DEC-93; NFR-11; NFR-13; CD-final; CMP-system.
+' Each layer only calls the layer directly below it. ECB mapping: boundary = View, control = Controller/service, entity = Model.
+top to bottom direction
+
+actor "Manager / Staff /\nIT Administrator" as Users
+
+package "Presentation layer (View) — web browser" as P {
+ rectangle "<<boundary>> pages\nLoginPage, LandingPage, JobAllocationPage,\nUpdateRosterPage, StandbyListView, CsvUploadPage,\nAvailabilityPage, StandbyPreferencePage, RequestPage,\nRequestReviewPage, JobPage, AccountAdminPage, AuditLogPage" as Views
+}
+
+package "Application layer (Controller) — on-site server" as A {
+ rectangle "<<control>> controllers\nAuthController, AccountController, JobController,\nAvailabilityController, StandbyPreferenceController,\nRequestController, CsvImportController,\nRosterController, HoursController, DashboardController" as Controllers
+ rectangle "<<control>> services\nCrewFormingService, StandbyActivationService,\nRuleValidator, NotificationService, RetentionJob\n+ <<interface>> TechnicianRanking, CsvRowMapper,\nNotificationChannel" as Services
+}
+
+package "Data layer (Model) — on-site server" as D {
+ rectangle "<<entity>> domain model\nUser, Account, Technician, Certification, Availability,\nStandbyPreference, LeaveRecord, VanAvailability, Job,\nWeeklyRoster, Crew, Assignment, Standby, HoursEdit,\nJobRejectionRequest, Notification, AuditLog, ..." as Model
+ database "Workload database\n(on-site)" as DB
+}
+
+rectangle "<<system>>\nEmail Service" as Email
+rectangle "<<system>>\nSMS Gateway" as SMS
+
+Users --> Views : HTTPS
+Views --> Controllers : requests / page data
+Controllers --> Services : scheduling, validation,\nnotification
+Controllers --> Model : read / change entities
+Services --> Model : read / change entities
+Model --> DB : persist
+Services --> Email : NotificationChannel
+Services --> SMS : NotificationChannel
+@enduml

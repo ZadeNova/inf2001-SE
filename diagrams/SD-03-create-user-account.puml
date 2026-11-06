@@ -29,7 +29,7 @@ skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
 title SD-03: Create User Account (UC-03)
-' Traces: UC-03; FR-02, FR-10, FR-66; NFR-09, NFR-11, NFR-12
+' Traces: UC-03; FR-44, FR-22, FR-49; NFR-06, NFR-08, NFR-09
 ' Sources: DEC-17, DEC-35, DEC-45, DEC-49; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 actor "IT Administrator" as ITA
@@ -46,13 +46,13 @@ activate Page
 Page -> AC ++ : createAccount(details)
 AC -> AC : checkAuthority()
 alt not IT Administrator
-  AC --> Page : refuse (NFR-12)
+  AC --> Page : refuse (NFR-09)
 else authorized
   AC -> AC : validate(details)
   alt invalid fields or duplicate email
     AC --> Page : errors; create nothing
   else valid
-    group atomic account save (NFR-09)
+    group atomic account save (NFR-06)
       AC -->> U ** : <<create>>(userDetails)
       note right of U : concrete subclass per role:\nDriver, Technician or Manager
       opt role = Technician
@@ -86,7 +86,7 @@ legend bottom
 Details: name, email, contact number, permitted role and initial
 Technician Certifications.
 Initial login details use email (DEC-49); password change is optional
-(FR-02).
-Failed save creates no usable partial account; retries follow NFR-09.
+(FR-44).
+Failed save creates no usable partial account; retries follow NFR-06.
 endlegend
 @enduml

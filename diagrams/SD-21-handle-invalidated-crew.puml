@@ -1,4 +1,4 @@
-@startuml SD-16-handle-invalidated-crew
+@startuml SD-21-handle-invalidated-crew
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-16: Handle Invalidated Crew and Certification Expiry (FR-70, no UC)
-' Traces: UC-09, UC-10 shared fragment; FR-10, FR-49, FR-56, FR-64, FR-66, FR-70, FR-71; NFR-09
+title SD-21: Handle Invalidated Crew and Certification Expiry (FR-29, no UC)
+' Traces: UC-09, UC-10 shared fragment; FR-22, FR-09, FR-40, FR-39, FR-49, FR-29, FR-30; NFR-06
 ' Sources: DEC-19, DEC-43, DEC-51, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
 actor "Clock" as Clock <<system>>
@@ -59,7 +59,7 @@ alt clock event: start of day after Certification expiry
         RC -> RC : retainPreviousState()
       else transaction committed
         RC -> NS : notify(crewEvents, removed Staff and eligible Standby)
-        ref over NS : SD-15
+        ref over NS : SD-20
         NS --> RC : notification outcome
       end
     end
@@ -67,7 +67,7 @@ alt clock event: start of day after Certification expiry
   RC --> Clock -- : check outcome
 else called by an approval or Certification edit
   [-> RC ++ : handleCrewInvalidation(staff, dates)
-  group joins the caller's atomic save (SD-10, SD-20 or SD-21)
+  group joins the caller's atomic save (SD-13, SD-10 or SD-11)
     loop each affected Crew made invalid
       RC -> Crew : removeMember(staff)
       RC -> Crew : markNeedsAttention()
@@ -79,11 +79,11 @@ else called by an approval or Certification edit
 end
 legend bottom
 Clock checks at 00:00 after expiryDate; expiryDate itself is valid
-(FR-10, DEC-59). Only invalid Crews are changed; Jobs stay on the Van.
+(FR-22, DEC-59). Only invalid Crews are changed; Jobs stay on the Van.
 Approval/edit callers commit Crew changes with their own changes,
-then deliver returned crewEvents through SD-15. No delivery here
+then deliver returned crewEvents through SD-20. No delivery here
 before the caller commits. The actor is carried in the call context.
-SD-15 hides Draft roster events.
+SD-20 hides Draft roster events.
 Account cleanup unassigns Jobs separately in SD-04 (DEC-60).
 endlegend
 @enduml

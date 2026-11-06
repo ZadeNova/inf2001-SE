@@ -29,7 +29,7 @@ skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
 title SD-04: Manage User Access (UC-04)
-' Traces: UC-04; FR-04, FR-05, FR-07, FR-49, FR-64, FR-66; NFR-09, NFR-12, NFR-13
+' Traces: UC-04; FR-45, FR-46, FR-48, FR-09, FR-39, FR-49; NFR-06, NFR-09, NFR-10
 ' Sources: DEC-17, DEC-34, DEC-45, DEC-53, DEC-56, DEC-58, DEC-60; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
 actor "IT Administrator" as ITA
@@ -47,7 +47,7 @@ activate Page
 Page -> AC ++ : manageAccess(account, action)
 AC -> AC : checkAuthority()
 alt not IT Administrator
-  AC --> Page : refuse (NFR-12)
+  AC --> Page : refuse (NFR-09)
 else authorized
   alt view audit log
     AC -> AL ++ : search(filter)
@@ -57,7 +57,7 @@ else authorized
     group atomic account and future roster save
       alt change role
         AC -> ACC : setRole(newRole)
-        note right of ACC : new role takes effect at next login (FR-04)
+        note right of ACC : new role takes effect at next login (FR-45)
       else deactivate leaver
         AC -> ACC : deactivate()
       else unlock account
@@ -84,7 +84,7 @@ else authorized
     else save committed
       opt future Crew or Assignment changed
         AC -> NS : notify(accountCleanup, affectedCrewAndStandby)
-        ref over NS : SD-15
+        ref over NS : SD-20
         NS --> AC : notification outcome
       end
       AC --> Page : updated state
@@ -95,10 +95,10 @@ deactivate AC
 Page --> ITA : result
 deactivate Page
 legend bottom
-Account cleanup unassigns future Jobs (FR-04/05); it does not use
-the FR-70 rule that keeps Jobs on the Van.
+Account cleanup unassigns future Jobs (FR-45/46); it does not use
+the FR-29 rule that keeps Jobs on the Van.
 Affected future Van-days are flagged Needs attention (DEC-60).
-SD-15 suppresses Draft roster delivery (FR-49, DEC-64).
+SD-20 suppresses Draft roster delivery (FR-09, DEC-64).
 Past records remain for 12 months. Only IT Administrator can view Audit Log.
 endlegend
 @enduml

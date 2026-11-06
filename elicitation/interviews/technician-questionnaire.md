@@ -77,6 +77,6 @@ Citation format: `INT-DCT [Questionnaire C18: DB01]` identifies a question and r
 
 ## Analysis summary (team interpretation, not verbatim answers)
 
-The responses support Manager-decided requests with operational data unchanged while Pending. They ask for original/proposed late-change visibility, meaningful change/decision messages and clear per-Job offline completion/photo feedback with retained retry data and no duplicate completion. C19 includes Android and iOS phones using Chrome, Firefox or Edge and a Windows/Edge laptop; the existing NFR-14 platform coverage remains sufficient.
+The responses support Manager-decided requests with operational data unchanged while Pending. They ask for original/proposed late-change visibility, meaningful change/decision messages and clear per-Job offline completion/photo feedback with retained retry data and no duplicate completion. C19 includes Android and iOS phones using Chrome, Firefox or Edge and a Windows/Edge laptop; the existing NFR-11 platform coverage remains sufficient.
 
 The new responses do not independently confirm the adopted fixed Travel Allowance, exact Workload formula, 40-hour threshold or Standard Durations. Those remain grounded in the brief, Manager/Driver sources and existing decisions. Availability reminders, additional calendar statistics/overlays, request-history timestamps and mandatory refusal explanations remain scope questions in DEC-70. This source adds no inventory or equipment-management use case.

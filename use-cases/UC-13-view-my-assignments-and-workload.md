@@ -1,6 +1,6 @@
 # UC-13: View My Assignments and Workload
 
-> **Status: Draft v0.2 (2026-10-01).**
+> **Status: M2 v1.0 (2026-11-06).** Shows Standby days. Workload is planned and Standby hours. Leave balance, Linked Jobs and the Van plate are removed (DEC-78, DEC-90).
 
 | Field | Value |
 |---|---|
@@ -8,65 +8,42 @@
 | **Name** | View My Assignments and Workload |
 | **Primary actor** | Staff |
 | **Secondary actors** | None |
-| **Description** | Staff view Published Assignments, Standby days, Crew and Job details, weekly and monthly Workload, request status and Leave balance. |
-| **Trigger** | A Staff member opens their Landing Page or selects an Assignment. |
-| **Linked requirements** | FR-49, FR-53, FR-55, FR-58, FR-59, NFR-08 |
-| **Source** | Brief R7; INT-DCT [Questionnaire C9], [Questionnaire C10/C11], [Questionnaire C18/C19], [Questionnaire C5]; INT-DRV [Q1], [Q2], [Q13]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-04; DEC-16; DEC-31; DEC-37; DEC-39; DEC-40; DEC-42; DEC-43; DEC-47; DEC-58 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [AD-03](../diagrams/AD-03-job-rejection.puml); [SD-13](../diagrams/SD-13-view-my-assignments-and-workload.puml) |
-| **Status** | Draft |
-
-## Preconditions
-
-1. The Staff member is logged in.
-2. At least the current week is available.
+| **Description** | A Staff member sees this week's Assignments and Standby days, the next Published week, and their weekly and monthly Workload. |
+| **Trigger** | The Staff member logs in. |
+| **Linked requirements** | FR-35, FR-36, FR-41, FR-42, FR-39, NFR-05 |
+| **Source** | Brief R7; INT-DRV [Q1], [Q2], [Q13]; DEC-04; DEC-16; DEC-37; DEC-78 |
+| **Classes** | LandingPage, DashboardController, Staff, Assignment, Standby, Job, Crew, Notification |
+| **Wireframe** | W-11 Staff Landing Page |
+| **Status** | Agreed |
 
 ## Main flow (basic path)
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens the Staff Landing Page. | Shows the current week's Published Assignments and Standby days, weekly Workload against 40 hours, monthly Workload and Leave balance (FR-58). |
-| 2 | Optionally switches to the next Published week. | Shows it; Draft weeks remain hidden (FR-49). |
-| 3 | Selects an Assignment. | Shows customer, address, Job, Van, Crew, contact and Linked Job details (FR-59). |
-| 4 | Reviews Workload. | Uses Planned Hours for Assigned Jobs and Actual Hours for Completed Jobs, crediting every Crew member (FR-53, FR-55). |
+| 1 | Logs in. | `DashboardController.loadStaffHome()` shows a weekly calendar of Assignments and Standby days, the weekly Workload against 40 h, the calendar-month Workload and recent notifications (FR-41, FR-39). |
+| 2 | Selects an Assignment. | `Assignment.getDetails()`: customer, address, postal code and zone, Brand, units, Job Type, start time, notes, Van number, and Crew-mates' names and phones (FR-42). |
+| 3 | Switches to the next week. | Shows it only if it is Published (FR-41). |
 
 ## Alternative flows
 
-### A1: Offline current-day view (branches at step 1)
+### A1: Offline (step 1)
 
-1. With no connection, the Staff member opens cached data.
-2. The system shows today's Published Assignments (NFR-08).
+1. `LandingPage.loadCachedToday()` shows today's Assignments from cache. Changes are disabled (NFR-05).
 
-### A2: Job Rejection Request is pending (branches at step 3)
+### A2: Current week is Draft (step 1)
 
-1. The system shows the pending status while keeping the Assignment visible (FR-58, FR-63).
+1. Show "not yet published" without exposing Draft Assignments (FR-09).
 
-### A3: Current week is Draft (branches at step 1)
+### A3: Reject a Job (step 2)
 
-1. Show not yet published and the Leave balance, without exposing Draft Assignments (FR-49, DEC-58).
+1. The Staff member starts UC-12.
 
 ## Exception flows
 
-### E1: Next week is Draft (branches at step 2)
+### E1: Next week is Draft (step 3)
 
-1. The system does not offer the Draft week to Staff (FR-49).
+1. The system does not offer the Draft week to Staff (FR-09).
 
-### E2: No cached offline data (branches at A1)
+### E2: No cached offline data (A1)
 
 1. The system explains that today's Assignments are unavailable offline.
-
-## Postconditions
-
-- **Success:** The requested read-only Assignment and Workload data is displayed.
-- **Failure:** No schedule or Workload data is changed.
-
-## Business rules / notes
-
-- Overtime is strictly above 40 hours per Planning Week.
-- Standby contributes zero Workload unless the Staff member is placed into a Crew (FR-71).
-
-- If the current week is Draft, show not yet published and the Leave balance; disclose no Draft Assignments. Published-week and cached Published-today views remain read-only (DEC-58).
-
-## Open questions
-
-- Confirm how and when today's offline cache is prepared.
-- Confirm whether daily totals, assigned/completed Job counts or Availability/Leave overlays are added to the Staff calendar. Weekly/monthly Workload and Leave balance remain the adopted scope; extra statistics are not silently reinstated (DEC-70).

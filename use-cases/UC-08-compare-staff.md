@@ -1,6 +1,6 @@
 # UC-08: Compare Staff
 
-> **Status: Draft v0.1 (2026-10-01).** Extends UC-07.
+> **Status: M2 v1.0 (2026-11-06).** Keeps «extend» to UC-07: comparison is optional during allocation (DEC-91). Shows the Standby pick, zone and activation count.
 
 | Field | Value |
 |---|---|
@@ -8,52 +8,25 @@
 | **Name** | Compare Staff |
 | **Primary actor** | Manager |
 | **Secondary actors** | None |
-| **Description** | During weekly allocation, the Manager compares up to three Staff using the information needed to choose Crew members. |
-| **Trigger** | The Manager requests a comparison while performing UC-07. |
-| **Linked requirements** | FR-43, FR-53, FR-55 |
-| **Source** | Brief R4, R5; INT-MGR [System Q3]; DEC-06; DEC-08; corrected finalized connection supplied 2026-10-01 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [SD-08](../diagrams/SD-08-compare-staff.puml) |
-| **Status** | Draft |
-
-## Preconditions
-
-1. UC-07 is active for a Job date and Planning Week.
-2. The Manager is logged in.
+| **Description** | While allocating, the Manager compares up to three Staff side by side for a date. |
+| **Trigger** | The Manager selects Staff to compare at UC-07's Compare Staff extension point. |
+| **Extends** | UC-07 at "Compare Staff", condition {Manager selects 1–3 Staff} |
+| **Linked requirements** | FR-31 |
+| **Source** | Brief R4, R5; DEC-06; DEC-77; DEC-79; DEC-91 |
+| **Classes** | JobAllocationPage, RosterController, Staff, Technician, Certification, StandbyPreference, Availability |
+| **Wireframe** | W-07 Compare Staff |
+| **Status** | Agreed |
 
 ## Main flow (basic path)
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens Compare Staff from UC-07. | Shows eligible Staff for selection. |
-| 2 | Selects up to three Staff. | Displays each person's Availability for the day and week, Planning Week Workload, Certifications and expiry, Job Preference, and location from other Jobs (FR-43). |
-| 3 | Reviews the side-by-side information and selects a Staff member or closes the comparison. | Returns the selection to UC-07 without allocating automatically. |
-
-## Alternative flows
-
-### A1: Staff member has no Jobs that day (branches at step 2)
-
-1. The system shows the location as “No Jobs” (FR-43).
-
-### A2: Overtime boundary is reached (branches at step 2)
-
-1. The system highlights Workload only when it is strictly above 40 hours (FR-55).
+| 1 | Selects up to three Staff and a date. | `RosterController.compare(selection, date)`. |
+| 2 | — | Shows for each: Availability that day and week, Workload this week and last week, Certifications with expiry, their Standby pick, their location that day (Crew zone or home zone) and their activation count (FR-31). |
+| 3 | Closes the panel. | Returns to UC-07. |
 
 ## Exception flows
 
-### E1: Fourth Staff selection (branches at step 2)
+### E1: A fourth selection
 
-1. The system refuses the fourth selection and retains the first three (FR-43).
-
-## Postconditions
-
-- **Success:** The Manager returns to UC-07 with comparison information and an optional selection.
-- **Failure:** The schedule and Staff records remain unchanged.
-
-## Business rules / notes
-
-- Comparison informs the Manager; it does not allocate Staff automatically.
-- UC-08 extends UC-07 as corrected by the user.
-
-## Open questions
-
-- None identified for the current draft.
+1. The system refuses it (FR-31).

@@ -1,4 +1,4 @@
-@startuml SD-25-submit-job-rejection-request
+@startuml SD-17-submit-job-rejection-request
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-25: Submit Job Rejection Request (UC-12)
-' Traces: UC-12; FR-49, FR-56, FR-62, FR-63, FR-66; NFR-09
+title SD-17: Submit Job Rejection Request (UC-12)
+' Traces: UC-12; FR-09, FR-40, FR-37, FR-38, FR-49; NFR-06
 ' Sources: DEC-42, DEC-43, DEC-52, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-66, DEC-68; sequence-diagram-review-round-3.md.
 actor Staff
@@ -85,6 +85,6 @@ Other Crew members see the existing Pending status.
 The page may pre-validate; authoritative checks and creation are atomic.
 Reasons: Personal emergency; Missing equipment or parts; Other
 (comment required). Less than 48 h needs an explanation and sets
-shortNotice; exactly 48 h is normal (DEC-52). Lapse is drawn in SD-22.
+shortNotice; exactly 48 h is normal (DEC-52). Lapse is drawn in SD-12.
 endlegend
 @enduml

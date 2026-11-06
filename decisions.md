@@ -10,36 +10,38 @@
 Quotes are verbatim from [brief/project-description.md](brief/project-description.md) ("Brief") and [brief/rubric-m1.md](brief/rubric-m1.md) / [brief/rubric-m2.md](brief/rubric-m2.md) / [brief/assessment-overview.md](brief/assessment-overview.md).
 DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. The index shows which entries have since been decided. DEC-02 to DEC-41 (except the rubric entries DEC-21, DEC-23 to DEC-29) were decided on 2026-09-30 for SRS v2: the Manager's interview answer was adopted where one exists, and the simplest option consistent with the brief was chosen otherwise. Each decision says which parts were chosen by the team. They are open to change at team review.
 
+> **ID note (2026-11-07, DEC-72):** the submitted M1 report renumbered the requirements and sequence diagrams. **DEC-01 to DEC-71 below are kept as written and cite the repo's draft IDs** (SRS v3.0–v3.4 and the 22-diagram draft). Read their FR/NFR numbers with the mapping in [requirements.md §9](requirements.md) and their SD numbers with [diagrams/README.md](diagrams/README.md). DEC-72 onwards use the report's IDs.
+
 ## Index
 
 | ID | Topic | Category | Ask whom | Status |
 |---|---|---|---|---|
 | DEC-01 | Availability horizon: one month vs 5 weeks | Contradiction | Lecturer | **Decided**: 1 month in advance |
-| DEC-02 | Availability Deadline mechanics (Wed / Thu / Mon) | Ambiguity | Stakeholder | **Decided** |
-| DEC-03 | Availability granularity, default and deletion | Missing definition | Stakeholder | **Decided** |
+| DEC-02 | Availability Deadline mechanics (Wed / Thu / Mon) | Ambiguity | Stakeholder | **Amended by DEC-83** (late changes now outside the system) |
+| DEC-03 | Availability granularity, default and deletion | Missing definition | Stakeholder | **Amended by DEC-83** (per working day) |
 | DEC-04 | Workload unit and the period behind the 40-hour highlight | Ambiguity | Stakeholder | **Decided** |
 | DEC-05 | "Top three staff with the lowest workload" | Ambiguity | Stakeholder | **Decided** |
 | DEC-06 | "Up to three staff" on the allocation page | Ambiguity | Stakeholder | **Decided** |
-| DEC-07 | What a Job Preference is | Missing definition | Stakeholder | **Decided** |
-| DEC-08 | "Staff's location at a particular date" | Missing definition | Stakeholder | **Decided** |
-| DEC-09 | Van crew composition and capacity | Ambiguity | Stakeholder | **Decided** |
+| DEC-07 | What a Job Preference is | Missing definition | Stakeholder | **Superseded by DEC-79** |
+| DEC-08 | "Staff's location at a particular date" | Missing definition | Stakeholder | **Superseded by DEC-77** |
+| DEC-09 | Van crew composition and capacity | Ambiguity | Stakeholder | **Amended by DEC-84** |
 | DEC-10 | Unit of assignment: Staff or Van crew | Ambiguity | Stakeholder | **Decided** |
-| DEC-11 | What a Job contains and who creates Jobs | Missing definition | Stakeholder | **Decided** |
+| DEC-11 | What a Job contains and who creates Jobs | Missing definition | Stakeholder | **Amended by DEC-90** (Linked Jobs retired) |
 | DEC-12 | Working days: Saturday and Sunday | Ambiguity | Stakeholder | **Amended by DEC-45** |
-| DEC-13 | How Leave is handled | Missing definition | Stakeholder | **Decided** |
-| DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | **Decided** |
+| DEC-13 | How Leave is handled | Missing definition | Stakeholder | **Superseded by DEC-73, DEC-74** |
+| DEC-14 | Van Workshop Servicing in the system | Missing definition | Stakeholder | **Superseded by DEC-85** |
 | DEC-15 | What happens after a Job Rejection | Missing definition | Stakeholder | **Superseded by DEC-42** |
 | DEC-16 | Allocate one week vs visualise one month | Ambiguity | Stakeholder | **Decided** |
 | DEC-17 | IT Administrator: distinct actor and scope | Missing definition | Stakeholder | **Decided** |
 | DEC-18 | Roles: Staff vs Manager vs "administrative staff" | Ambiguity | Stakeholder | **Decided** |
-| DEC-19 | Does the system enforce the business rules? | Missing definition | Stakeholder | **Decided** |
+| DEC-19 | Does the system enforce the business rules? | Missing definition | Stakeholder | **Amended by DEC-90** (Needs attention retired) |
 | DEC-20 | "Working hours engaged/assigned" | Ambiguity | Stakeholder | **Decided** |
-| DEC-21 | Deliverable scope: working web app vs wireframe | Rubric | Lecturer | Open |
+| DEC-21 | Deliverable scope: working web app vs wireframe | Rubric | Lecturer | **Decided** (DEC-94) |
 | DEC-22 | Job volume and duration vs crew capacity | Missing definition | Stakeholder | **Decided** |
 | DEC-23 | M1 activity diagram examples ("subscription, announcement, notification") | Rubric | Lecturer | **Decided** |
 | DEC-24 | M1 Formatting rubric lists M2 artefacts and a "required template" | Rubric | Lecturer | **Decided** |
 | DEC-25 | Appendix C subsections labelled B.1–B.4 | Rubric | Lecturer | Open |
-| DEC-26 | M2 "provided report template" not in our materials | Rubric | Lecturer | Open |
+| DEC-26 | M2 "provided report template" not in our materials | Rubric | Lecturer | **Decided** (DEC-94) |
 | DEC-27 | Week numbering and M1 presentation timing | Rubric | Lecturer | **Asked** |
 | DEC-28 | Stakeholder rule: "same project" restriction | Rubric | Lecturer | Open |
 | DEC-29 | Weighting labels and unweighted Introduction items | Rubric | Lecturer | Open |
@@ -47,18 +49,18 @@ DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-
 | DEC-31 | Travel time: fixed allowance vs estimated driving time | Contradiction (interviews) | Stakeholder | **Decided** |
 | DEC-32 | Overtime: approval step or warning only? | Contradiction (interviews) | Stakeholder | **Decided** |
 | DEC-33 | Real-time delay reporting by the Crew | Scope (interviews) | Stakeholder | **Decided** |
-| DEC-34 | Leavers: delete accounts vs retain records | Contradiction (interviews) | Stakeholder | **Decided** |
-| DEC-35 | Who maintains Certifications and staff details | Contradiction (interviews) | Stakeholder | **Decided** |
+| DEC-34 | Leavers: delete accounts vs retain records | Contradiction (interviews) | Stakeholder | **Amended by DEC-89** (purge is required) |
+| DEC-35 | Who maintains Certifications and staff details | Contradiction (interviews) | Stakeholder | **Amended by DEC-75** |
 | DEC-36 | Account and schedule import vs manual entry | Contradiction (interviews) | Stakeholder | **Decided** |
 | DEC-37 | What Staff may see about colleagues | Ambiguity (interviews) | Stakeholder | **Decided** |
 | DEC-38 | IT Administrator's Thursday peak vs the weekly cycle | Contradiction (interviews) | Stakeholder | **Decided** |
-| DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | **Decided** |
-| DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | **Decided** |
+| DEC-39 | Technician Workload on mixed or 3-person Vans | Missing definition | Stakeholder | **Amended by DEC-78** |
+| DEC-40 | Actual Hours, Travel Allowance and completion evidence | Missing definition | Stakeholder | **Superseded by DEC-76, DEC-78** |
 | DEC-41 | Email 2FA vs simplicity and field use | Tension (interviews) | Stakeholder / Team | **Decided** |
 | DEC-42 | Job Rejection needs Manager approval (\"Staff submit, the Manager decides\") | Team decision (overrides interviews) | Team | **Decided** |
-| DEC-43 | Daily Standby Staff as backup for every Job | Team decision (overrides interview) | Team | **Decided** |
+| DEC-43 | Daily Standby Staff as backup for every Job | Team decision (overrides interview) | Team | **Superseded by DEC-81** |
 | DEC-44 | Pay model (salary, shifts, commission) is background only | Scope | Team | **Decided** |
-| DEC-45 | Final 15-use-case structure and scope alignment | Team decision | Team | **Decided** |
+| DEC-45 | Final 15-use-case structure and scope alignment | Team decision | Team | **Amended by DEC-91** |
 | DEC-46 | UC-15 uses Email/Phone | Team decision | Team | **Decided** |
 | DEC-47 | Consolidate requirements to minimum active baseline | Team decision | Team | **Decided** |
 | DEC-48 | UC-15 phone channel is SMS | Team decision | Team | **Decided** |
@@ -1270,8 +1272,8 @@ These entries were made by the team on 2026-09-30 while reviewing SRS v2. They a
 
 | ID | Topic | Category | Ask whom | Status |
 |---|---|---|---|---|
-| DEC-51 | FR-70 is the later-event exception to FR-44 | Team decision | Team | **Decided** |
-| DEC-52 | Short notice means less than 48 hours | Team decision | Team | **Decided** |
+| DEC-51 | FR-70 is the later-event exception to FR-44 | Team decision | Team | **Superseded by DEC-90** |
+| DEC-52 | Short notice means less than 48 hours | Team decision | Team | **Superseded by DEC-90** |
 | DEC-53 | Boundary, control and entity sequence lifelines | Analysis design | Team | **Decided** |
 
 ### DEC-51: FR-70 is the later-event exception to FR-44
@@ -1660,3 +1662,560 @@ Keep the per-recipient Staff-or-Manager xor association and the existing 43 iden
 **Recorded by:** OpenAI Codex for the authorized focused update; no commit or push.
 
 ---
+
+## M. M1 report alignment (2026-11-07)
+
+| ID | Topic | Category | Ask whom | Status |
+|---|---|---|---|---|
+| DEC-72 | The submitted M1 report is the M1 source of truth; repo IDs follow it | Team decision | Team | **Decided** |
+
+### DEC-72: The submitted M1 report is the M1 source of truth; repo IDs follow it
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-07 by JunKeatLim.
+
+**Source text:** JunKeatLim, 2026-11-07: "after the initial M1 report draft, we made multiple changes to the report but not the repo. I have uploaded the final M1 report that we submitted. ... refer to the M1 report and use it as the source of truth. anything that is not in the report (i.e FR requirements) or any contradictions in rules, inconsistencies in numbering, etc fix it all based on the report."
+
+**Question:** The repo (SRS v3.4, 22 SDs) and the submitted report (9 Oct 2026) use different requirement and diagram numbers and slightly different wording. Which governs?
+
+**Decision:**
+1. The **submitted M1 report** (INF2001 P8-1 M1 Report, 9 Oct 2026) is the source of truth for M1 artefacts. Where the repo and the report differ, the repo is changed to match the report.
+2. **Requirements:** the repo uses the report's FR-01–FR-50 and NFR-01–NFR-12 with the report's wording, groups and priorities (SRS v3.5). Source and Test columns are kept from the repo. Draft IDs that were withdrawn before submission are dropped from the active SRS; requirements.md §9 maps every draft ID.
+3. **Use cases:** UC-01 to UC-15 are transcribed from report §3.2. The repo's Source rows are kept.
+4. **Sequence diagrams:** the report's SD-01 to SD-21 numbering and titles. The draft SD-18 Allocate Job is not in the report and is archived (`diagrams/archive/pre-report-2026-10-09/`). The report and its AI declaration say "21 sequence diagrams", which replaces DEC-57's 22.
+5. **Glossary, WBS, AI declaration:** AGENTS.md and the root files `Glossary.md`, `WBS and Timeline.md` and `AI Usage Declaration.md` follow report Tables 1.2, 1.3, 5.1 and 5.2. The team is 6 members (report cover), not 5. File owners follow the report WBS (Table 5.1), pending team confirmation.
+6. **ID rule:** this is a one-off renumbering to match the submitted report. From this baseline on, IDs are never reused or renumbered. DEC-01 to DEC-71, the sequence-review notes, the archives, `requirements-review.md`, `phases.md` and `M1 Report Gap Analysis.md` are history and keep their draft IDs.
+
+**Known report issue (not changed):** report Figure 4.8 (SD-07) labels its Compare Staff reference "SD-08"; in the report's own numbering Compare Staff is SD-09. The repo source uses SD-09.
+
+**Decided by:** JunKeatLim · **Decision date:** 2026-11-07 · **Decision source:** direct instruction in a Claude Code session, 2026-11-07; submitted M1 report.
+
+## N. M2 design update (2026-11-06)
+
+These entries apply on top of the M1 report baseline (DEC-72) and use its IDs. They record the team's M2 Design Update Brief ([m2/design-update-brief.md](m2/design-update-brief.md), cited as `M2-Brief §<n>`) and the answers JunKeatLim gave on 2026-11-06 to the open points it raised. M2-Brief §1–§4 are final team decisions. Where JunKeatLim delegated a point ("do whatever you think is suitable"), the entry says so and the choice was proposed by Claude Code. All entries stay open to change at team review. Earlier entries are not edited; where an entry below replaces one, the earlier entry's index status is updated.
+
+| ID | Topic | Category | Ask whom | Status |
+|---|---|---|---|---|
+| DEC-73 | M2 scope: schedule planning only | Team decision | Team | **Decided** |
+| DEC-74 | External data enters by CSV upload | Team decision | Team | **Decided** |
+| DEC-75 | Certification is Brand and expiry only | Team decision | Team | **Decided** |
+| DEC-76 | No Job completion; two Job statuses; cancelled Jobs are deleted | Team decision | Team | **Decided** |
+| DEC-77 | Zones, Job zone from postal code, home zone | Team decision | Team | **Decided** |
+| DEC-78 | Workload is planned hours, Standby hours and Manager edits | Team decision | Team | **Decided** |
+| DEC-79 | Standby Preference replaces Job Preference | Team decision | Team | **Decided** |
+| DEC-80 | Crew-forming algorithm suggests the roster | Team decision | Team | **Decided** |
+| DEC-81 | Standby cover and Standby activation | Team decision | Team | **Decided** |
+| DEC-82 | Drivers are outside the scheduling logic | Team decision | Team | **Decided** |
+| DEC-83 | Availability is per working day, 1 month in advance | Team decision | Team | **Decided** |
+| DEC-84 | Crew Brand coverage is flexible; Crews stay together all day | Team decision | Team | **Decided** |
+| DEC-85 | Van count comes from the van CSV; no Van entity | Team decision | Team | **Decided** |
+| DEC-86 | Two 40-hour boundaries | Team decision (delegated) | Team | **Decided** |
+| DEC-87 | Derive values instead of storing them | Team decision (delegated) | Team | **Decided** |
+| DEC-88 | Notification triggers and non-human delivery actors | Team decision | Team | **Decided** |
+| DEC-89 | Audit Log scope, on-site storage and 12-month purge | Team decision | Team | **Decided** |
+| DEC-90 | Retire Linked Jobs, Short notice, Needs attention and Leave balance | Team decision (delegated) | Team | **Decided** |
+| DEC-91 | M2 use-case structure | Team decision | Team | **Decided** |
+| DEC-92 | ID policy for M2 and the report's numbering | Team decision (delegated) | Team | **Decided** |
+| DEC-93 | Architecture and design pattern | Team decision (delegated) | Team | **Decided** |
+| DEC-94 | M2 testing targets; close DEC-21 and DEC-26 | Rubric | Team | **Decided** |
+| DEC-95 | M2 report numbering and §1.2 content | Rubric | Team | **Decided** |
+
+### DEC-73: M2 scope: schedule planning only
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §2: "The system is **primarily focused on schedule planning**. Nothing else." It lists as outside the system: "job completion", "leave applications and approvals", "overtime approval (settled between the manager and the technician)", "van management and van servicing", "contacting standbys when they are activated (manager phones them)". M2-Brief §1 records the lecturer's M1 feedback that "Too much unnecessary data was stored (certificate numbers, van licence plates, workshop servicing, job completion details)".
+
+**Decision:** The system plans and publishes Weekly Rosters and shows Workload. Job completion, Leave applications and approvals, Late Availability Change Requests, Overtime approval, van management, Workshop Servicing and phoning Standby Staff all happen outside the system. Requirements and classes for them are Withdrawn (DEC-92).
+
+**Replaces:** the in-system parts of DEC-02 (late-change request), DEC-13 (Leave Requests and balance), DEC-14 (Workshop Servicing), DEC-40 (completion evidence). DEC-32 already kept Overtime approval out of scope.
+
+**Decided by:** Team (M2-Brief §1–§3) · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §2, §3.1; confirmed by JunKeatLim in a Claude Code session, 2026-11-06.
+
+---
+
+### DEC-74: External data enters by CSV upload
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §2: "The manager downloads a CSV from each external system and uploads it into our system: **HR system CSV:** who is on leave / emergency leave / MC, and on which dates. **Van vendor CSV:** how many vans are available on each date." "The HR system and the van vendor are **not actors** in our use case diagram". M2-Brief §7 left the upload deadline, re-uploads and bad files open.
+
+**Decision:**
+1. The Manager uploads two CSV types (UC-16). An HR CSV creates read-only **Leave Records** (Technician or Driver, date, type: Leave, Emergency Leave or MC). A van CSV creates **Van Availability** (date, number of Vans available).
+2. HR and the van vendor are not actors. The Manager is the only actor.
+3. **Timing (JunKeatLim, 2026-11-06):** the Manager uploads both files before planning the week, which is the Thursday after the Availability Deadline (DEC-02). The system does not enforce an upload deadline. It warns at planning time when no van CSV covers a day of the Planning Week.
+4. **Bad files (delegated):** the whole file is validated before anything is saved. Missing columns, unknown Staff, unknown dates or types, a negative Van count, or an empty file reject the whole file and list each row error. Duplicate rows are saved once.
+5. **Re-upload (delegated):** a later file of the same type replaces the records for the dates it contains.
+6. **Clash assumption (JunKeatLim, 2026-11-06):** Leave is booked well ahead and Standby picks are made in the week before planning, so an upload is assumed not to add Leave on a day where the person already has a Standby pick or a Crew place. If it does, Leave wins (M2-Brief §3.4) and the Manager fixes the roster through UC-17. The report states this as an assumption.
+
+**Decided by:** Team (M2-Brief §2); items 3 and 6 by JunKeatLim; items 4 and 5 delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §2, §3.2, §7; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-75: Certification is Brand and expiry only
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.7: "Store only **Brand** and **expiry date** per technician." "The system blocks placing a technician in a crew for a brand whose certification has expired." M2-Brief §5.1: "IT Administrator | Keep | Creates accounts, sets home zone and certifications at creation".
+
+**Decision:** The certificate number is removed. A Certification holds Brand and expiry date, and is valid for a date when the expiry date is on or after that date. The IT Administrator enters Certifications and home zone at account creation and **also updates them later** (UC-04, delegated). This replaces DEC-35's "the Manager maintains them afterwards", so that one role owns the update method.
+
+**Decided by:** Team (M2-Brief §3.7); the later-update owner delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.7, §5.1; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-76: No Job completion; two Job statuses; cancelled Jobs are deleted
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.1: "No actual start/end time, remark, follow-up flag or invoice photo. No "Completed" job status." M2-Brief §3.2: "**Job status** | Only **Assigned** or **Unassigned**." "When a customer cancels, the job is **deleted**. Affected staff are notified."
+
+**Decision:** A Job is Unassigned or Assigned. A customer cancellation deletes the Job, and its Crew is notified first. Past and in-progress Jobs cannot be deleted. They are kept until the 12-month purge (DEC-89). UC-14 Complete Job is Withdrawn.
+
+**Decided by:** Team · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.1, §3.2.
+
+---
+
+### DEC-77: Zones, Job zone from postal code, home zone
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §1: "Zones were missing. Singapore should be divided so vans don't travel across the island." M2-Brief §3.2: "Jobs are sorted into **North, East, South, West, Central**. The manager decides which zone each van/crew covers; the algorithm does not." "**Home zone** | New attribute on every technician. Used to find the closest standby." M2-Brief §7 asked how a Job gets its zone.
+
+**Decision:**
+1. Zones are North, East, South, West and Central.
+2. **A Job's zone is derived from its postal code (JunKeatLim, 2026-11-06)** using a fixed table from the 2-digit postal sector to a Zone. The Manager does not type it.
+3. Every Technician has a home zone, set by the IT Administrator.
+4. The Manager sets each Crew's zone. Allocating a Job to a Crew whose zone differs from the Job's zone raises a warning, not a block (delegated).
+5. **Zone distance (delegated, †):** 0 for the same zone. 1 when either zone is Central, or for the adjacent pairs North–East, North–West, South–East and South–West. 2 for the opposite pairs North–South and East–West.
+6. A Technician's location on a date (Brief R5) is shown as their Crew's zone that day, or their home zone if they are not in a Crew. This replaces DEC-08's postal-district list.
+
+**Decided by:** Team (M2-Brief §3.2); item 2 by JunKeatLim; items 4 and 5 delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §3.2, §7; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-78: Workload is planned hours, Standby hours and Manager edits
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §1: "Hours must be tracked on **planned** time, not actual time (people could stall to inflate hours)." M2-Brief §3.3: "**Workload** = a technician's **active hours**: planned job hours + activated standby hours + manager edits." "An **unused standby day** counts as **half hours** (e.g. 4 h for an 8 h day)." "If a standby is **activated**, the actual hours entered by the manager **replace** the half hours (not added on top)." "**Leave does not count as hours.**" "Half hours **do** count toward the 40-hour highlight."
+
+**Decision:** A Staff member's hours for one working day are:
+1. the latest **Hours Edit** for that person and date, if the Manager recorded one; otherwise
+2. in a Crew: the Planned Hours of every Job assigned to that Crew that day (duration + 0.5 h Travel Allowance, DEC-31); otherwise
+3. on Standby and not activated: **4 h** (half of the 8 h working day 09:00–18:00 less lunch, DEC-12); otherwise
+4. 0 h (Leave, not working, or a Driver not in a Crew).
+
+Workload is the sum of these over a Planning Week (Monday–Saturday) or a calendar month. Actual Hours are removed. When a Standby is activated, the Manager enters the hours worked as an Hours Edit, which replaces the 4 h (UC-17). This replaces DEC-40, the 0 h Standby rule in DEC-43, and the completed-work credit in DEC-39.
+
+**Decided by:** Team · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §3.3, §4 step 10 and 13.
+
+---
+
+### DEC-79: Standby Preference replaces Job Preference
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** Brief R9: "Staff can indicate their job preference for the week". M2-Brief §1: "Job preferences were "one-sided": the system accepted preferences it could not guarantee. If the system offers a preference, it must follow it." M2-Brief §3.4: "The only preference is the **standby day**: each technician picks **one standby day per week**." "Each day allows **at most 2 picks: one M Electric slot and one Dicon slot**, first come first served. A dual-brand technician can take either slot. Once both slots are taken, that day is greyed out." "Priority order: **leave / emergency leave / MC > preference pick > normal standby**."
+
+**Decision:**
+1. A Technician may make one **Standby Preference** per Planning Week: a working day and a Brand slot (M Electric or Dicon).
+2. A pick is accepted only if all of these hold:
+   - it is made before the Availability Deadline;
+   - the Technician is Available that day with no Leave Record;
+   - they hold a valid Certification for the chosen Brand on that day;
+   - that Brand slot on that day is still free.
+3. A Technician may change or withdraw their pick before the deadline, which frees the slot.
+4. **Timing (JunKeatLim, 2026-11-06):** picks close with Availability at the Availability Deadline (DEC-02), so they are known when planning starts on Thursday.
+5. Every accepted pick is followed. The algorithm never pulls a pick into a Crew (DEC-80). A Manager who moves a pick into a Crew must override a warning, and the override is logged.
+6. **R9 argument (JunKeatLim, 2026-11-06):** the standby day is the Technician's weekly preference for which day they do not drive out on Jobs. The report must state that this is how R9 is met, and why: an advisory preference the system cannot guarantee was criticised at M1.
+
+This replaces DEC-07 (Job Preference). Drivers do not make Standby Preferences (DEC-82).
+
+**Decided by:** Team (M2-Brief §3.4); items 4 and 6 by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §3.4; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-80: Crew-forming algorithm suggests the roster
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §4: "The algorithm **suggests** a roster. The **manager reviews, edits and publishes** it (the brief says the manager allocates; the algorithm only assists)." Steps 3–11 as written there. JunKeatLim, 2026-11-06, on step 8: "if there is not enough to form 3 available crews, it will pick the staff that are ranked low on the algorithm", and confirmed option (a), the bottom of the ranking first.
+
+**Decision:** For each working day of the Planning Week, in date order, the system:
+1. Excludes Technicians with a Leave Record or without Availability that day.
+2. Puts that day's Standby Preference picks on Standby (source Preference).
+3. Puts Dual-Certified Technicians whose **last week's Workload is 20 h or more** on Standby (source Algorithm, treated as based in Central).
+4. Ranks the remaining Technicians by:
+   - projected hours this week: under 40 h first, 40 h or more last (DEC-86);
+   - then last week's Workload, lowest first;
+   - then projected hours this week, lowest first;
+   - then staff ID.
+
+   New staff count as 0 h.
+5. Forms Crews from the top of the ranking. A Dual-Certified Technician forms a Crew alone. Otherwise the top Technician is paired with the highest-ranked Technician of the other Brand. It stops when:
+   - the Van count for that day is reached (DEC-85);
+   - no other Crew covering both Brands can be formed; or
+   - after the third Crew, forming one more would leave Standby without cover for both Brands (DEC-81).
+6. If fewer than 3 Crews were formed, it returns Standby Staff of source Algorithm, then Leftover, to the pool, **lowest-ranked first** (JunKeatLim, option (a)), and repeats step 5 until there are 3 Crews or the pool is used up. It never uses a Preference pick or anyone on Leave. If there are still fewer than 3 Crews, the Manager is warned (FR-33).
+7. Puts everyone left on Standby (source Leftover).
+8. Assigns one available Driver to each Crew in staff-ID order (DEC-82).
+9. Adds **projected hours** before the next day: **8 h† per Crew day and 4 h per Standby day** (delegated). Jobs are usually not yet allocated when Crews are suggested, so a full working day is the estimate. Real Workload is recalculated from Assignments (DEC-78).
+
+The suggestion is a Draft. The Manager then sets each Crew's zone, edits Crews and Standby, allocates Jobs and publishes. Every change to the suggestion is logged as an override (DEC-89). The Manager may run the suggestion again for a Draft week, which replaces the unedited suggestion.
+
+**Decided by:** Team (M2-Brief §4); step 6 order by JunKeatLim; steps 5 (stop rules), 8 and 9 delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.5, §4; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-81: Standby cover and Standby activation
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.5: "**Standby** = technicians who are available but were not placed in a crew that day." "**Minimum standby per day:** one team covering both brands (1 M Electric + 1 Dicon, or 1 dual). No maximum." "If there are not enough people for both 3 crews and a standby team, **3 crews win**." "The system tracks each technician's **activation count** over a **rolling 12 months**". M2-Brief §4 steps 12–13.
+
+**Decision:**
+1. A Standby is a Technician not in any Crew on a working day, with source Preference, Algorithm, Leftover or Manager.
+2. Full cover means the day's Standby Technicians hold valid Certifications for both Brands. Missing cover is a warning (FR-33). There is no maximum number of Standby Staff.
+3. When a Crew member drops out, the Manager opens the Standby list for that day and the affected Job's zone. The list is ordered by:
+   1. fewest activations in the last 12 months;
+   2. zone distance (DEC-77) from the Standby's zone to the Job's zone, where the Standby's zone is Central for source Algorithm and the home zone otherwise;
+   3. staff ID.
+4. The Manager phones the person outside the system, then records the change in UC-17:
+   - who replaces whom;
+   - the hours worked by each, as Hours Edits;
+   - the activation, which ends that person's Standby place that day and adds one to their activation count.
+
+   The affected Staff are notified.
+5. The activation count is **counted** from activated Standby records dated in the last 12 months, not stored as a number (DEC-87).
+
+This replaces DEC-43 (Manager-named Standby with 0 h and a Standby Driver).
+
+**Decided by:** Team (M2-Brief §3.5, §4); ordering tie-break and the counted activation delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.5, §4; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-82: Drivers are outside the scheduling logic
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.6: "Drivers are deliberately kept simple: **assumed always available, one per van**. The system's scheduling logic (ranking, preferences, standby) applies to **technicians only**. State this explicitly as an assumption in the report." Brief R8: "Staff can add and edit their availabilities".
+
+**Decision:**
+1. **Assumption:** enough Drivers are available every working day. The report states this.
+2. Each Crew has exactly one Driver. The suggestion fills Drivers in staff-ID order from those Available that day with no Leave Record, and the Manager may change them.
+3. Drivers are not ranked, make no Standby Preference and are never on Standby.
+4. Drivers still enter Availability, which keeps R8 for all Staff, and the suggestion uses it (delegated).
+5. Driver Workload follows DEC-78 and is shown with the Technicians'.
+
+**Decided by:** Team (M2-Brief §3.6); item 4 delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.6; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-83: Availability is per working day, 1 month in advance
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §5.1: "Staff still indicate availability up to 5 weeks ahead (brief requirement 8)." JunKeatLim, 2026-11-06: "Keep it to 1 month in advance, no more 5 weeks ahead." M2-Brief §3.2: "Crews | Stay together **all day**."
+
+**Decision:**
+1. The horizon stays **1 month in advance** (DEC-01, DEC-30). The "5 weeks" in M2-Brief §5.1 is superseded.
+2. Because Crews work the whole day, Availability is set **per working day** (`Available` or `Unavailable`), not per Slot (delegated). A day with no entry is Not submitted and counts as unavailable (DEC-03).
+3. Slots remain only as a Job's preferred time.
+4. Availability locks at the Availability Deadline (DEC-02). A later change is handled outside the system, so the Late Availability Change Request is Withdrawn.
+
+**Decided by:** Item 1 by JunKeatLim; item 2 delegated to Claude Code; item 4 by the team (M2-Brief §3.1) · **Decision date:** 2026-11-06 · **Decision source:** Brief R8 + Lecturer clarification; M2-Brief §3.1, §3.2; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-84: Crew Brand coverage is flexible; Crews stay together all day
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** Brief §Company ¶3: "Each van is made up of one driver and a qualified technician for each brand. Unless the van is servicing or installing only a particular brand, then one driver and a qualified technician for the brand." M2-Brief §4 step 7: "Each crew must **cover both brands**". JunKeatLim, 2026-11-06: "i think this is suppose to be flexible". M2-Brief §3.2: "Crews | Stay together **all day**. They **can go home** after their last job (no reporting back to base)."
+
+**Decision:**
+1. A Crew is one Driver and one or two Technicians for one Van on one working day.
+2. Together, its Technicians must hold valid Certifications for **the Brand of every Job assigned to it**. A single-Brand Crew is therefore allowed when all its Jobs are that Brand.
+3. The suggestion still forms Crews covering both Brands by default (DEC-80).
+4. A Crew stays together for the whole day. Members go home after the last Job, so the system stores no end-of-day location.
+
+**Decided by:** Item 2 by JunKeatLim; the rest by the team · **Decision date:** 2026-11-06 · **Decision source:** Brief §Company ¶3; M2-Brief §3.2, §4; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-85: Van count comes from the van CSV; no Van entity
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.1: "Van details (number, licence plate), the Van list and the Workshop Servicing rotation are removed. Van availability comes from the vendor CSV." Brief §Company ¶4: "at least three vans can be on service daily except for Sunday". JunKeatLim, 2026-11-06: "We have a schedule set that ensures there to be at least 5 vans at all times, so just assume we will not have lesser than 3 vans avail. But 3 available crews is a different thing."
+
+**Decision:**
+1. The system stores no Van identity or plate.
+2. For each date, the number of Vans available comes from the van CSV and caps the number of Crews that day.
+3. Crews are numbered **Van 1 … n** per day (delegated).
+4. **Assumption:** the company's own servicing schedule keeps at least 5 Vans available, so at least 3 are always available. The "at least 3 Vans on service" check concerns Crews (DEC-80), not Vans.
+
+This replaces DEC-14.
+
+**Decided by:** Item 4 by JunKeatLim; item 3 delegated to Claude Code; the rest by the team · **Decision date:** 2026-11-06 · **Decision source:** Brief §Company ¶4–5; M2-Brief §3.1; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-86: Two 40-hour boundaries
+
+| Category | Team decision (delegated) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** Brief R6: "highlight all staff over 40 hours of jobs allocated". DEC-04: "**strictly above 40 hours** is Overtime and is highlighted". M2-Brief §4 step 6: "anyone at **40 h or more** goes to the **bottom**".
+
+**Decision:** Two rules with two purposes, each stated in its own requirement:
+- **Highlight (R6):** Workload **strictly above 40 h** in a Planning Week. 40.0 h is not highlighted and 40.5 h is.
+- **Ranking (algorithm):** projected hours this week of **40 h or more** go to the bottom, because that person has already reached the target.
+
+**Decided by:** Delegated to Claude Code by JunKeatLim ("the rest just do whatever you think is suitable") · **Decision date:** 2026-11-06 · **Decision source:** Brief R6; DEC-04; M2-Brief §4.
+
+---
+
+### DEC-87: Derive values instead of storing them
+
+| Category | Team decision (delegated) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** M2-Brief writing rules: "If no decision depends on a piece of data, do not store it (PDPA principle: don't collect what you don't need)." M2-Brief §5.1 suggests storing "homeZone, lastWeekHours, currentWeekHours, activationCount" on Technician and "basedInCentral (for duals)" on Standby.
+
+**Decision:** Only `homeZone` is stored. These values are **computed by methods** from records that already exist, so they cannot fall out of step:
+- last week's hours and this week's hours (from Assignments, Standby records and Hours Edits);
+- the activation count (from activated Standby records in the last 12 months);
+- "based in Central" (from Standby source = Algorithm).
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief writing rules, §5.1.
+
+---
+
+### DEC-88: Notification triggers and non-human delivery actors
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.2: "Sent for the **initial roster publication and every later change** (roster changes, job changes, deletions, standby assignment, job rejection outcomes)." "**Notification class** | New/explicit class to back FR-40–42." M2-Brief writing rules: "External services (Email/SMS) are **non-human actors**, not stick figures."
+
+**Decision:**
+1. Staff are notified on their Landing Page, by email and by SMS (DEC-46, DEC-48) when:
+   - a week with their Assignments or Standby days is published;
+   - after publication, one of their Assignments, Crew places or Standby days is added, changed or removed;
+   - one of their Jobs is deleted;
+   - a Job Rejection Request they made is decided or lapses;
+   - the Manager records an Hours Edit for them.
+2. The Manager is notified when a Job Rejection Request is submitted.
+3. Each message is a stored Notification.
+4. **Email Service** and **SMS Gateway** are drawn as «system» actors (rectangles), not stick figures. The system sends through the `NotificationChannel` interface.
+
+**Decided by:** Team; the Hours-Edit trigger delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §3.2; DEC-46; DEC-48.
+
+---
+
+### DEC-89: Audit Log scope, on-site storage and 12-month purge
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §3.2: "Every hours edit and every manager override of the suggested roster is logged: who, what changed, why, when." "Records and logs are saved on an **on-site server backend** (persistent storage)." "Records and logs are kept for a **rolling 12 months**, then purged."
+
+**Decision:**
+1. The Audit Log records who, what, when and, where one applies, why. It covers:
+   - account and role changes;
+   - Technician profile changes;
+   - CSV uploads;
+   - suggestion runs and every Manager change to a suggested or published roster, each change with a reason;
+   - Hours Edits and Standby activations;
+   - Job creation, edits and deletion;
+   - Job Rejection decisions.
+2. The data lives in a database on an on-site server.
+3. A daily **Retention Job** purges records and log entries dated more than 12 months ago. This makes DEC-34's "may then be purged" a "must".
+
+**Decided by:** Team · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §3.2; DEC-34.
+
+---
+
+### DEC-90: Retire Linked Jobs, Short notice, Needs attention and Leave balance
+
+| Category | Team decision (delegated) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** M2-Brief §1: "Every tracked value needs an owning class and a method." The M2-Brief does not mention Linked Jobs, Short notice, Needs attention or the Travel Allowance.
+
+**Decision:**
+- **Linked Jobs (DEC-11, DEC-67) are retired.** The Manager places two Brands at one address on the same Crew by hand.
+- **Short notice (DEC-52) is retired.** No decision depends on it.
+- **Needs attention (DEC-19, DEC-51) is retired.** Its triggers (Leave approval, late changes, Certification expiry inside a Crew) no longer happen inside a published week under DEC-73 and DEC-74. Changes are made through UC-17.
+- **Leave balance (DEC-13) is retired** (DEC-73).
+- **The 0.5 h Travel Allowance (DEC-31) is kept.** It is part of Planned Hours and needs no stored data.
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §3; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-91: M2 use-case structure
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by JunKeatLim.
+
+**Source text:** M2-Brief §5.4: "**Remove:** UC-06 Manage Vans and Workshop Servicing; UC-14 Complete Job; leave-approval and late-availability parts of UC-09 / UC-12. **Add:** Upload CSV; Edit Hours / Update Roster; Set Standby Preference (replaces the preference part of UC-11)." "Re-check every «extend» for genuine optionality." M2-Brief §1: "check whether «extend» relationships are genuinely optional (Login → Reset Password, Allocate Jobs → Compare Staff)".
+
+**Decision:**
+1. UC-06 and UC-14 are Withdrawn.
+2. New use cases: **UC-16 Upload CSV** (Manager), **UC-17 Update Roster and Hours** (Manager) and **UC-18 Set Standby Preference** (Technician).
+3. Narrowed use cases:
+   - UC-09 becomes **Decide Job Rejection Request**;
+   - UC-11 becomes **Set Availability**;
+   - UC-12 becomes **Submit Job Rejection Request**.
+4. **«extend» check (delegated):**
+   - **UC-02 Reset Password becomes a standalone use case** of User. A user starts it from the login page without logging in, and it does not continue or change the login, so it is not an extension of UC-01.
+   - **UC-08 Compare Staff keeps «extend» to UC-07.** Allocating needs no comparison, and the Manager optionally opens it at the extension point "Compare Staff".
+5. UC-15 Notify Staff is included by UC-05, UC-07, UC-09 and UC-17. Its actors are the «system» actors Email Service and SMS Gateway, which replace the combined "Email/Phone" stick figure.
+6. Email Service also serves UC-01 (new-device confirmation), UC-02 and UC-03.
+7. HR and the van vendor are not actors.
+
+The 18 IDs give 16 active use cases.
+
+**Decided by:** Team (M2-Brief §5.4); item 4 and the new names delegated to Claude Code · **Decision date:** 2026-11-06 · **Decision source:** M2-Brief §1, §5.4; Claude Code session, 2026-11-06.
+
+---
+
+### DEC-92: ID policy for M2 and the report's numbering
+
+| Category | Team decision (delegated) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim; revised 2026-11-07 after DEC-72.
+
+**Source text:** AGENTS.md: "**IDs are never reused or renumbered.** Mark a dropped item `Status: Withdrawn` and keep its row." M2-Brief §5.4: "Renumber FRs and update every trace reference after removals." M2-Brief §1 cites the lecturer's feedback using "FR-47 (forgotten password), FR-46 (keeping past records), FR-10 (12-month tracking) and FR-40–42 (notifications)".
+
+**Decision:**
+1. M2 keeps the **submitted M1 report's IDs** (DEC-72), because they are the numbers the lecturer marked and quoted.
+2. Removed items are marked Withdrawn in place. New items take the next free ID: FR-51 onwards, NFR-13 onwards, UC-16 onwards.
+3. Report §1.2 lists the active requirements and an "Updates from M1" table (SRS §9) of every withdrawn, changed and new ID. This meets the brief's "renumber and update trace references" goal without changing numbers the lecturer has already seen.
+4. The lecturer's references now match: FR-47 is password reset (backed by PasswordResetToken, FR-47 in v4.0); FR-46 is leaver records and NFR-10 is 12-month retention (backed by RetentionJob, FR-58); FR-39 and FR-40 cover notifications (backed by Notification and NotificationService).
+
+**Team check:** the lecturer's "FR-10 (12-month tracking)" does not match the report's FR-10 (post-publication changes). It most likely means NFR-10 (data retention). Confirm with the lecturer if it matters for the resubmission.
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-07 · **Decision source:** AGENTS.md ID conventions; DEC-72; M2-Brief §1, §5.4.
+
+---
+
+### DEC-93: Architecture and design pattern
+
+| Category | Team decision (delegated) | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** Report template §3.2: "Identify and evaluate ONE design patterns that are applicable to your system." Rubric M2 Detailed Design: "ONE (1) suitable design pattern that addresses an identified design problem in the system". JunKeatLim, 2026-11-06: "Prioritise the Milestone 2 template since that is the format the professor wants." M2-Brief §6.1–§6.2.
+
+**Decision:**
+1. **Architecture:** layered (3-tier) with MVC in the web tier, on one on-site server:
+   - Presentation (the «boundary» pages are the Views);
+   - Application (the «control» classes are the Controllers and services);
+   - Data (the «entity» classes are the Model, held in the on-site database).
+2. **Design pattern for report §3.2: Strategy.**
+   - Interface: `TechnicianRanking`.
+   - Concrete strategies: `WorkloadRanking` (crew forming) and `ActivationRanking` (Standby activation).
+   - Contexts: `CrewFormingService` and `StandbyActivationService`.
+   - Problem solved: two fairness orderings that the client may change, kept out of the algorithm code.
+3. `CsvRowMapper` and `NotificationChannel` are also «interface» classes in the final class diagram. They are not written up as patterns.
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** brief/report-template-m2.md §3; brief/rubric-m2.md; M2-Brief §6.
+
+---
+
+### DEC-94: M2 testing targets; close DEC-21 and DEC-26
+
+| Category | Rubric | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** Report template §4.1: "design the decision table black box testing". §4.2: "The selected methods for 4.1 and 4.2 should be different. Write the pseudocode for the method." Rubric M2 Whitebox: "a CFG containing at least eight nodes and two decision points". §5: "Provide wireframe screenshots for all implemented use cases."
+
+**Decision:**
+1. **Black box (decision table):** `StandbyPreferenceController.submitPick()` (FR-51).
+2. **White box (pseudocode, CFG, cyclomatic complexity, basis paths):** `CrewFormingService.classifyTechnicians()` (FR-54 steps 1–4).
+3. The EP/BVA targets in M2-Brief §6.3 are kept as extra test notes, not as the report's method.
+4. **DEC-21 is answered:** M2 delivers wireframes and pseudocode, not a working app.
+5. **DEC-26 is answered:** the template was received on 2026-11-06 ([brief/report-template-m2.md](brief/report-template-m2.md)).
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** brief/report-template-m2.md §4–§5; brief/rubric-m2.md.
+
+---
+
+### DEC-95: M2 report numbering and §1.2 content
+
+| Category | Rubric | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-06 by Claude Code for JunKeatLim.
+
+**Source text:** The template's table of contents lists "1.4 Component Diagram", but its body has "2 Component Diagram", "3 Detailed Design", "4 Testing" and "5 Wireframe". Rubric M2 B.1.1 Introduction: "Description of updates from M1 (if any)", "Summary of final features /use cases that are tied to the wireframe".
+
+**Decision:**
+1. The report follows the **body** numbering (1 Introduction, 2 Component Diagram, 3 Detailed Design, 4 Testing, 5 Wireframe) and regenerates the table of contents.
+2. §1.2 contains three things:
+   - the active requirements;
+   - an "Updates from M1" table (DEC-92);
+   - a use-case summary that maps each use case to its wireframe screen.
+
+**Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** brief/report-template-m2.md; brief/rubric-m2.md B.1.1.

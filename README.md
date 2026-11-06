@@ -19,7 +19,11 @@ elicitation/                Stakeholder register, meeting notes (MEETING-TEMPLAT
 traceability.md             Requirement → use case → class → diagram matrix
 decisions.md                Open questions and team decisions (DEC-nn)
 ai-usage-log.md             AI usage log for the milestone reports
+Glossary.md, WBS and Timeline.md, AI Usage Declaration.md
+                            Transcribed from the submitted M1 report (source of truth for M1)
 ```
+
+The submitted M1 report (9 Oct 2026) is the source of truth for M1 artefacts; the repo follows its IDs and wording (DEC-72).
 
 ## Workflow
 

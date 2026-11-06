@@ -1,17 +1,21 @@
+> **Source:** transcribed from §5 of the submitted M1 report (9 Oct 2026), the M1 source of truth (DEC-72). This replaces the 7 Oct draft export. The Gantt chart (report Figure 5.1) is an image in the report and is not reproduced here.
+
 ## 5.1 Work Breakdown Structure
 
-The WBS decomposes the project into six phases, each divided into tasks and subtasks, coded phase.task.subtask (for example, 1.1.2). Tasks without a milestone label belong to Milestone 1 (M1); tasks labelled "M2" belong to Milestone 2. Each subtask is owned by the person named on its parent task unless another owner is given.
+The WBS decomposes the project into six phases, each divided into tasks and subtasks, coded phase.task.subtask (for example, 1.1.2). Tasks without a milestone label belong to Milestone 1 (M1); tasks labelled "M2" belong to Milestone 2. Each lowest-level task has exactly one accountable owner; other members may contribute. A subtask is owned by the person named on its parent task unless another owner is given.
+
+*Table 5.1 – Work Breakdown Structure*
 
 | WBS Code | Task / Deliverable | Owner |
 |---|---|---|
 | **1** | **Requirements** | |
 | 1.1 | Requirements elicitation | Chee Long |
 | 1.1.1 | Document analysis of the client's Project Description | Chee Long |
-| 1.1.2 | Prepare role-specific interview guides (five stakeholder perspectives) | Chee Long |
+| 1.1.2 | Prepare role-specific interview questions (Manager, Driver, IT Administrator, Dual-Certified Technician follow-up) | Chee Long |
 | 1.1.3 | Create the Google Form questionnaire | Jeremy |
-| 1.1.4 | Conduct stakeholder interviews and the questionnaire | Chee Long |
+| 1.1.4 | Coordinate the stakeholder interviews and the questionnaire (sessions and interviewers in Appendix C) | Chee Long |
 | 1.1.5 | Analyse findings; record assumptions and unresolved issues | Chee Long |
-| 1.1.6 | Record interview notes and attendance (Appendix A) | Chee Long |
+| 1.1.6 | Record interview transcripts and attendance (Appendices C–G) | Chee Long |
 | 1.2 | Software Requirement Specification (SRS) | Chee Long |
 | 1.2.1 | Functional requirements | Chee Long |
 | 1.2.2 | Non-functional requirements and permission matrix | Chee Long |
@@ -34,7 +38,7 @@ The WBS decomposes the project into six phases, each divided into tasks and subt
 | 2.4.1 | Sequence diagrams for accounts, Jobs and Vans (UC-01 to UC-06) | Jun Keat |
 | 2.4.2 | Sequence diagrams for allocation, requests and dashboard (UC-07 to UC-10) | Jun Keat |
 | 2.4.3 | Sequence diagrams for Staff features and notifications (UC-11 to UC-15) | Jun Keat |
-| 2.4.4 | Consistency check against the use cases and class diagrams | Erfan, Damien, Jeremy |
+| 2.4.4 | Consistency check against the use cases and class diagrams | Erfan |
 | 2.5 | Final class diagram, component diagram and architecture — M2 | Jeremy |
 | 2.5.1 | Refine the class diagram | Jeremy |
 | 2.5.2 | Draw the component diagram | Jeremy |
@@ -49,26 +53,26 @@ The WBS decomposes the project into six phases, each divided into tasks and subt
 | 3.2 | Manager and IT Administrator wireframes | Damien |
 | 3.2.1 | Manager Landing Page and Job Allocation page | Damien |
 | 3.2.2 | Account administration pages | Damien |
-| 3.3 | Prototype navigation and use case mapping | Erfan, Damien |
-| 3.3.1 | Link the wireframes into navigable flows | Erfan, Damien |
-| 3.3.2 | Map each flow to its use cases | Erfan, Damien |
+| 3.3 | Prototype navigation and use case mapping | Erfan |
+| 3.3.1 | Link the wireframes into navigable flows | Erfan |
+| 3.3.2 | Map each flow to its use cases | Erfan |
 | **4** | **Testing — M2** | |
 | 4.1 | Black-box test design | Brandon (supported by Chee Long and Jun Keat) |
 | 4.1.1 | Identify test conditions from the use cases and requirements | Brandon |
-| 4.1.2 | Design test cases using equivalence partitioning and boundary values | Brandon |
-| 4.2 | White-box test design | Brandon (supported by Chee Long and Jun Keat) |
-| 4.2.1 | Select key methods and draw their control-flow graphs | Brandon |
-| 4.2.2 | Derive and review the test cases | Brandon |
+| 4.1.2 | Construct the complete decision table, reduce it where applicable, and derive test cases with inputs, expected outputs and traceability to decision rules | Brandon |
+| 4.2 | White-box test design | Jun Keat (supported by Chee Long and Brandon) |
+| 4.2.1 | Select a method and write its pseudocode; draw its control-flow graph with at least eight nodes and two decision points | Jun Keat |
+| 4.2.2 | Calculate cyclomatic complexity and derive and review test cases covering the identified paths | Jun Keat |
 | **5** | **Documentation and Presentation** | |
 | 5.1 | M1 report and presentation | Brandon |
 | 5.1.1 | Compile, format and review the M1 report, including the declaration and AI usage section | Brandon |
-| 5.1.2 | Prepare the M1 presentation slides | All members |
-| 5.1.3 | Deliver the M1 presentation | Presenting members |
+| 5.1.2 | Prepare the M1 presentation slides | Jun Keat |
+| 5.1.3 | Deliver the M1 presentation | Brandon |
 | 5.2 | M2 report and presentation | Brandon |
 | 5.2.1 | Compile and format the M2 report | Brandon |
-| 5.2.2 | Prepare the M2 presentation slides and rehearse | All members |
-| 5.2.3 | Review the M2 report against the rubric | All members |
-| 5.2.4 | Deliver the M2 presentation | Presenting members |
+| 5.2.2 | Prepare the M2 presentation slides and rehearse | Jun Keat |
+| 5.2.3 | Review the M2 report against the rubric | Jun Keat |
+| 5.2.4 | Deliver the M2 presentation | Brandon |
 | **6** | **Project Management** | |
 | 6.1 | Planning | Brandon |
 | 6.1.1 | Work Breakdown Structure | Brandon |
@@ -77,22 +81,24 @@ The WBS decomposes the project into six phases, each divided into tasks and subt
 | 6.2.1 | Weekly team meetings | Brandon |
 | 6.2.2 | Track progress against the timeline | Brandon |
 | 6.3 | Submission and peer evaluation | Brandon |
-| 6.3.1 | Package and submit M1; complete M1 peer evaluation | Brandon; all members (peer evaluation) |
-| 6.3.2 | Package and submit M2; complete M2 peer evaluation | Brandon; all members (peer evaluation) |
+| 6.3.1 | Package and submit M1; complete M1 peer evaluation | Brandon |
+| 6.3.2 | Package and submit M2; complete M2 peer evaluation | Brandon |
 
 ## 5.2 Project Timeline
 
 The timeline maps the WBS tasks onto the trimester calendar, with Week 1 starting on Monday 31 August 2026. Durations are in calendar days, inclusive. Dependencies refer to WBS codes and are finish-to-start: a task starts after its predecessor finishes. "(SS)" marks a start-to-start dependency, where a task may start once its predecessor has started. M1 dates are approximate.
 
+*Table 5.2 – Project timeline*
+
 | Task (WBS ref.) | Start | End | Duration (days) | Week(s) | Dependency | Milestone |
 |---|---|---|---|---|---|---|
 | Document analysis (1.1.1) | 10 Sep | 16 Sep | 7 | 2–3 | — | |
-| Interview guides and questionnaire (1.1.2, 1.1.3) | 17 Sep | 23 Sep | 7 | 3–4 | 1.1.1 | |
-| Stakeholder interviews and questionnaire (1.1.4) | 24 Sep | 25 Sep | 2 | 4 | 1.1.2, 1.1.3 | |
-| Findings analysis (1.1.5) | 26 Sep | 29 Sep | 4 | 4–5 | 1.1.4 | |
-| Interview notes and attendance (1.1.6) | 26 Sep | 29 Sep | 4 | 4–5 | 1.1.4 | |
-| SRS (1.2) | 30 Sep | 3 Oct | 4 | 5 | 1.1.5 | |
-| Use case modelling (2.1) | 30 Sep | 3 Oct | 4 | 5 | 1.1.5 | |
+| Interview questions and questionnaire (1.1.2, 1.1.3) | 17 Sep | 22 Sep | 6 | 3–4 | 1.1.1 | |
+| Stakeholder interviews and questionnaire (1.1.4) | 23 Sep | 1 Oct | 9 | 4–5 | 1.1.2, 1.1.3 | |
+| Findings analysis (1.1.5) | 26 Sep | 1 Oct | 6 | 4–5 | 1.1.4 (SS) | |
+| Interview transcripts and attendance (1.1.6) | 26 Sep | 1 Oct | 6 | 4–5 | 1.1.4 (SS) | |
+| SRS (1.2) | 30 Sep | 3 Oct | 4 | 5 | 1.1.5 (SS) | |
+| Use case modelling (2.1) | 30 Sep | 3 Oct | 4 | 5 | 1.1.5 (SS) | |
 | Activity diagrams (2.2) | 2 Oct | 6 Oct | 5 | 5–6 | 2.1 (SS) | |
 | Class diagrams (2.3) | 2 Oct | 6 Oct | 5 | 5–6 | 2.1 (SS) | |
 | Sequence diagrams (2.4) | 4 Oct | 6 Oct | 3 | 5–6 | 2.1; 2.3 (SS) | |

@@ -1,4 +1,4 @@
-@startuml SD-17-form-crews-and-standby
+@startuml SD-07-form-crews-and-standby
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,13 +28,13 @@ skinparam wrapWidth 300
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-17: Form Crews and Standby (UC-07)
-' Traces: UC-07, UC-08; FR-30, FR-32, FR-33, FR-41, FR-43, FR-44, FR-46, FR-50, FR-51, FR-55, FR-64, FR-66, FR-71; NFR-09
+title SD-07: Form Crews and Standby (UC-07)
+' Traces: UC-07, UC-08; FR-26, FR-27, FR-28, FR-07, FR-31, FR-32, FR-34, FR-10, FR-11, FR-36, FR-39, FR-49, FR-30; NFR-06
 ' Sources: DEC-09, DEC-19, DEC-39, DEC-43, DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Current questionnaire D2: DB01; DEC-69: validate all affected Crews.
-' Consistency fix 2026-10-07: authoritative checks inside the atomic save (DEC-18, as SD-25);
-' Standby moved into a Crew (DEC-43); Standby cover gaps shown, overridden at publication (FR-45, FR-71, DEC-19).
+' Consistency fix 2026-10-07: authoritative checks inside the atomic save (DEC-18, as SD-17);
+' Standby moved into a Crew (DEC-43); Standby cover gaps shown, overridden at publication (FR-33, FR-30, DEC-19).
 actor Manager
 boundary ":JobAllocationPage" as Page
 control ":RosterController" as RC
@@ -54,7 +54,7 @@ RC --> Page -- : timeline, Jobs, eligible Staff
 Page --> Manager : planning data
 opt compare candidates
   Manager -> Page : compareStaff(selection, date)
-  ref over Manager, Page, RC : SD-08
+  ref over Manager, Page, RC : SD-09
   Page --> Manager : selected Staff / closed
 end
 Manager -> Page : prepareCrewOrStandby(proposal)
@@ -100,7 +100,7 @@ else save still fails after 3 retries
 else save committed
   opt week already Published
     RC -> NS : notify(event, affectedStaff)
-    ref over NS : SD-15
+    ref over NS : SD-20
     NS --> RC : notification outcome
   end
   RC --> Page : saved; Standby cover gaps shown
@@ -115,10 +115,10 @@ Crew: 1 Driver and 1-2 Technicians; valid Brands and all worked Slots.
 Standby: uncrewed, available all day; 0 h until Crew placement.
 Current/future Published changes notify removed/added Staff;
 Standby naming notifies the named Staff. Draft notifications wait for publication.
-Completed-work credit is preserved. Failed save keeps prior records (NFR-09).
+Completed-work credit is preserved. Failed save keeps prior records (NFR-06).
 Checks are authoritative inside the atomic save (another Manager may edit, DEC-18).
 checkCrew lets that day's Standby join a Crew and ends the Standby (DEC-43);
-any other Crew + Standby overlap is blocked (FR-44).
-Standby cover gaps are shown here; override and logging happen at publication (SD-19).
+any other Crew + Standby overlap is blocked (FR-32).
+Standby cover gaps are shown here; override and logging happen at publication (SD-08).
 endlegend
 @enduml

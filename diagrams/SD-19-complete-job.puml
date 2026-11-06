@@ -1,4 +1,4 @@
-@startuml SD-14-complete-job
+@startuml SD-19-complete-job
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 300
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-14: Complete Job (UC-14)
-' Traces: UC-14; FR-39, FR-53, FR-66; NFR-08, NFR-09, NFR-12
+title SD-19: Complete Job (UC-14)
+' Traces: UC-14; FR-06, FR-35, FR-49; NFR-05, NFR-06, NFR-09
 ' Sources: DEC-69; INT-DCT [Questionnaire C18: DB01/DB02]; DEC-39, DEC-40; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 actor Technician
@@ -76,7 +76,7 @@ else eligible Technician
     alt eligible completion committed with photo
       CC --> Page : received; Completed; Workload updated
       Page --> Technician : details and photo received
-    else transport/photo/save fails after NFR-09 retries
+    else transport/photo/save fails after NFR-06 retries
       CC --> Page : Not saved; identify failed part
       Page --> Technician : failed; retained for retry
     else refused or already Completed
