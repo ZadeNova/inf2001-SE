@@ -1,52 +1,52 @@
 # UC-04: Manage User Access
 
-> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
+> **Status: M2 v1.0 (2026-11-06).** Adds Technician profile updates (home zone, Certification expiry). The IT Administrator now owns these updates (DEC-75).
 
 | Field | Value |
 |---|---|
 | **ID** | UC-04 |
 | **Name** | Manage User Access |
 | **Primary actor** | IT Administrator |
-| **Secondary actors** | Email/Phone through UC-15 |
-| **Description** | The IT Administrator changes roles, unlocks accounts, deactivates leavers and reviews the access-related audit record. |
-| **Trigger** | An account's access, role or lock state requires administration. |
-| **Linked requirements** | FR-45, FR-46, FR-48, FR-49, NFR-09, NFR-10 |
-| **Source** | INT-ITA [Q: Permissions], [Q: Role change/leaver], [Q: Retention], [Q: Passwords], [Q: Audit]; DEC-17; DEC-34; DEC-45; DEC-47; DEC-58; DEC-60; DEC-72 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-04](../diagrams/SD-04-manage-user-access.puml) |
+| **Secondary actors** | None |
+| **Description** | The IT Administrator changes roles, unlocks or deactivates accounts, updates Technician profiles and views the Audit Log. |
+| **Trigger** | A role change, lockout, leaver, renewed Certification, moved home, or audit question. |
+| **Linked requirements** | FR-45, FR-46, FR-48, FR-22, FR-49 |
+| **Source** | INT-ITA [Q: Role change/leaver], [Q: Passwords], [Q: Audit]; DEC-17; DEC-34; DEC-75 |
+| **Classes** | AccountAdminPage, AuditLogPage, AccountController, RosterController, Account, Technician, Certification, AuditLog |
+| **Wireframe** | W-13 IT Admin account management |
 | **Status** | Agreed |
 
 ## Preconditions
 
 1. The IT Administrator is logged in.
-2. The target account exists.
 
 ## Main flow (basic path)
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Searches for and selects an account. | Shows its role, status and lock state. |
-| 2 | Selects an allowed access action and supplies any required change. | Validates that the actor is an IT Administrator (NFR-09). |
-| 3 | Confirms the change. | Saves it and writes an audit entry with who, what and when (FR-49). |
-| 4 | Reviews the result. | Shows the updated account state and any affected future Assignments (FR-45, FR-46). |
+| 1 | Searches for a user and opens the account. | Shows role, status and, for a Technician, home zone and Certifications. |
+| 2 | Chooses an action: change role, unlock, deactivate, or update Technician profile. | Shows the action's form. |
+| 3 | Confirms. | Applies the action and logs it (FR-49). |
 
 ## Alternative flows
 
-### A1: Change role (branches at step 2)
+### A1: Change role or deactivate (branches at step 3)
 
-1. The IT Administrator selects a new role.
-2. The system applies it from the User's next login; if Staff becomes Manager, future Assignments are removed and their Jobs become Unassigned (FR-45).
+1. `Account.setRole()` or `Account.deactivate()`.
+2. `RosterController.removeFromFutureRoster(staff)` removes future Crew places and Standby days, and the affected Jobs become Unassigned (FR-45, FR-46).
 
-### A2: Deactivate a leaver (branches at step 2)
+### A2: Unlock (branches at step 3)
 
-1. The system prevents later login, removes future Assignments, returns those Jobs to Unassigned, and retains past records (FR-46, NFR-10).
+1. `Account.unlock()` (FR-48).
 
-### A3: Unlock an account (branches at step 2)
+### A3: Update Technician profile (branches at step 3)
 
-1. The system clears the FR-48 lock so the User can try UC-01 again.
+1. `AccountController.updateTechnicianProfile()` calls `Technician.setHomeZone()` and `Certification.renew(expiryDate)`, or adds or removes a Certification (FR-22).
+2. A Technician must keep at least one Certification.
 
-### A4: View audit log (branches at step 1)
+### A4: View Audit Log (branches at step 1)
 
-1. The IT Administrator opens the read-only audit log and filters or reviews entries (FR-49).
+1. The IT Administrator opens the Audit Log page and filters by who, action or date (`AuditLog.search()`).
 
 ## Exception flows
 
@@ -60,15 +60,5 @@
 
 ## Postconditions
 
-- **Success:** The selected access state is updated and audited, or the audit log is displayed.
-- **Failure:** The account and its Assignments remain unchanged.
-
-## Business rules / notes
-
-- Historical records are retained for 12 months from their date (NFR-10).
-- Audit-log viewing is part of this use case (A4).
-- Account deactivation and Staff-to-Manager changes atomically remove future Crew membership, flag affected Van-days Needs attention, end future Assignments, make the Jobs Unassigned and audit the changes. Notify affected Crew/eligible Standby after commit; hide Draft roster events through SD-20.
-
-## Open questions
-
-- Confirm how active sessions behave after deactivation or a role change.
+- **Success:** The change is saved and logged.
+- **Failure:** Nothing changes.

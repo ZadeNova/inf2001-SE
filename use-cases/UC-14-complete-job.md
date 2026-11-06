@@ -1,6 +1,6 @@
 # UC-14: Complete Job
 
-> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
+> **Status: Withdrawn (2026-11-07, DEC-76, DEC-91).** Out of M2 scope (DEC-73). The ID is kept and never reused. The text below is the M1 report record (UC-06/UC-14 as submitted) and is not part of the M2 baseline.
 
 | Field | Value |
 |---|---|
@@ -13,7 +13,7 @@
 | **Linked requirements** | FR-05, FR-06, FR-35, NFR-05, NFR-06 |
 | **Source** | INT-DCT [Questionnaire C17/C18], [Questionnaire C18/C19], [Questionnaire C9]; INT-MGR [Process Q1 follow-up: completion], [Clarification Q7]; DEC-40; DEC-47; DEC-69; DEC-72 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-19](../diagrams/SD-19-complete-job.puml) |
-| **Status** | Agreed |
+| **Status** | Withdrawn |
 
 ## Preconditions
 

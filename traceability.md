@@ -1,149 +1,193 @@
 # Traceability Matrix
 
-> **M1 submitted baseline (2026-11-07).** Aligned with the submitted M1 report (9 Oct 2026): SRS v3.5 (FR-01–FR-50, NFR-01–NFR-12), use cases UC-01–UC-15 as printed in report §3.2, and the 21 sequence diagrams SD-01–SD-21 of report §4.3 (DEC-72).
-> The "Use case(s)" column is derived from each use case's *Linked requirements* in the report. Class and diagram columns are carried over from the previous matrix and renumbered. The draft SD-18 Allocate Job is not in the report and has been archived.
-> Earlier draft IDs are mapped in [requirements.md §9](requirements.md) and [diagrams/README.md](diagrams/README.md).
+> **M2 baseline (2026-11-06):** SRS v4.0, use-case list v3.0, [CD-final](diagrams/CD-final.puml), [CMP-system](diagrams/CMP-system.puml), [m2/testing.md](m2/testing.md) and [m2/wireframes.md](m2/wireframes.md) (DEC-73 to DEC-95).
+> Builds on the M1 report baseline (DEC-72): SRS v3.5, 43-class analysis model and 21 sequence diagrams SD-01–SD-21, whose matrix is in git history. M1 diagram status after the M2 changes is in §5; the draft SD-18 Allocate Job was already archived before M2.
+> Component names match the CD-final packages. W-nn = wireframe screen. BB/WB = black-box and white-box test cases.
 
-## Requirement → Use case → Class → Diagram
+## 1. Requirement → Use case → Class → Component → Test → Wireframe
 
-| Requirement | Source | Use case(s) | Class(es) | Sequence diagram(s) | Activity diagram(s) |
+| Requirement | Source (main) | Use case(s) | Key classes (CL-) | Component | Test | Wireframe |
+|---|---|---|---|---|---|---|
+| FR-43 | Brief R2, R7, R11; DEC-18 | UC-01 | Account, AuthController, LandingPage | Authentication | SRS note | W-01 |
+| FR-44 | Brief R11; DEC-49; DEC-75; DEC-77 | UC-03 | AccountController, User, Technician, Certification, Account, EmailChannel | Account Management | SRS note | W-13 |
+| FR-45 | DEC-17 | UC-04 | AccountController, Account, RosterController | Account Management | SRS note | W-13 |
+| FR-46 | DEC-34 | UC-04 | AccountController, Account, RosterController | Account Management | SRS note | W-13 |
+| FR-47 | DEC-71; M2-Brief §3.2 | UC-02 | AuthController, PasswordResetToken, Account | Authentication | SRS note | W-02 |
+| FR-48 | DEC-17 | UC-01, UC-04 | Account, AuthController, AccountController | Authentication | SRS note | W-01, W-13 |
+| FR-22 | DEC-75; DEC-77 | UC-03, UC-04 | Technician, Certification, AccountController | Account Management | BB extra (expiry boundary) | W-13 |
+| FR-12 | Brief R8; DEC-83 | UC-11 | Availability, AvailabilityController | Staff Inputs | SRS note | W-12 |
+| FR-13 | Brief R8; DEC-01; DEC-30 | UC-11 | AvailabilityController, RuleValidator | Staff Inputs | SRS note | W-12 |
+| FR-14 | Brief §Intro ¶4; DEC-74 | UC-10 | DashboardController, Availability, LeaveRecord, StandbyPreference | Roster & Hours | SRS note | W-08 |
+| FR-15 | Brief §Company ¶1; DEC-02; DEC-79 | UC-11, UC-18 | RuleValidator, AvailabilityController, StandbyPreferenceController | Scheduling Engine | BB-01 | W-12, W-14 |
+| FR-26 | Brief §Company ¶3–4; DEC-84; DEC-85 | UC-07 | Crew, RosterController, RuleValidator, VanAvailability | Roster & Hours | SRS note | W-06 |
+| FR-27 | Brief §Company ¶2–3; DEC-84 | UC-07, UC-17 | Crew, Certification, RuleValidator | Scheduling Engine | SRS note | W-06 |
+| FR-01 | DEC-11; DEC-77 | UC-05 | Job, JobController, Zone | Job Management | SRS note | W-04 |
+| FR-02 | DEC-22 | UC-05 | JobController, Job | Job Management | SRS note | W-04 |
+| FR-04 | DEC-76 | UC-05 | JobController, Job, NotificationService | Job Management | SRS note | W-04 |
+| FR-05 | DEC-42; DEC-76 | UC-05, UC-09 | Job | Job Management | SRS note | W-04, W-16 |
+| FR-07 | Brief R3; DEC-16 | UC-07 | RosterController, Assignment, Job | Roster & Hours | SRS note | W-06 |
+| FR-08 | DEC-12; DEC-31 | UC-07 | Assignment, RuleValidator | Roster & Hours | SRS note | W-06 |
+| FR-31 | Brief R4, R5; DEC-77; DEC-79 | UC-08 | RosterController, Technician, StandbyPreference | Roster & Hours | SRS note | W-07 |
+| FR-32 | DEC-19; DEC-85 | UC-07, UC-17 | RuleValidator | Scheduling Engine | SRS note | W-06 |
+| FR-33 | Brief R6; DEC-19; DEC-77; DEC-81 | UC-07 | RuleValidator, RosterController, AuditLog | Scheduling Engine | SRS note | W-06 |
+| FR-34 | INT-MGR [Conflicts Q1] | UC-05, UC-07, UC-09, UC-10 | JobController, Job | Job Management | SRS note | W-03, W-06 |
+| FR-09 | Brief R3; DEC-16; DEC-80 | UC-07 | WeeklyRoster, RosterController, NotificationService, AuditLog | Roster & Hours | SRS note | W-06 |
+| FR-10 | DEC-16; DEC-88 | UC-07, UC-17 | RosterController, NotificationService | Roster & Hours | SRS note | W-06, W-09 |
+| FR-11 | INT-MGR [System Q2]; DEC-85 | UC-07 | RosterController, Crew | Roster & Hours | SRS note | W-06 |
+| FR-35 | DEC-31; DEC-78 | UC-07, UC-10, UC-13, UC-17 | Staff, Job, Assignment, Standby, HoursEdit | Domain Model | SRS note | W-03, W-11 |
+| FR-36 | Brief R6; DEC-04; DEC-86 | UC-07, UC-10, UC-13 | Staff | Domain Model | SRS boundary 40.0/40.5 | W-03, W-11 |
+| FR-40 | Brief R2, R6; DEC-05 | UC-10 | DashboardController, Notification | Roster & Hours | SRS note | W-03 |
+| FR-41 | Brief R7 | UC-12, UC-13 | DashboardController, Staff | Roster & Hours | SRS note | W-11 |
+| FR-42 | DEC-37 | UC-13 | Assignment | Domain Model | SRS note | W-11 |
+| FR-37 | Brief R10; DEC-42; DEC-66 | UC-12 | RequestController, JobRejectionRequest, RequestPage | Staff Inputs | SRS note | W-15 |
+| FR-38 | Brief R10; DEC-42 | UC-09 | RequestController, JobRejectionRequest, Job | Staff Inputs | SRS note | W-16 |
+| FR-39 | DEC-46; DEC-48; DEC-88 | UC-15 | NotificationService, NotificationChannel, EmailChannel, SmsChannel, Notification | Notification | SRS note | W-11, W-03 |
+| FR-49 | DEC-17; DEC-89 | UC-04 (view); all changing UCs | AuditLog, AccountController | Domain Model | SRS note | W-13 |
+| FR-50 | DEC-34; DEC-76 | UC-05 | JobController | Job Management | SRS note | W-04 |
+| FR-30 | DEC-81 | UC-07 | Standby, RosterController, RuleValidator | Roster & Hours | SRS note | W-06 |
+| FR-51 | Brief R9; DEC-79 | UC-18 | StandbyPreferenceController, StandbyPreference, RuleValidator | Staff Inputs | **BB-01 to BB-06** (decision table) | W-14 |
+| FR-52 | DEC-74 | UC-16 | CsvImportController, CsvImport, HrLeaveCsvMapper, LeaveRecord | CSV Import | SRS note | W-05 |
+| FR-53 | DEC-74; DEC-85 | UC-16 | CsvImportController, CsvImport, VanAvailabilityCsvMapper, VanAvailability | CSV Import | SRS note | W-05 |
+| FR-54 | DEC-74 | UC-16 | CsvImport, CsvRowMapper | CSV Import | SRS note | W-05 |
+| FR-55 | Brief R3; DEC-80 | UC-07 | CrewFormingService, TechnicianRanking, WorkloadRanking, Crew, Standby | Scheduling Engine | **WB-01 to WB-07** (`classifyTechnicians`) | W-06 |
+| FR-56 | DEC-81 | UC-17 | StandbyActivationService, ActivationRanking, Standby | Scheduling Engine | SRS note | W-10 |
+| FR-57 | DEC-78; DEC-81 | UC-17 | HoursController, HoursEdit, Standby, Crew | Roster & Hours | SRS note | W-09 |
+| FR-58 | DEC-89 | — (Clock) | RetentionJob | Audit & Retention | SRS note | — |
+| NFR-01 | INT-ITA [Q: Response time] | All | — | All | Load test | — |
+| NFR-02 | INT-ITA [Q: Concurrency] | All | — | All | Load test | — |
+| NFR-03, NFR-04 | INT-ITA [Q: Outage], [Q: Restore] | — | RetentionJob | Database | Ops check | — |
+| NFR-05 | INT-DCT [Questionnaire C18/C19] | UC-13 | LandingPage | Web UI | Airplane-mode test | W-11 |
+| NFR-06 | INT-ITA [Q: Connection failure] | All | — | Web UI | SRS note | — |
+| NFR-07 | DEC-41 | UC-01 | Account | Authentication | SRS note | W-01 |
+| NFR-08 | INT-ITA [Q: Safeguards] | UC-01–UC-03 | Account, PasswordResetToken | Database | DB inspection | — |
+| NFR-09 | DEC-17; DEC-18 | All | all controllers | Application layer | Permission matrix | — |
+| NFR-10 | DEC-34; DEC-89 | — | RetentionJob | Audit & Retention | SRS note | — |
+| NFR-11 | Brief R1 | All | all boundaries | Web UI | Browser matrix | All |
+| NFR-12 | INT-MGR [Closing] | UC-11, UC-12, UC-18 | — | Web UI | Walkthrough | W-12, W-14, W-15 |
+| NFR-13 | DEC-89 | — | — | Database | Deployment check | — |
+| NFR-14 | DEC-87 | — | all entities | Domain Model | Attribute review | — |
+
+Withdrawn requirements (SRS §3.15, §4.1) have no row here.
+
+## 2. Use case → Diagram, wireframe and tests
+
+| Use case | Actor(s) | Use case diagram | Main components | Wireframe | Tests |
 |---|---|---|---|---|---|
-| FR-01 | INT-MGR [Process Q2]; INT-DCT [Questionnaire C5]; INT-DRV [Q2]; DEC-11 | [UC-05](use-cases/UC-05-manage-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | [SD-05](diagrams/SD-05-manage-job.puml) | Pending |
-| FR-02 | INT-MGR [Process Q2 follow-up: hours]; DEC-22 | [UC-05](use-cases/UC-05-manage-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | [SD-05](diagrams/SD-05-manage-job.puml) | Pending |
-| FR-03 | INT-MGR [Process Q2]; INT-DCT [Questionnaire C5]; DEC-11 | [UC-05](use-cases/UC-05-manage-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | [SD-05](diagrams/SD-05-manage-job.puml), -allocate-job.puml) | Pending |
-| FR-04 | INT-MGR [added follow-up: cancellations]; DEC-19 | [UC-05](use-cases/UC-05-manage-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | [SD-05](diagrams/SD-05-manage-job.puml) | Pending |
-| FR-05 | INT-MGR [Conflicts Q3], [Conflicts Q4], [added follow-up: cancellations]; DEC-42; DEC-40 | [UC-05](use-cases/UC-05-manage-job.md), [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md), [UC-14](use-cases/UC-14-complete-job.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Van, CL-WorkshopServicing | [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Pending |
-| FR-06 | INT-DCT [Questionnaire C17/C18]; INT-MGR [Process Q1 follow-up: completion]; DEC-40; DEC-47 | [UC-14](use-cases/UC-14-complete-job.md) | CL-AuditLog, CL-Job, CL-Technician | [SD-19](diagrams/SD-19-complete-job.puml) | Pending |
-| FR-07 | Brief R3; INT-MGR [Process Q1], [Clarification Q6], [Conflicts Q2 follow-up: standby]; DEC-10; DEC-16; DEC-43; DEC-47 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-08 | INT-DRV [Q5]; INT-MGR [Clarification Q4], [Clarification Q7]; DEC-12; DEC-31 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | -allocate-job.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-09 | INT-MGR [Process Q1], [Conflicts Q1], [added follow-up: notifications]; DEC-16; DEC-19; DEC-43; DEC-47 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md), [UC-15](use-cases/UC-15-notify-staff.md) | CL-Assignment, CL-AuditLog, CL-Manager, CL-Staff, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-10 | INT-MGR [Conflicts Q5], [Conflicts Q2 follow-up: staff cancellation]; DEC-16 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-11 | INT-MGR [System Q2] | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-AuditLog, CL-Crew, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-12 | Brief R8; INT-MGR [Clarification Q4]; INT-DCT [Questionnaire C6]; DEC-03; DEC-45 | [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | CL-AuditLog, CL-Availability, CL-JobPreference, CL-Staff | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | [AD-02](diagrams/AD-02-set-availability.puml) |
-| FR-13 | Brief R8 + Lecturer clarification; DEC-01; DEC-30; DEC-02 | [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | CL-AuditLog, CL-Availability, CL-JobPreference, CL-Staff | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | [AD-02](diagrams/AD-02-set-availability.puml) |
-| FR-14 | Brief §Intro ¶4 + Lecturer clarification; INT-MGR [System Q2]; DEC-03 | [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | CL-Certification, CL-Manager, CL-Notification, CL-Staff | [SD-13](diagrams/SD-13-view-manpower-dashboard.puml) | Pending |
-| FR-15 | Brief §Company ¶1; INT-MGR [Clarification Q6 follow-up]; DEC-02; DEC-07 | [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | CL-AuditLog, CL-Availability, CL-JobPreference, CL-Staff | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | [AD-02](diagrams/AD-02-set-availability.puml) |
-| FR-16 | Brief §Company ¶1; INT-MGR [Conflicts Q2]; INT-DCT [Questionnaire C12/C13]; DEC-02; DEC-69 | [UC-09](use-cases/UC-09-manage-staff-request.md), [UC-12](use-cases/UC-12-manage-requests.md) | CL-AuditLog, CL-Availability, CL-JobPreference, CL-LateAvailabilityChangeRequest, CL-Manager, CL-Staff | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml) | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-17 | Brief R9, R5; INT-DCT [Questionnaire C7]; INT-DRV [Q10]; INT-MGR [Process Q1 follow-up: ordering]; DEC-07 | [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | CL-AuditLog, CL-Availability, CL-JobPreference, CL-Staff | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | [AD-02](diagrams/AD-02-set-availability.puml) |
-| FR-18 | Brief §Company ¶4; INT-MGR [Process Q4], [Process Q4 follow-up]; INT-DCT [Questionnaire C11]; DEC-13 | [UC-12](use-cases/UC-12-manage-requests.md) | CL-AuditLog, CL-LeaveRequest, CL-Staff | [SD-15](diagrams/SD-15-submit-leave-request.puml) | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-19 | INT-MGR [Process Q4], [Process Q4 follow-up]; DEC-13 | [UC-09](use-cases/UC-09-manage-staff-request.md) | CL-AuditLog, CL-LeaveRequest, CL-Manager | [SD-10](diagrams/SD-10-decide-leave-request.puml) | [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-20 | INT-MGR [Process Q4]; INT-DRV [Q15]; DEC-13; DEC-19 | [UC-09](use-cases/UC-09-manage-staff-request.md) | CL-AuditLog, CL-LeaveRequest, CL-Manager | [SD-10](diagrams/SD-10-decide-leave-request.puml) | [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-21 | Brief §Company ¶4; INT-MGR [Process Q4], [System Q1]; INT-DCT [Questionnaire C10/C11]; DEC-13 | [UC-09](use-cases/UC-09-manage-staff-request.md), [UC-12](use-cases/UC-12-manage-requests.md) | CL-AuditLog, CL-LeaveRequest, CL-Manager, CL-Staff | [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml) | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-22 | Brief §Company ¶2, ¶4; INT-MGR [Clarification Q2 follow-up], [Clarification Q5]; DEC-35; DEC-19 | [UC-03](use-cases/UC-03-create-user-account.md), [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | CL-Account, CL-AuditLog, CL-Certification, CL-ITAdministrator, CL-Manager, CL-Notification, CL-Staff, CL-User | [SD-03](diagrams/SD-03-create-user-account.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml) | [AD-04](diagrams/AD-04-create-user-account.puml) |
-| FR-23 | Brief §Company ¶3; INT-DRV [Q2]; DEC-14 | [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Van, CL-WorkshopServicing | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Pending |
-| FR-24 | Brief §Company ¶5; INT-MGR [Process Q3]; DEC-14; DEC-45 | [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Van, CL-WorkshopServicing | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Pending |
-| FR-25 | INT-MGR [Conflicts Q4]; INT-DRV [Q8] | [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Van, CL-WorkshopServicing | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Pending |
-| FR-26 | Brief §Company ¶3–4; INT-MGR [Process Q1], [Clarification Q3], [Clarification Q4 follow-up]; INT-DCT [Questionnaire D1/D2]; DEC-09; DEC-47 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-AuditLog, CL-Crew, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-27 | Brief §Company ¶2–3; INT-MGR [Process Q1 follow-up: ordering], [Process Q2]; INT-DCT [Questionnaire D2]; DEC-09 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-AuditLog, CL-Crew, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-28 | INT-MGR [Clarification Q4 follow-up]; INT-DRV [Q7]; DEC-39 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-AuditLog, CL-Crew, CL-Manager, CL-Standby | [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-29 | DEC-19; DEC-43; INT-MGR [Process Q4], [Conflicts Q2]; DEC-45 | [UC-09](use-cases/UC-09-manage-staff-request.md) | CL-AuditLog, CL-Availability, CL-Certification, CL-Crew, CL-LateAvailabilityChangeRequest, CL-LeaveRequest, CL-Manager, CL-Notification, CL-Staff, CL-Standby | [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-30 | DEC-43; INT-MGR [Conflicts Q2 follow-up: standby] | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-15](use-cases/UC-15-notify-staff.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Notification, CL-Staff, CL-Standby, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-20](diagrams/SD-20-notify-staff.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-31 | Brief R4, R5; INT-MGR [System Q3]; DEC-06; DEC-08 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-08](use-cases/UC-08-compare-staff.md) | CL-AuditLog, CL-Crew, CL-Manager, CL-Staff, CL-Standby, CL-Technician | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-32 | INT-MGR [System Q4], [Process Q3], [Clarification Q8]; DEC-19; DEC-43; DEC-45; DEC-47 | [UC-05](use-cases/UC-05-manage-job.md), [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-Manager, CL-Standby, CL-WeeklyRoster | [SD-05](diagrams/SD-05-manage-job.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-33 | Brief §Company ¶4, R6; INT-MGR [System Q4], [Conflicts Q1]; DEC-19; DEC-32; DEC-43 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager, CL-WeeklyRoster | -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml) |
-| FR-34 | INT-MGR [Conflicts Q1], [System Q1 follow-up: ranking] | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-09](use-cases/UC-09-manage-staff-request.md), [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | CL-Assignment, CL-AuditLog, CL-Crew, CL-Job, CL-JobRejectionRequest, CL-Manager, CL-Standby | [SD-05](diagrams/SD-05-manage-job.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-35 | INT-MGR [Clarification Q7], [Clarification Q4 follow-up], [Conflicts Q5]; INT-DCT [Questionnaire C9], [Questionnaire C9]; DEC-31; DEC-39; DEC-40; DEC-47 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-08](use-cases/UC-08-compare-staff.md), [UC-10](use-cases/UC-10-view-manpower-dashboard.md), [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md), [UC-14](use-cases/UC-14-complete-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager, CL-Staff, CL-Technician, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-19](diagrams/SD-19-complete-job.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-36 | Brief R6; INT-MGR [Clarification Q7]; DEC-04 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-08](use-cases/UC-08-compare-staff.md), [UC-10](use-cases/UC-10-view-manpower-dashboard.md), [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md) | CL-Assignment, CL-AuditLog, CL-Certification, CL-Crew, CL-Job, CL-Manager, CL-Notification, CL-Staff, CL-Standby, CL-Technician, CL-WeeklyRoster | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-37 | Brief R10, §Intro ¶3; INT-MGR [Conflicts Q3], [added follow-up: early rejection]; INT-DCT [Questionnaire C14/C15], [Questionnaire C15/C16]; INT-DRV [Q17]; DEC-42 | [UC-12](use-cases/UC-12-manage-requests.md) | CL-Assignment, CL-AuditLog, CL-JobRejectionRequest, CL-Staff | [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-38 | Brief R10; INT-MGR [System Q1 follow-up: landing page] (rejections listed as "pending requests"); DEC-42; DEC-43 | [UC-09](use-cases/UC-09-manage-staff-request.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-JobRejectionRequest, CL-Manager, CL-Staff | [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-39 | INT-MGR [added follow-up: notifications], [Conflicts Q5], [added follow-up: cancellations]; INT-DCT [Questionnaire C16], [Questionnaire C15/C16]; INT-DRV [Q7]; DEC-42; DEC-43; DEC-46; DEC-69 | [UC-05](use-cases/UC-05-manage-job.md), [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md), [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md), [UC-09](use-cases/UC-09-manage-staff-request.md), [UC-15](use-cases/UC-15-notify-staff.md) | CL-Assignment, CL-AuditLog, CL-Availability, CL-Crew, CL-Job, CL-JobRejectionRequest, CL-LateAvailabilityChangeRequest, CL-LeaveRequest, CL-Manager, CL-Notification, CL-Standby, CL-Van, CL-WeeklyRoster, CL-WorkshopServicing | [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-20](diagrams/SD-20-notify-staff.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-40 | Brief R2, R6; INT-MGR [System Q1 follow-up: landing page], [System Q2], [added follow-up: lowest three], [Clarification Q2 follow-up], [Conflicts Q3]; DEC-05; DEC-19; DEC-30; DEC-42; DEC-43; DEC-47 | [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | CL-Assignment, CL-AuditLog, CL-Availability, CL-Certification, CL-Crew, CL-Job, CL-JobRejectionRequest, CL-LateAvailabilityChangeRequest, CL-LeaveRequest, CL-Manager, CL-Notification, CL-Staff, CL-Standby | [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-41 | Brief R7; INT-DCT [Questionnaire C10/C11]; INT-DRV [Q13]; DEC-04; DEC-16; DEC-42; DEC-43; DEC-47 | [UC-12](use-cases/UC-12-manage-requests.md), [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md) | CL-Assignment, CL-Staff, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-42 | INT-DRV [Q1], [Q2]; INT-DCT [Questionnaire C5]; DEC-37 | [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md) | CL-Assignment, CL-Staff, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| FR-43 | Brief R2, R7, R11; INT-ITA [Q: Permissions]; DEC-18 | [UC-01](use-cases/UC-01-log-in-out.md) | CL-Account, CL-AuditLog, CL-User | [SD-01](diagrams/SD-01-log-in-out.puml) | Pending |
-| FR-44 | Brief R11; INT-ITA [Q: Account info]; INT-MGR [Clarification Q2]; DEC-35 | [UC-03](use-cases/UC-03-create-user-account.md) | CL-Account, CL-AuditLog, CL-Certification, CL-ITAdministrator, CL-User | [SD-03](diagrams/SD-03-create-user-account.puml) | [AD-04](diagrams/AD-04-create-user-account.puml) |
-| FR-45 | INT-ITA [Q: Role change/leaver]; DEC-17 | [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-ITAdministrator, CL-Job | [SD-04](diagrams/SD-04-manage-user-access.puml) | Pending |
-| FR-46 | INT-ITA [Q: Role change/leaver], [Q: Retention]; DEC-34 | [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-ITAdministrator, CL-Job, CL-User | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | Pending |
-| FR-47 | INT-ITA [Q: Passwords]; DEC-71 | [UC-02](use-cases/UC-02-reset-password.md) | CL-Account, CL-AuditLog, CL-User | [SD-02](diagrams/SD-02-reset-password.puml) | Pending |
-| FR-48 | INT-ITA [Q: Passwords]; DEC-17 | [UC-01](use-cases/UC-01-log-in-out.md), [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-ITAdministrator, CL-Job, CL-User | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | Pending |
-| FR-49 | INT-ITA [Q: Audit]; DEC-17 | [UC-02](use-cases/UC-02-reset-password.md), [UC-03](use-cases/UC-03-create-user-account.md), [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-Availability, CL-Certification, CL-Crew, CL-ITAdministrator, CL-Job, CL-JobPreference, CL-JobRejectionRequest, CL-LateAvailabilityChangeRequest, CL-LeaveRequest, CL-Manager, CL-Staff, CL-Standby, CL-Technician, CL-User, CL-Van, CL-WeeklyRoster, CL-WorkshopServicing | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-19](diagrams/SD-19-complete-job.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | Pending |
-| FR-50 | INT-ITA [Q: Retention]; DEC-34 | [UC-05](use-cases/UC-05-manage-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Manager | [SD-05](diagrams/SD-05-manage-job.puml) | Pending |
-| NFR-01 | INT-ITA [Q: Response time] ("maybe 3 or 5 seconds"; "less than a minute or so"); Brief R2 ("immediately"); DEC-47 | [UC-15](use-cases/UC-15-notify-staff.md) | CL-Notification | [SD-20](diagrams/SD-20-notify-staff.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| NFR-02 | INT-ITA [Q: Concurrency]; Brief §Company ¶4–5; DEC-34 | - (no use case lists it) | Pending | Pending | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-03 | INT-ITA [Q: Hours], [Q: Outage]; DEC-38 | - (no use case lists it) | Pending | Pending | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-04 | INT-ITA [Q: Outage] ("Not more than one day"), [Q: Restore]; DEC-47 | - (no use case lists it) | Pending | Pending | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-05 | INT-DCT [Questionnaire C18/C19]; INT-ITA [Q: Outage], [Q: Connection failure]; DEC-69 | [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md), [UC-14](use-cases/UC-14-complete-job.md) | CL-Assignment, CL-AuditLog, CL-Job, CL-Staff, CL-Technician, CL-WeeklyRoster | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-19](diagrams/SD-19-complete-job.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| NFR-06 | INT-ITA [Q: Connection failure] | [UC-02](use-cases/UC-02-reset-password.md), [UC-03](use-cases/UC-03-create-user-account.md), [UC-05](use-cases/UC-05-manage-job.md), [UC-14](use-cases/UC-14-complete-job.md), [UC-15](use-cases/UC-15-notify-staff.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-Certification, CL-Crew, CL-ITAdministrator, CL-Job, CL-JobRejectionRequest, CL-LateAvailabilityChangeRequest, CL-LeaveRequest, CL-Manager, CL-Notification, CL-Staff, CL-Standby, CL-Technician, CL-User, CL-Van, CL-WeeklyRoster, CL-WorkshopServicing | [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-19](diagrams/SD-19-complete-job.puml), [SD-20](diagrams/SD-20-notify-staff.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-07 | INT-ITA [Q: Safeguards]; DEC-41 | [UC-01](use-cases/UC-01-log-in-out.md) | CL-Account, CL-AuditLog, CL-User | [SD-01](diagrams/SD-01-log-in-out.puml) | Pending |
-| NFR-08 | INT-ITA [Q: Safeguards] ("encrypted properly in the backend") | [UC-02](use-cases/UC-02-reset-password.md) | CL-Account, CL-AuditLog, CL-Certification, CL-ITAdministrator, CL-User | [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-09 | INT-ITA [Q: Onboarding], [Q: Permissions]; DEC-17; DEC-18; DEC-37; DEC-45; DEC-47 | [UC-01](use-cases/UC-01-log-in-out.md), [UC-03](use-cases/UC-03-create-user-account.md), [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-Certification, CL-ITAdministrator, CL-Job, CL-Technician, CL-User | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-19](diagrams/SD-19-complete-job.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-10 | INT-ITA [Q: Retention] ("up to one year"); DEC-34 | [UC-04](use-cases/UC-04-manage-user-access.md) | CL-Account, CL-Assignment, CL-AuditLog, CL-ITAdministrator, CL-Job | [SD-04](diagrams/SD-04-manage-user-access.puml) | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
-| NFR-11 | Brief R1; INT-ITA [Q: Devices]; INT-DCT [Questionnaire C18/C19]; INT-DRV [Q14]; DEC-47 | [UC-01](use-cases/UC-01-log-in-out.md) | Pending | Pending | [AD-01](diagrams/AD-01-weekly-roster.puml), [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml), [AD-04](diagrams/AD-04-create-user-account.puml) |
-| NFR-12 | INT-MGR [Closing] ("Just keep it simple. Most of my staff aren't very technical.") | - (no use case lists it) | Pending | Pending | [AD-02](diagrams/AD-02-set-availability.puml), [AD-03](diagrams/AD-03-job-rejection.puml) |
+| [UC-01](use-cases/UC-01-log-in-out.md) | User; Email Service «system» | [UCD-system](diagrams/UCD-system.puml) | Web UI, Authentication | W-01 | — |
+| [UC-02](use-cases/UC-02-reset-password.md) | User; Email Service «system» | UCD-system | Authentication | W-02 | — |
+| [UC-03](use-cases/UC-03-create-user-account.md) | IT Administrator; Email Service «system» | UCD-system | Account Management | W-13 | — |
+| [UC-04](use-cases/UC-04-manage-user-access.md) | IT Administrator | UCD-system | Account Management | W-13 | — |
+| [UC-05](use-cases/UC-05-manage-job.md) | Manager | UCD-system | Job Management | W-04 | — |
+| UC-06 | — | — (Withdrawn) | — | — | — |
+| [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | Manager | UCD-system | Scheduling Engine, Roster & Hours | W-06 | WB-01 to WB-07 |
+| [UC-08](use-cases/UC-08-compare-staff.md) | Manager | UCD-system | Roster & Hours | W-07 | — |
+| [UC-09](use-cases/UC-09-manage-staff-request.md) | Manager; Clock | UCD-system | Staff Inputs | W-16 | — |
+| [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | Manager | UCD-system | Roster & Hours | W-03, W-08 | — |
+| [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | Staff | UCD-system | Staff Inputs | W-12 | — |
+| [UC-12](use-cases/UC-12-manage-requests.md) | Staff | UCD-system | Staff Inputs | W-15 | — |
+| [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md) | Staff | UCD-system | Roster & Hours | W-11 | — |
+| UC-14 | — | — (Withdrawn) | — | — | — |
+| [UC-15](use-cases/UC-15-notify-staff.md) | Email Service, SMS Gateway «system» | UCD-system | Notification | W-11, W-03 | — |
+| [UC-16](use-cases/UC-16-upload-csv.md) | Manager | UCD-system | CSV Import | W-05 | — |
+| [UC-17](use-cases/UC-17-update-roster-and-hours.md) | Manager | UCD-system | Roster & Hours, Scheduling Engine | W-09, W-10 | — |
+| [UC-18](use-cases/UC-18-set-standby-preference.md) | Technician | UCD-system | Staff Inputs | W-14 | BB-01 to BB-06 |
 
-## Brief → Requirement (coverage)
+## 3. Class index (CD-final)
 
-This table is maintained in [requirements.md §6](requirements.md#6-coverage-check-brief-initial-requirements).
+| Class ID | Stereotype | Component / package | Requirements | Status vs M1 |
+|---|---|---|---|---|
+| CL-User | entity (abstract) | Domain Model | FR-43, FR-44 | Kept |
+| CL-Account | entity | Domain Model | FR-43, FR-45, FR-46, FR-47, FR-48, NFR-07 | Kept |
+| CL-PasswordResetToken | entity | Domain Model | FR-47 | **New** |
+| CL-Manager | entity | Domain Model | FR-43 | Kept |
+| CL-ITAdministrator | entity | Domain Model | FR-44, FR-45 | Kept |
+| CL-Staff | entity (abstract) | Domain Model | FR-12, FR-35, FR-36 | Changed (no Leave balance) |
+| CL-Driver | entity | Domain Model | FR-26 | Kept (assumption A1) |
+| CL-Technician | entity | Domain Model | FR-22, FR-31, FR-51, FR-55, FR-56 | Changed (homeZone; derived hours) |
+| CL-Certification | entity | Domain Model | FR-22, FR-27 | Changed (no number) |
+| CL-Availability | entity | Domain Model | FR-12, FR-13, FR-14, FR-15 | Changed (per day) |
+| CL-StandbyPreference | entity | Domain Model | FR-51 | **New** (replaces CL-JobPreference) |
+| CL-LeaveRecord | entity | Domain Model | FR-52 | **New** (replaces CL-LeaveRequest) |
+| CL-VanAvailability | entity | Domain Model | FR-53 | **New** (replaces CL-Van) |
+| CL-CsvImport | entity | Domain Model | FR-52, FR-53, FR-54 | **New** |
+| CL-Job | entity | Domain Model | FR-01, FR-02, FR-03, FR-04, FR-05 | Changed (zone; two statuses) |
+| CL-WeeklyRoster | entity | Domain Model | FR-09 | Kept |
+| CL-Crew | entity | Domain Model | FR-26, FR-27 | Changed (vanNumber, zone) |
+| CL-Assignment | entity | Domain Model | FR-07, FR-08, FR-42 | Simplified |
+| CL-Standby | entity | Domain Model | FR-30, FR-56, FR-57 | Changed (source, activated) |
+| CL-HoursEdit | entity | Domain Model | FR-35, FR-57 | **New** |
+| CL-JobRejectionRequest | entity | Domain Model | FR-37, FR-38 | Simplified (no Short notice) |
+| CL-AuditLog | entity | Domain Model | FR-49, FR-58 | Kept (reason added) |
+| CL-Notification | entity | Domain Model | FR-40, FR-39 | Kept (explicit) |
+| CL-AuthController | control | Authentication | FR-43, FR-47, FR-48 | Kept |
+| CL-AccountController | control | Account Management | FR-44, FR-45, FR-46, FR-22, FR-49 | Changed |
+| CL-AvailabilityController | control | Staff Inputs | FR-12, FR-13 | Changed |
+| CL-StandbyPreferenceController | control | Staff Inputs | FR-51 | **New** |
+| CL-RequestController | control | Staff Inputs | FR-37, FR-38 | Trimmed |
+| CL-CsvImportController | control | CSV Import | FR-52, FR-53, FR-54 | **New** |
+| CL-CsvRowMapper | interface | CSV Import | FR-52, FR-53, FR-54 | **New** |
+| CL-HrLeaveCsvMapper | class | CSV Import | FR-52 | **New** |
+| CL-VanAvailabilityCsvMapper | class | CSV Import | FR-53 | **New** |
+| CL-JobController | control | Job Management | FR-01, FR-02, FR-03, FR-04, FR-05, FR-34, FR-50 | Changed |
+| CL-CrewFormingService | control | Scheduling Engine | FR-55 | **New** |
+| CL-StandbyActivationService | control | Scheduling Engine | FR-56 | **New** |
+| CL-TechnicianRanking | interface | Scheduling Engine | FR-55, FR-56 | **New** (Strategy) |
+| CL-WorkloadRanking | class | Scheduling Engine | FR-55 | **New** |
+| CL-ActivationRanking | class | Scheduling Engine | FR-56 | **New** |
+| CL-RuleValidator | control | Scheduling Engine | FR-13, FR-15, FR-26, FR-27, FR-32, FR-33, FR-30, FR-51 | Changed |
+| CL-RosterController | control | Roster & Hours | FR-45, FR-26, FR-07, FR-31, FR-33, FR-09, FR-10, FR-11, FR-30 | Changed |
+| CL-HoursController | control | Roster & Hours | FR-57 | **New** |
+| CL-DashboardController | control | Roster & Hours | FR-14, FR-40, FR-41 | Changed |
+| CL-NotificationService | control | Notification | FR-39 | Kept |
+| CL-NotificationChannel | interface | Notification | FR-39 | **New** |
+| CL-EmailChannel | class | Notification | FR-44, FR-47, FR-39 | **New** |
+| CL-SmsChannel | class | Notification | FR-39 | **New** |
+| CL-RetentionJob | control | Audit & Retention | FR-58, NFR-10 | **New** |
+| CL-LoginPage | boundary | Web UI | FR-43, FR-47 | Kept |
+| CL-LandingPage | boundary | Web UI | FR-14, FR-40, FR-41, NFR-05 | Kept |
+| CL-AccountAdminPage | boundary | Web UI | FR-44, FR-45, FR-46, FR-22 | Kept |
+| CL-AuditLogPage | boundary | Web UI | FR-49 | **New** (split from AccountAdminPage) |
+| CL-JobPage | boundary | Web UI | FR-01, FR-04 | Kept |
+| CL-CsvUploadPage | boundary | Web UI | FR-52, FR-53, FR-54 | **New** |
+| CL-JobAllocationPage | boundary | Web UI | FR-07, FR-31, FR-09, FR-55 | Changed |
+| CL-UpdateRosterPage | boundary | Web UI | FR-57 | **New** |
+| CL-StandbyListView | boundary | Web UI | FR-56 | **New** |
+| CL-AvailabilityPage | boundary | Web UI | FR-12 | Changed |
+| CL-StandbyPreferencePage | boundary | Web UI | FR-51 | **New** |
+| CL-RequestPage | boundary | Web UI | FR-37 | Trimmed |
+| CL-RequestReviewPage | boundary | Web UI | FR-38 | Trimmed |
 
-## Use case → Diagram index
+**Removed classes (M1 → M2):** CL-Van, CL-WorkshopServicing, CL-LeaveRequest, CL-LateAvailabilityChangeRequest, CL-JobPreference, CL-VanController, CL-CompletionController, CL-VanPage, CL-JobCompletionPage (DEC-73, DEC-76, DEC-79, DEC-83, DEC-85).
 
-| Use case | Related diagrams (report §3.2) |
-|---|---|
-| [UC-01](use-cases/UC-01-log-in-out.md) | [UCD-system](diagrams/UCD-system.puml); [SD-01](diagrams/SD-01-log-in-out.puml) |
-| [UC-02](use-cases/UC-02-reset-password.md) | [UCD-system](diagrams/UCD-system.puml); [SD-02](diagrams/SD-02-reset-password.puml) |
-| [UC-03](use-cases/UC-03-create-user-account.md) | [UCD-system](diagrams/UCD-system.puml); [AD-04](diagrams/AD-04-create-user-account.puml); [SD-03](diagrams/SD-03-create-user-account.puml) |
-| [UC-04](use-cases/UC-04-manage-user-access.md) | [UCD-system](diagrams/UCD-system.puml); [SD-04](diagrams/SD-04-manage-user-access.puml) |
-| [UC-05](use-cases/UC-05-manage-job.md) | [UCD-system](diagrams/UCD-system.puml); [SD-05](diagrams/SD-05-manage-job.puml) |
-| [UC-06](use-cases/UC-06-manage-vans-and-workshop-servicing.md) | [UCD-system](diagrams/UCD-system.puml); [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) |
-| [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | [UCD-system](diagrams/UCD-system.puml); [AD-01](diagrams/AD-01-weekly-roster.puml); [SD-07](diagrams/SD-07-form-crews-and-standby.puml); [SD-08](diagrams/SD-08-publish-weekly-roster.puml) |
-| [UC-08](use-cases/UC-08-compare-staff.md) | [UCD-system](diagrams/UCD-system.puml); [AD-01](diagrams/AD-01-weekly-roster.puml); [SD-09](diagrams/SD-09-compare-staff.puml) |
-| [UC-09](use-cases/UC-09-manage-staff-request.md) | [UCD-system](diagrams/UCD-system.puml); [AD-03](diagrams/AD-03-job-rejection.puml); [SD-10](diagrams/SD-10-decide-leave-request.puml); [SD-11](diagrams/SD-11-decide-late-availability-change.puml); [SD-12](diagrams/SD-12-decide-job-rejection-request.puml); [SD-21](diagrams/SD-21-handle-invalidated-crew.puml) |
-| [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | [UCD-system](diagrams/UCD-system.puml); [SD-13](diagrams/SD-13-view-manpower-dashboard.puml); [SD-21](diagrams/SD-21-handle-invalidated-crew.puml) |
-| [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | [UCD-system](diagrams/UCD-system.puml); [AD-02](diagrams/AD-02-set-availability.puml); [SD-14](diagrams/SD-14-set-availability-and-preferences.puml); [SD-16](diagrams/SD-16-submit-late-availability-change.puml) |
-| [UC-12](use-cases/UC-12-manage-requests.md) | [UCD-system](diagrams/UCD-system.puml); [AD-02](diagrams/AD-02-set-availability.puml); [AD-03](diagrams/AD-03-job-rejection.puml); [SD-15](diagrams/SD-15-submit-leave-request.puml); [SD-16](diagrams/SD-16-submit-late-availability-change.puml); [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) |
-| [UC-13](use-cases/UC-13-view-my-assignments-and-workload.md) | [UCD-system](diagrams/UCD-system.puml); [AD-01](diagrams/AD-01-weekly-roster.puml); [AD-03](diagrams/AD-03-job-rejection.puml); [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml) |
-| [UC-14](use-cases/UC-14-complete-job.md) | [UCD-system](diagrams/UCD-system.puml); [SD-19](diagrams/SD-19-complete-job.puml) |
-| [UC-15](use-cases/UC-15-notify-staff.md) | [UCD-system](diagrams/UCD-system.puml); [AD-01](diagrams/AD-01-weekly-roster.puml); [AD-03](diagrams/AD-03-job-rejection.puml); [SD-20](diagrams/SD-20-notify-staff.puml) |
+## 4. M2 diagram source index
 
-## Class index
+| Source | Report section | Status |
+|---|---|---|
+| [UCD-system](diagrams/UCD-system.puml) | §1.2 (use-case summary) | M2 v3.0, not yet rendered or reviewed |
+| [CD-final](diagrams/CD-final.puml) | §1.3 | New, not yet rendered or reviewed |
+| [CMP-system](diagrams/CMP-system.puml) | §2 | New, not yet rendered or reviewed |
+| [ARCH-layered](diagrams/ARCH-layered.puml) | §3.1 | New, not yet rendered or reviewed |
+| [DP-strategy-ranking](diagrams/DP-strategy-ranking.puml) | §3.2 | New, not yet rendered or reviewed |
+| [CFG-classify-technicians](diagrams/CFG-classify-technicians.puml) | §4.2 | New, not yet rendered or reviewed |
 
-| Class ID | Appears in use cases | Appears in sequence diagrams | Source / DEC |
-|---|---|---|---|
-| CL-User | UC-01, UC-02, UC-03 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml) | DEC-17; DEC-18; DEC-53; DEC-56; DEC-58 |
-| CL-Staff | UC-07, UC-08, UC-09, UC-10, UC-11, UC-12, UC-13 | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | DEC-18; DEC-39; DEC-40; DEC-53; DEC-56; DEC-58 |
-| CL-Manager | UC-05, UC-06, UC-07, UC-08, UC-09, UC-10 | [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-09](diagrams/SD-09-compare-staff.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | Brief R3; DEC-18; DEC-53; DEC-56; DEC-58 |
-| CL-ITAdministrator | UC-03, UC-04 | [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | Brief R11; DEC-17; DEC-53; DEC-56; DEC-58 |
-| CL-Driver | UC-03, UC-07, UC-08, UC-09, UC-10, UC-12, UC-13 | Through Staff/Crew or concrete account creation (DEC-53/56) | DEC-09; DEC-18; DEC-53; DEC-56; DEC-58 |
-| CL-Technician | UC-07, UC-08, UC-14 | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-19](diagrams/SD-19-complete-job.puml) | DEC-09; DEC-35; DEC-53; DEC-56; DEC-58 |
-| CL-Account | UC-01, UC-02, UC-03, UC-04 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | DEC-17; DEC-34; DEC-41; DEC-53; DEC-56; DEC-58 |
-| CL-Availability | UC-09, UC-11, UC-12 | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml) | DEC-02; DEC-03; DEC-30; DEC-53; DEC-56; DEC-58 |
-| CL-JobPreference | UC-11, UC-12 | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | Brief R9; DEC-07; DEC-53; DEC-56; DEC-58 |
-| CL-LeaveRequest | UC-09, UC-12 | [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml) | DEC-13; DEC-53; DEC-56; DEC-58 |
-| CL-LateAvailabilityChangeRequest | UC-09, UC-12 | [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml) | DEC-02; DEC-53; DEC-56; DEC-58 |
-| CL-JobRejectionRequest | UC-09, UC-12 | [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | DEC-42; DEC-52; DEC-53; DEC-56; DEC-58 |
-| CL-Certification | UC-03, UC-09, UC-10 | [SD-03](diagrams/SD-03-create-user-account.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml) | DEC-35; DEC-53; DEC-56; DEC-59 |
-| CL-Van | UC-06 | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | DEC-14; DEC-53; DEC-56; DEC-54; DEC-58 |
-| CL-WorkshopServicing | UC-06 | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | DEC-14; DEC-53; DEC-56; DEC-54; DEC-58 |
-| CL-Crew | UC-04, UC-06, UC-07, UC-08, UC-09, UC-10 | [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | DEC-09; DEC-51; DEC-53; DEC-56; DEC-58; DEC-59; DEC-60 |
-| CL-WeeklyRoster | UC-07, UC-13 | [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | DEC-16; DEC-53; DEC-56; DEC-58 |
-| CL-Assignment | UC-04, UC-05, UC-06, UC-07, UC-09, UC-12, UC-13 | [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml), -allocate-job.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | DEC-10; DEC-39; DEC-40; DEC-53; DEC-56; DEC-58 |
-| CL-Job | UC-04, UC-05, UC-06, UC-07, UC-09, UC-14 | [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-19](diagrams/SD-19-complete-job.puml), -allocate-job.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | DEC-11; DEC-40; DEC-53; DEC-56; DEC-58 |
-| CL-Standby | UC-07, UC-08 | [SD-07](diagrams/SD-07-form-crews-and-standby.puml) | DEC-43; DEC-53; DEC-56; DEC-58 |
-| CL-AuditLog | UC-01, UC-02, UC-03, UC-04, UC-05, UC-06, UC-07, UC-08, UC-09, UC-10, UC-11, UC-12, UC-14 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml), [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-19](diagrams/SD-19-complete-job.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | FR-49; DEC-17; DEC-53; DEC-56; DEC-58 |
-| CL-Notification | UC-10, UC-15 | [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-20](diagrams/SD-20-notify-staff.puml) | FR-40; FR-39; DEC-46; DEC-48; DEC-53; DEC-56; DEC-63 |
-| CL-LoginPage | UC-01, UC-02 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-LandingPage | UC-01, UC-02, UC-10, UC-13 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-AccountAdminPage | UC-03, UC-04 | [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-JobPage | UC-05 | [SD-05](diagrams/SD-05-manage-job.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-VanPage | UC-06 | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-JobAllocationPage | UC-07, UC-08 | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-57; DEC-58 |
-| CL-RequestReviewPage | UC-09 | [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-57; DEC-58 |
-| CL-AvailabilityPage | UC-11, UC-12 | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-RequestPage | UC-11, UC-12 | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-JobCompletionPage | UC-14 | [SD-19](diagrams/SD-19-complete-job.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-AuthController | UC-01, UC-02 | [SD-01](diagrams/SD-01-log-in-out.puml), [SD-02](diagrams/SD-02-reset-password.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-61 |
-| CL-AccountController | UC-03, UC-04 | [SD-03](diagrams/SD-03-create-user-account.puml), [SD-04](diagrams/SD-04-manage-user-access.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-60 |
-| CL-JobController | UC-05 | [SD-05](diagrams/SD-05-manage-job.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-VanController | UC-06 | [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-RosterController | UC-07, UC-08, UC-09, UC-10 | [SD-09](diagrams/SD-09-compare-staff.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58; DEC-59 |
-| CL-RuleValidator | UC-05, UC-07, UC-08 | [SD-05](diagrams/SD-05-manage-job.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-RequestController | UC-09, UC-12 | [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml), [SD-15](diagrams/SD-15-submit-leave-request.puml), [SD-16](diagrams/SD-16-submit-late-availability-change.puml), [SD-17](diagrams/SD-17-submit-job-rejection-request.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58; DEC-59 |
-| CL-DashboardController | UC-10, UC-13 | [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-18](diagrams/SD-18-view-my-assignments-and-workload.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-AvailabilityController | UC-11, UC-12 | [SD-14](diagrams/SD-14-set-availability-and-preferences.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-CompletionController | UC-14 | [SD-19](diagrams/SD-19-complete-job.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58 |
-| CL-NotificationService | UC-04, UC-05, UC-06, UC-07, UC-08, UC-09, UC-10, UC-15 | [SD-04](diagrams/SD-04-manage-user-access.puml), [SD-05](diagrams/SD-05-manage-job.puml), [SD-06](diagrams/SD-06-manage-vans-and-workshop-servicing.puml), [SD-13](diagrams/SD-13-view-manpower-dashboard.puml), [SD-20](diagrams/SD-20-notify-staff.puml), [SD-21](diagrams/SD-21-handle-invalidated-crew.puml), [SD-07](diagrams/SD-07-form-crews-and-standby.puml), -allocate-job.puml), [SD-08](diagrams/SD-08-publish-weekly-roster.puml), [SD-10](diagrams/SD-10-decide-leave-request.puml), [SD-11](diagrams/SD-11-decide-late-availability-change.puml), [SD-12](diagrams/SD-12-decide-job-rejection-request.puml) | Supplied review section 3; DEC-53; DEC-56; DEC-58; DEC-62 |
+## 5. M1 diagrams after the M2 changes
 
-## Sequence source index (report §4.3)
+Sequence and activity diagrams are not M2 deliverables (template §1–§5). Their status is recorded so that no outdated diagram is reused by mistake.
+
+| Diagram | M2 status | Reason |
+|---|---|---|
+| CD-domain, CD-control, CD-boundary | **Superseded by CD-final** | DEC-73 to DEC-93 |
+| AD-01 Weekly roster | Needs rework before reuse | Suggested Roster, CSV upload, no Leave decisions (DEC-74, DEC-80) |
+| AD-02 Set availability | Needs rework before reuse | Per-day Availability; no late-change request (DEC-83) |
+| AD-03 Job rejection | Needs update before reuse | Short notice and Linked partners retired (DEC-90) |
+| AD-04 Create user account | Needs update before reuse | Home zone; no certificate number (DEC-75, DEC-77) |
+| SD-01, SD-08 | Still valid in substance | — |
+| SD-02, SD-03, SD-04, SD-05, SD-07, SD-09, SD-12, SD-13, SD-14, SD-17, SD-18, SD-20 | Need update before reuse | Class and rule changes above (SD-07 needs the Suggested Roster) |
+| SD-06, SD-10, SD-11, SD-15, SD-16, SD-19, SD-21 | **Withdrawn** (IDs kept) | Their use cases or requirements were withdrawn (DEC-76, DEC-83, DEC-85, DEC-90) |
+
+## 6. M1 history
+
+### M1 sequence source index (report §4.3)
 
 | Source | Title | Related use cases |
 |---|---|---|
@@ -171,8 +215,3 @@ This table is maintained in [requirements.md §6](requirements.md#6-coverage-che
 
 The draft IDs SD-07, SD-09, SD-12 and SD-26 to SD-30 were consolidated before submission (DEC-57) and the draft SD-18 Allocate Job is not in the report. Their sources are in `diagrams/archive/` under their draft numbers.
 
-## M2 extension (fill after M1)
-
-| Use case | Component(s) | Test (black-box / white-box) | Wireframe screen |
-|---|---|---|---|
-| Pending | Pending | Pending | Pending |

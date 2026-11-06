@@ -27,6 +27,7 @@ Late work loses 20% per day, and anything more than 4 days late gets zero. See [
    - `INT-MGR|DCT|DRV|ITA [<question>]` (an interview transcript in `elicitation/interviews/`; format in `requirements.md` §1.4)
    - `DEC-<nn>` (a logged team decision in `decisions.md`)
    - `M1 Report §<n>` (the submitted M1 report, 9 Oct 2026)
+   - `M2-Brief §<n>` (the team's M2 Design Update Brief in `m2/design-update-brief.md`; cite it through the DEC entry that records it where one exists)
 
    Items without a source are flagged, not merged.
 
@@ -47,8 +48,11 @@ Late work loses 20% per day, and anything more than 4 days late gets zero. See [
 | `AD-nn`          | Activity diagram                  | `AD-01`         | `diagrams/AD-01-<slug>.puml`        |
 | `DEC-nn`         | Decision or open question         | `DEC-01`        | `decisions.md`                      |
 | `MTG-nn`         | Stakeholder meeting               | `MTG-01`        | `elicitation/MTG-01-<date>.md`      |
+| `W-nn`           | Wireframe screen (M2)             | `W-06`          | `m2/wireframes.md`                  |
+| `A<n>`           | SRS assumption (M2)               | `A1`            | `requirements.md` §1.5              |
+| `BB-nn` / `WB-nn`| Black-box / white-box test case   | `BB-01`         | `m2/testing.md`                     |
 
-- Use two digits with zero padding. FR, NFR and SD IDs follow the **submitted M1 report** (FR-01–FR-50, NFR-01–NFR-12, SD-01–SD-21); the repo's earlier draft IDs were renumbered to match it on 2026-11-07 (DEC-72; mapping in `requirements.md` §9 and `diagrams/README.md`). From this baseline on, **IDs are never reused or renumbered**; mark a dropped item `Status: Withdrawn` and keep its row. History files (DEC-01 to DEC-71, review notes, archives) keep the draft IDs they were written with.
+- Use two digits with zero padding. FR, NFR and SD IDs follow the **submitted M1 report** (FR-01–FR-50, NFR-01–NFR-12, SD-01–SD-21; M2 adds FR-51 onwards and NFR-13 onwards); the repo's earlier draft IDs were renumbered to match it on 2026-11-07 (DEC-72; mapping in `requirements.md` §9 and `diagrams/README.md`). From this baseline on, **IDs are never reused or renumbered**; mark a dropped item `Status: Withdrawn` and keep its row. History files (DEC-01 to DEC-71, review notes, archives) keep the draft IDs they were written with.
 - Before creating an ID, check the highest existing one. If two people collide, the later commit renumbers.
 - Slugs are kebab-case, e.g. `UC-03-reject-job.md`.
 
@@ -58,52 +62,55 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 
 | Term | Meaning | Avoid |
 | --- | --- | --- |
-| **Staff** | Field employees who receive Assignments: Drivers and Technicians. Managers are not Staff (FR-43) | employee, worker, user |
-| **Manager** | Office-based user who records Jobs, forms Crews, allocates and publishes the Weekly Roster, and decides Staff requests. There may be several Manager accounts with the same rights (FR-43, FR-07) | admin, supervisor |
-| **IT Administrator** | User who creates accounts, changes roles, deactivates and unlocks accounts, and views the Audit Log (FR-44, FR-45, FR-46, FR-49) | admin, sysadmin |
-| **Driver** | Staff member who drives a Van. The only role allowed to drive (FR-26). There are 6 | — |
-| **Technician** | Staff member holding a Certification for one or both Brands. A Technician never drives (FR-22, FR-26). There are 11 | engineer, installer |
+| **Staff** | Field employees who receive Assignments: Drivers and Technicians. Managers are not Staff (DEC-18) | employee, worker, user |
+| **Manager** | Office-based user who uploads CSV files, records Jobs, reviews the suggested Weekly Roster, allocates and publishes it, updates the roster and hours, and decides Job Rejection Requests. May be several accounts with identical rights (DEC-18, DEC-73) | admin, supervisor |
+| **IT Administrator** | Manages accounts, roles, lockouts, Technician profiles (home zone, Certifications) and views the Audit Log (Brief R11, DEC-17, DEC-75) | admin, sysadmin |
+| **Driver** | Staff member who drives a Van; the only role allowed to drive. There are 6. Outside the scheduling logic: one per Crew, assumed always enough (DEC-82) | — |
+| **Technician** | Staff member certified for one or both Brands; never drives. There are 11: 2 dual, 5 M Electric only, 4 Dicon only | engineer, installer |
 | **Single-Brand Technician** | A Technician certified for only one Brand: M Electric (5 Technicians) or Dicon (4 Technicians) (FR-22; Brief) | — |
-| **Dual-Certified Technician** | A Technician certified for both Brands (2 Technicians). One Dual-Certified Technician can cover a Van's Jobs of both Brands (FR-22, FR-27; Brief) | dual-skilled |
-| **Brand** | Aircon brand: `M Electric` or `Dicon` (exact spelling) (FR-01) | make, vendor |
-| **Certification** | A Technician's qualification for a Brand, recorded as Brand, certificate number and expiry date. It is valid for a Job when its expiry date is on or after the Job's date (FR-22) | skill, license |
-| **Van** | Service vehicle, recorded by number and licence plate. The company currently has six (FR-23) | truck, team |
-| **Crew** | One Driver and one or two Technicians assigned to one Van for one working day (FR-26) | team, van team |
-| **Van-day** | One Van on one date, together with its Crew and Jobs (FR-29) | — |
-| **Job** | One Installation or Servicing task for one Brand at one address, created by the Manager (FR-01) | task, order, ticket |
+| **Dual-Certified Technician** | A Technician with valid Certifications for both Brands (2 Technicians). One can cover a Crew's Jobs of both Brands (FR-22, FR-27; M2-Brief §8) | dual-skilled, Dual-Certified |
+| **Brand** | Aircon brand: `M Electric` or `Dicon` (exact spelling) | make, vendor |
+| **Certification** | A Technician's qualification for a Brand (covers Installation and Servicing): Brand and expiry date only (DEC-75) | skill, license |
+| **Van** | Service vehicle. Not stored: only the number available per date, from the van CSV; Crews are numbered Van 1…n per day (DEC-85) | truck, team |
+| **Van Availability** | The number of Vans available on a date, imported from the van vendor CSV (DEC-74, DEC-85) | fleet |
+| **Leave Record** | A read-only record that a Staff member is on Leave, Emergency Leave or MC on a date, imported from the HR CSV (DEC-74) | leave request |
+| **CSV Import** | One Manager upload of an HR CSV or a van CSV, validated as a whole before saving (DEC-74) | sync |
+| **Zone** | `North`, `East`, `South`, `West` or `Central`. A Job's zone comes from its postal code; the Manager sets each Crew's zone (DEC-77) | area, region |
+| **Home Zone** | A Technician's base Zone, used to order Standby Staff (DEC-77) | base |
+| **Crew** | The Driver plus 1–2 Technicians on one Van for one whole working day; its Technicians cover the Brands of its Jobs (DEC-09, DEC-84) | team, van team |
+| **Job** | One Installation or Servicing task for one Brand at one address, created by the Manager. Status `Unassigned` or `Assigned`; a cancelled Job is deleted (DEC-11, DEC-76) | task, order, ticket |
 | **Job Type** | `Installation` or `Servicing` (FR-01) | — |
 | **Standard Duration** | The default length of a Job: 1 h per unit for Servicing and 3 h per unit for Installation. The Manager can adjust it (FR-02) | — |
-| **Linked Jobs** | Jobs of different Brands at the same address. They must be allocated to the same Van on the same date (FR-03) | — |
-| **Assignment** | A Job placed on a Van for a date. Every Crew member of that Van-day holds the Assignment (FR-07, FR-35) | allocation (noun), booking |
-| **Unassigned Job** | A Job with status Unassigned. Cancelled Jobs are not counted (FR-05, FR-34) | open job, pending job |
-| **Job Allocation** | The Manager's weekly activity of creating Assignments (FR-07) | scheduling, planning page |
-| **Planning Week** | A Monday-to-Saturday week. "The" Planning Week is the next unpublished one (FR-07, FR-36) | work week |
-| **Weekly Roster** | All Crews and Assignments of one Planning Week. It is Draft until the Manager publishes it, then Published (FR-09) | timetable, schedule |
-| **Slot** | Half-day unit: `Morning` or `Afternoon`. Jobs run within 09:00–18:00 and skip lunch (13:00–14:00) (FR-12, FR-08) | shift, timeslot |
-| **Availability** | A Staff member's per-Slot setting of Available or Unavailable, entered up to one month in advance. A Slot with no entry is Not submitted and counts as unavailable (FR-12, FR-13) | schedule, free time |
-| **Availability Deadline** | 18:00 on the Wednesday 12 days before a Planning Week's Monday. After it, that week's Availability and Job Preference are locked (FR-15) | cut-off, lock |
-| **Late Availability Change Request** | A Staff request to set or change Availability for a locked week, with a reason. The Manager approves or rejects it (FR-16) | late request |
-| **Job Preference** | A Staff member's advisory weekly preference for area, days, Slot and Job Type. A Job that breaks it raises a warning, not a block (FR-17) | — |
-| **Workload** | Hours credited to a Staff member: Planned Hours of Assigned Jobs plus Actual Hours of Completed Jobs, summed per Planning Week and per calendar month (FR-35, FR-36) | load, utilisation |
-| **Travel Allowance** | A fixed 0.5 h added to each Job's hours (FR-08, FR-35) | travel time |
-| **Planned Hours / Actual Hours** | Planned Hours are a Job's duration plus the Travel Allowance. Actual Hours are the actual end minus the actual start, plus the Travel Allowance (FR-35) | — |
-| **Overtime** | Workload strictly above 40 h in a Planning Week (FR-36) | OT |
-| **Job Rejection Request** | A Crew member's request to take a Job off their Van, made after a warning to discuss it with the Manager. The Manager approves or refuses it (FR-37, FR-38) | decline, cancel, rejection (alone) |
-| **Short notice** | A Job Rejection Request submitted when the Job starts in less than 48 hours (FR-37) | — |
-| **Standby** | A Staff member named by the Manager to back up a working day's Jobs. Not in any Crew that day, and counted as 0 h unless placed in a Crew (FR-30) | backup, reserve |
-| **Leave** | Annual leave in full working days: 7 per calendar year, with no carry-over (FR-21) | holiday, time off |
-| **Leave Request** | A Staff application for Leave. The Manager approves or rejects it (FR-18, FR-19) | leave form |
-| **Workshop Servicing** | A Van's maintenance day, generated from a two-monthly rotation. The Van is unavailable that day (FR-24) | maintenance |
-| **Needs attention** | A Van-day whose Crew became invalid after a later event, such as approved Leave or an expired Certification (FR-29) | — |
+| **Van-day** | One Van number on one date, together with its Crew and Jobs (FR-26, DEC-85) | — |
+| **Assignment** | A Job placed on a Crew on a date; every Crew member of that Van-day holds the Assignment (DEC-10, DEC-39) | allocation (noun), booking |
+| **Unassigned Job** | A Job with status Unassigned (FR-05, FR-34) | open job, pending job |
+| **Job Allocation** | The Manager's weekly activity or page for reviewing the Suggested Roster and creating Assignments (R3, R4) | scheduling, planning page |
+| **Suggested Roster** | The Draft Crews and Standby Staff the crew-forming algorithm proposes for a Planning Week; the Manager edits and publishes it (DEC-80) | auto-roster |
+| **Planning Week** | A Monday–Saturday week; "the" Planning Week is the next unpublished one (DEC-04, DEC-16) | work week |
+| **Weekly Roster** | All Crews, Standby Staff and Assignments of one Planning Week; `Draft` until published, then `Published` (DEC-16) | timetable, schedule |
+| **Slot** | Half-day unit used only for a Job's preferred time: `Morning` 09:00–13:00 or `Afternoon` 14:00–18:00 (DEC-12, DEC-83) | shift, timeslot |
+| **Availability** | Per-working-day `Available`/`Unavailable` set by Staff, up to **1 month in advance** (DEC-01, DEC-30, DEC-83); no entry = Not submitted = unavailable (DEC-03) | schedule, free time |
+| **Availability Deadline** | 18:00 on the Wednesday 12 days before a Planning Week; that week's Availability and Standby Preferences then lock (DEC-02, DEC-79) | cut-off, lock |
+| **Standby Preference** | A Technician's one weekly pick of a Standby day and Brand slot; at most one M Electric and one Dicon pick per day, first come first served, always followed (DEC-79) | job preference |
+| **Standby** | A Technician not in any Crew on a working day, held in reserve; source Preference, Algorithm, Leftover or Manager. Counts 4 h unless activated (DEC-78, DEC-81) | backup, reserve |
+| **Standby Activation** | A Standby called in to replace a Crew member, recorded by the Manager in Update Roster (DEC-81) | call-up |
+| **Hours Edit** | A Manager's recorded change to a Staff member's hours for one date, with a reason; replaces the computed hours (DEC-78) | timesheet |
+| **Workload** | Hours credited to a Staff member in a Planning Week or calendar month: Planned Hours of Assigned Jobs, 4 h per unused Standby day, replaced by any Hours Edit (DEC-04, DEC-78) | load, utilisation |
+| **Travel Allowance** | Fixed 0.5 h added to each Job's hours (DEC-31) | travel time |
+| **Planned Hours** | A Job's duration + Travel Allowance (DEC-31, DEC-78) | — |
+| **Overtime** | Workload strictly above 40 h in a Planning Week (DEC-04, DEC-86) | OT |
+| **Job Rejection Request** | A Crew member's request to take a Job off their Crew, after a warning; the Manager approves or refuses it (R10, DEC-42) | decline, cancel, rejection (alone) |
+| **Audit Log** | Who did what, when and why, for account changes, CSV uploads, roster overrides and Hours Edits; kept 12 months (DEC-89) | history |
+| **Notification** | A message to a recipient's Landing Page, with a handled state; Staff Notifications are also sent by email and SMS (FR-39, FR-40, DEC-88) | alert, message |
 | **Landing Page** | The first page after login, specific to each role (FR-43) | home, dashboard |
-| **Notification** | A message to a recipient's Landing Page, with a handled state. Staff Notifications are also sent by email and phone (FR-40, FR-39) | alert, message |
-| **Audit Log** | A record of who changed what and when. Only the IT Administrator can view it (FR-49) | history |
 
-The terms and meanings follow the submitted M1 report, Table 1.3; the "Avoid" column is the repo's own. 
+The M1 terms and meanings follow the submitted M1 report (Table 1.3); M2 changes follow DEC-73 to DEC-95. Retired terms (do not use in M2 artefacts): Leave Request, Late Availability Change Request, Job Preference, Workshop Servicing, Actual Hours, Linked Jobs, Short notice, Needs attention (DEC-73, DEC-79, DEC-83, DEC-90).
 
 When a new term is needed, add it here in the same commit and cite its source.
 
 ### Sequence analysis classes (DEC-53)
+
+> M1 analysis view (report §4.2). The M2 final classes, including the new controllers, boundaries and «interface» classes, are in [diagrams/CD-final.puml](diagrams/CD-final.puml) (DEC-93).
 
 These boundary and control names identify analysis responsibilities used by the active sequence diagrams. They do not add stakeholder requirements or prescribe implementation services.
 
@@ -142,7 +149,7 @@ External sequence actors: **Email Service** delivers email (UC-01/02/03/15; DEC-
 
 ## Repo map
 
-`brief/` holds the source docs (read-only) and `requirements.md` holds the SRS (FR and NFR tables). `elicitation.md` is the brief for the report's elicitation-process chapter. `use-cases/` has one file per UC, `diagrams/` holds the PlantUML source and `elicitation/` holds the stakeholder meeting notes. The remaining files are `traceability.md`, `decisions.md` and `ai-usage-log.md`. Root files transcribed from the submitted M1 report: `Glossary.md`, `AI Usage Declaration.md`, `WBS and Timeline.md`. Review and history files (`M1 Report Gap Analysis.md`, `requirements-review.md`, `phases.md`, `SWE Assignment M1.md`) are kept as records and use draft IDs.
+`brief/` holds the source docs (read-only) and `requirements.md` holds the SRS (FR and NFR tables). `m2/` holds the M2 Design Update Brief and the M2 design, testing and wireframe working documents. `elicitation.md` is the brief for the report's elicitation-process chapter. `use-cases/` has one file per UC, `diagrams/` holds the PlantUML source and `elicitation/` holds the stakeholder meeting notes. The remaining files are `traceability.md`, `decisions.md` and `ai-usage-log.md`. Root files transcribed from the submitted M1 report: `Glossary.md`, `AI Usage Declaration.md`, `WBS and Timeline.md`. Review and history files (`M1 Report Gap Analysis.md`, `requirements-review.md`, `phases.md`, `SWE Assignment M1.md`) are kept as records and use draft IDs.
 
 ## Elicitation material
 

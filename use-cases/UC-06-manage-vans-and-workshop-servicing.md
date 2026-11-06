@@ -1,6 +1,6 @@
 # UC-06: Manage Vans and Workshop Servicing
 
-> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
+> **Status: Withdrawn (2026-11-07, DEC-85, DEC-91).** Out of M2 scope (DEC-73). The ID is kept and never reused. The text below is the M1 report record (UC-06/UC-14 as submitted) and is not part of the M2 baseline.
 
 | Field | Value |
 |---|---|
@@ -13,7 +13,7 @@
 | **Linked requirements** | FR-23, FR-24, FR-25, FR-05, FR-39 |
 | **Source** | Brief §Company ¶3, ¶5; INT-MGR [Process Q3], [Conflicts Q4]; INT-DRV [Q2], [Q8]; DEC-14; DEC-45; DEC-54; DEC-58; DEC-72 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-06](../diagrams/SD-06-manage-vans-and-workshop-servicing.puml) |
-| **Status** | Agreed |
+| **Status** | Withdrawn |
 
 ## Preconditions
 

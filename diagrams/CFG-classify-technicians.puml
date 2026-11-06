@@ -1,0 +1,49 @@
+@startuml CFG-classify-technicians
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam dpi 150
+skinparam ArrowColor black
+skinparam circleBackgroundColor white
+skinparam circleBorderColor black
+title CFG-classify-technicians: Control Flow Graph of CrewFormingService.classifyTechnicians(day)
+' Traces: FR-55 steps 1-4; DEC-80; DEC-86; DEC-94. Pseudocode and basis paths: m2/testing.md §2.
+' 14 nodes, 19 edges, 6 predicate nodes (N2, N3, N5, N7, N8, N10). V(G) = 19 - 14 + 2 = 7.
+top to bottom direction
+
+circle "N1\ninit" as N1
+circle "N2\nmore\nTechnicians?" as N2
+circle "N3\nnot working\nthat day?" as N3
+circle "N4\ncontinue" as N4
+circle "N5\nStandby pick\ntoday?" as N5
+circle "N6\nstandby +=\nPreference" as N6
+circle "N7\ndual?" as N7
+circle "N8\nlast week\n>= 20 h?" as N8
+circle "N9\nstandby +=\nAlgorithm" as N9
+circle "N10\nprojected\n>= 40 h?" as N10
+circle "N11\nbottom += t" as N11
+circle "N12\nranked += t" as N12
+circle "N13\nend of\niteration" as N13
+circle "N14\nsort and\nreturn" as N14
+
+N1 --> N2
+N2 --> N3 : T
+N2 --> N14 : F
+N3 --> N4 : T
+N3 --> N5 : F
+N4 --> N2
+N5 --> N6 : T
+N5 --> N7 : F
+N6 --> N13
+N7 --> N8 : T
+N7 --> N10 : F
+N8 --> N9 : T
+N8 --> N10 : F
+N9 --> N13
+N10 --> N11 : T
+N10 --> N12 : F
+N11 --> N13
+N12 --> N13
+N13 --> N2
+@enduml

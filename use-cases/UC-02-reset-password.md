@@ -1,18 +1,19 @@
 # UC-02: Reset Password
 
-> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
+> **Status: M2 v1.0 (2026-11-06).** Now a standalone use case of User, no longer «extend» UC-01 (DEC-91). Backed by the PasswordResetToken class (FR-47).
 
 | Field | Value |
 |---|---|
 | **ID** | UC-02 |
 | **Name** | Reset Password |
 | **Primary actor** | User |
-| **Secondary actors** | Email Service |
-| **Description** | A User who cannot remember the password obtains a reset link through company email and sets a new password. |
-| **Trigger** | The User selects Forgot Password from UC-01. |
+| **Secondary actors** | Email Service «system» |
+| **Description** | A User who has forgotten the password gets a single-use link by company email and sets a new password. |
+| **Trigger** | The User chooses "Forgot password" on the Login page. |
 | **Linked requirements** | FR-47, FR-49, NFR-06, NFR-08 |
-| **Source** | INT-ITA [Q: Passwords], [Q: Audit], [Q: Connection failure], [Q: Safeguards]; DEC-17; DEC-56; DEC-61; DEC-71; DEC-72 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-02](../diagrams/SD-02-reset-password.puml) |
+| **Source** | INT-ITA [Q: Passwords], [Q: Audit], [Q: Safeguards]; DEC-56; DEC-61; DEC-71; DEC-91; M2-Brief §3.2 |
+| **Classes** | LoginPage, AuthController, Account, PasswordResetToken, AuditLog, EmailChannel |
+| **Wireframe** | W-02 Forgot password |
 | **Status** | Agreed |
 
 ## Preconditions
@@ -23,10 +24,10 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Enters the company email and requests a reset. | Accepts the request without disclosing whether another person's account exists (FR-47). |
-| 2 | — | Sends a reset link to the company email and logs the request (FR-47, FR-49). |
-| 3 | Opens the link and enters a new password. | Validates the link and atomically stores the new password as a salted hash (NFR-08), invalidates all outstanding reset tokens for that Account, and logs the password change (FR-49). |
-| 4 | Returns to UC-01. | Confirms the reset and allows login with the new password. |
+| 1 | Enters the company email and requests a reset. | `AuthController.requestReset()` replies the same way whether or not the account exists. |
+| 2 | — | `PasswordResetToken.generate(account)` stores a hashed token with an expiry time, emails the link through Email Service and logs the request (FR-47, FR-49, NFR-08). |
+| 3 | Opens the link and enters a new password. | `AuthController.resetPassword()`: `PasswordResetToken.validate()`, `Account.setPassword()`, then `PasswordResetToken.invalidateAll(account)`, all in one save (DEC-71). |
+| 4 | — | Confirms the reset and returns to the Login page. |
 
 ## Alternative flows
 
@@ -36,26 +37,19 @@
 
 ## Exception flows
 
-### E1: Link cannot be used (branches at step 3)
+### E1: Token expired, already used or invalidated (branches at step 3)
 
-1. The system refuses the reset and tells the User to request another link.
+1. The system refuses the reset and offers to send a new link.
 
-### E2: Submission fails (branches at steps 1 or 3)
+### E2: Submission fails
 
-1. The system retries up to three times.
-2. If saving still fails, it states that the request was not saved and advises retrying or contacting the IT Administrator (NFR-06).
+1. The system retries up to 3 times, then shows the NFR-06 message.
 
 ## Postconditions
 
-- **Success:** The password is replaced and all outstanding reset tokens for the Account are unusable, and the request and password change are logged.
-- **Failure:** The existing password remains unchanged.
-
-## Business rules / notes
-
-- This use case extends UC-01. Reset-token validation, the password change and invalidation of all outstanding reset tokens occur atomically. Concurrent or repeated resets recheck token validity at save time; a failed transaction preserves the prior password and token state.
-- Exact token lifetime and password-complexity rules are not stated in the SRS.
-- Reset-token lifetime and password complexity remain open; no numeric policy is assumed.
+- **Success:** The password is replaced, every outstanding token for the Account is unusable, and both events are logged.
+- **Failure:** The old password stays valid.
 
 ## Open questions
 
-- Confirm reset-link lifetime and password-complexity policy before implementation. Single-use behaviour is adopted.
+- Token lifetime and password complexity remain open in DEC-61. No number is assumed.

@@ -1,57 +1,69 @@
-# UC-07: Allocate Jobs/set weekly schedule (includes forming Van Crew and publishing Weekly Roster)
+# UC-07: Allocate Jobs / Set Weekly Schedule
 
-> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
+> **Status: M2 v1.0 (2026-11-06).** Starts from the system's Suggested Roster (FR-55). The Manager reviews and edits it, sets Crew zones, allocates Jobs and publishes (DEC-80).
 
 | Field | Value |
 |---|---|
 | **ID** | UC-07 |
-| **Name** | Allocate Jobs/set weekly schedule (includes forming Van Crew and publishing Weekly Roster) |
+| **Name** | Allocate Jobs / Set Weekly Schedule |
 | **Primary actor** | Manager |
-| **Secondary actors** | Email/Phone through UC-15 |
-| **Description** | The Manager prepares one Planning Week by forming daily Crews, naming Standby Staff, assigning and timing Jobs, resolving validation results and publishing the Weekly Roster. |
-| **Trigger** | Planning begins for the next unpublished Planning Week or a current/future Published roster needs revision. |
-| **Linked requirements** | FR-07 to FR-11, FR-26 to FR-28, FR-30 to FR-36, FR-39 |
-| **Source** | Brief R3 to R6; INT-MGR [Process Q1], [System Q2], [System Q4], [Conflicts Q1], [Conflicts Q2 follow-up: standby], [Conflicts Q5]; INT-DRV [Q5], [Q7]; DEC-09; DEC-10; DEC-16; DEC-19; DEC-31; DEC-32; DEC-39; DEC-43; DEC-45; DEC-47; DEC-51; DEC-69; DEC-72 |
-| **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [AD-01](../diagrams/AD-01-weekly-roster.puml); [SD-07](../diagrams/SD-07-form-crews-and-standby.puml); [SD-08](../diagrams/SD-08-publish-weekly-roster.puml) |
+| **Secondary actors** | Email Service, SMS Gateway «system» through UC-15 |
+| **Description** | The Manager prepares one Planning Week: generates the Suggested Roster, edits Crews and Standby, sets zones, allocates and times Jobs, resolves warnings and publishes the Weekly Roster. |
+| **Trigger** | Planning starts on the Thursday after the Availability Deadline. |
+| **Extension point** | **Compare Staff:** at steps 3–5, when the Manager selects Staff to compare (UC-08) |
+| **Linked requirements** | FR-26, FR-27, FR-07, FR-08, FR-32, FR-33, FR-34, FR-09, FR-10, FR-11, FR-35, FR-36, FR-30, FR-55 |
+| **Source** | Brief R3–R6; INT-MGR [Process Q1], [System Q4]; M2-Brief §4; DEC-16; DEC-19; DEC-80; DEC-81; DEC-82; DEC-84; DEC-85 |
+| **Classes** | JobAllocationPage, RosterController, CrewFormingService, TechnicianRanking, WorkloadRanking, RuleValidator, NotificationService, WeeklyRoster, Crew, Standby, Assignment, Job, VanAvailability, LeaveRecord, StandbyPreference, AuditLog |
+| **Wireframe** | W-06 Job Allocation; W-07 Compare Staff |
 | **Status** | Agreed |
 
 ## Preconditions
 
 1. The Manager is logged in.
-2. The next unpublished Planning Week exists.
-3. Jobs to allocate exist with status Unassigned.
+2. The Planning Week is Draft and its Availability Deadline has passed.
+3. The HR CSV and van CSV for the week have been uploaded (UC-16, assumption A4).
 
 ## Main flow (basic path)
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens the Planning Week. | Shows the weekly Van timeline, Unassigned Jobs, eligible Staff, Availability, Workload and existing Draft data (FR-07, FR-34, FR-11). |
-| 2 | Selects a Van-day and chooses one Driver and one or two Technicians. The Manager may optionally invoke **UC-08** to compare up to three candidate Staff before confirming the selection. | Validates Crew size, roles, Availability, double booking and Certifications (FR-26 to FR-27, FR-32). |
-| 3 | Names eligible Standby Staff for the day. | Validates full-day Availability and absence from another Crew; warns when coverage is incomplete (FR-33, FR-30). |
-| 4 | Selects an Unassigned Job, date and Van. | Checks the Planning Week, Crew, Van, Linked Jobs and Brand rules (FR-07, FR-32). |
-| 5 | Sets the Job start time. | Calculates its working interval, lunch interruption and travel gap; blocks overlap (FR-08). |
-| 6 | Repeats steps 2–5 until planning is complete, updating or re-allocating resources as needed. | Recalculates Workload and displays blocking errors and overridable warnings (FR-32, FR-33). |
-| 7 | Chooses Publish. | Refuses any FR-32 violation and shows outstanding FR-33 warnings. |
-| 8 | Confirms publication and any warning overrides. | Changes Draft to Published and invokes UC-15 for assigned and Standby Staff (FR-09, FR-39). |
+| 1 | Opens the Planning Week. | Shows each day with its Van Availability, Unassigned Jobs and any existing Draft Crews (FR-07, FR-34, FR-11). |
+| 2 | Chooses "Suggest roster". | `CrewFormingService.suggestRoster(week)` forms Draft Crews (Van 1…n), Drivers and Standby Staff for each day and logs the run (FR-55). |
+| 3 | Reviews each day; sets each Crew's zone; changes Crew members or Standby where needed. | `RosterController.setCrewZone()`, `changeCrew()`, `nameStandby()`/`removeStandby()`. `RuleValidator.checkCrew()` blocks FR-32 violations and `checkWarnings()` raises FR-33 warnings. Each change is logged as an override with a reason (FR-09). |
+| 4 | Drags an Unassigned Job onto a Crew and sets the start time. | `RosterController.allocateJob()` creates the Assignment after `RuleValidator.checkAssignment()` checks Brands, times and the zone match (FR-27, FR-08, FR-32, FR-33). |
+| 5 | Repeats steps 3–4. | Recalculates Workload with the 40 h highlight (FR-35, FR-36). |
+| 6 | Chooses Publish. | Refuses any FR-32 violation and lists outstanding warnings. |
+| 7 | Confirms, giving a reason for each overridden warning. | `WeeklyRoster.publish()`; notifies every Staff member with an Assignment or Standby day through UC-15 (FR-09, FR-39). |
 
 ## Alternative flows
 
-### A1: Revise a Published roster (branches at step 1)
+### A1: Compare Staff (extension point, steps 3–5)
 
-1. The Manager selects an existing Published roster for a current or future date, including making emergency or ad-hoc adjustments during an active working day. The Manager adds, moves or unassigns Jobs, or modifies existing Crews (FR-10, FR-28).
-2. The system reruns validation for affected Jobs, Crews and assignments, recalculates Workload, and preserves completed-work credit where applicable (FR-32, FR-10). For mid-day Crew changes, the system rechecks the applicable Crew constraints for every affected Crew, including the original Crew when a Technician is moved (FR-26, FR-27, FR-28, FR-32).
-3. The system applies valid changes and invokes **UC-15** to notify affected Staff (FR-10, FR-28, FR-39).
+1. The Manager selects up to three Staff, and UC-08 runs.
+
+### A2: Fewer than 3 Crews or no Full Standby cover (branches at step 2 or 3)
+
+1. The suggestion has already pulled Standby Staff back in, lowest-ranked first, without using Standby picks (FR-55 step 6).
+2. The system warns. The Manager accepts with a reason or edits the day (FR-33).
+
+### A3: Regenerate (branches at step 3)
+
+1. The Manager runs the suggestion again. The previous suggestion for the week is replaced, and the run is logged.
+
+### A4: Revise a Published roster (branches at step 1)
+
+1. For today or future dates, the Manager adds, moves or unassigns Jobs or changes Crews or Standby.
+2. Validation runs again and the affected Staff are notified through UC-15 (FR-10).
 
 ## Exception flows
 
-### E1: Blocking violation (branches at steps 2–7)
+### E1: Blocking violation (steps 3–6)
 
-1. The system explains the FR-32 violation and refuses the change or publication.
+1. The system explains the FR-32 rule and refuses the change.
 
-### E2: Warning (branches at steps 3, 6 or 7)
+### E2: No van CSV for a day (step 1)
 
-1. The Manager may revise the schedule or override the warning.
-2. The system logs an override with who, what and when (FR-33, FR-49).
+1. The system warns and treats that day's Van count as unknown. The Manager uploads the file (UC-16) or overrides with a reason (FR-33).
 
 ### E3: Save fails
 
@@ -59,16 +71,11 @@
 
 ## Postconditions
 
-- **Success:** A valid Draft or Published Weekly Roster exists, with Crews, Standby and timed Assignments.
-- **Failure:** Invalid changes are not applied and publication state does not change.
+- **Success:** A valid Weekly Roster exists, Draft or Published, with Crews, zones, Standby and timed Assignments. Every Manager override is logged.
+- **Failure:** Invalid changes are not applied.
 
 ## Business rules / notes
 
-- The Crew is fixed for a Van-day except for the FR-28 emergency change.
-- Past roster dates are read-only.
-- FR-29 is the later-event exception to FR-32; later approved Leave, approved Availability changes or Certification changes may leave an existing Crew marked Needs attention.
-- Validation is embedded in this merged use case rather than represented as a separate use case.
-
-## Open questions
-
-- None.
+- The system suggests and the Manager decides (SRS §2.5).
+- Drivers are placed by staff ID only (assumption A1, DEC-82).
+- Changes during the running week that involve replacements or hours are made in UC-17.

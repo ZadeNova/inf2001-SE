@@ -1,8 +1,7 @@
-# Use-case list (M1)
+# Use-case list (M2)
 
-> **Status: v2.4 (2026-11-07), M1 submitted baseline.** The 15 use cases, actors and requirement links match §3 of the submitted M1 report (DEC-72); SRS v3.5. v2.3 (2026-10-03) is in git history.
-> Each use case has one formal file named `UC-nn-<slug>.md`. Names, IDs, actors and connections below are preserved from the supplied list.
-> **Totals:** 15 use cases: 12 Main, 2 Extends and 1 Included.
+> **Status: v3.0 (2026-11-06).** M2 baseline aligned to SRS v4.0 (DEC-91). It supersedes v2.3 (M1), which is kept in git history.
+> **Totals:** 16 active use cases: 14 Main, 1 Extends and 1 Included. UC-06 and UC-14 are Withdrawn and their IDs are never reused.
 
 ## Actors
 
@@ -10,57 +9,51 @@
 |---|---|---|
 | **User** | Abstract | Staff, Manager and IT Administrator specialise User |
 | **Staff** | Primary | Drivers and Technicians |
-| **Technician** | Primary | Adds UC-14 Complete Job |
-| **Manager** | Primary | Manages Jobs, Vans, Weekly Rosters, requests and manpower information |
-| **IT Administrator** | Primary | Manages accounts and access |
-| **Email Service** | Secondary | Delivers reset and confirmation emails for UC-01 and UC-02, and initial login details for UC-03 |
-| **Email/Phone** | Primary for UC-15 | External delivery actor shown in the UCD for system-triggered Staff notifications (UC-15). Email Service and SMS Gateway realise its email and phone channels |
-| **SMS Gateway** | External (sequence analysis) | Realises the phone channel as SMS (UC-15). Not a separate human role or use case |
-| **Clock** | Secondary system-event actor | Job-start lapse in UC-09 (SD-12) and daily Certification-expiry checks under FR-22/FR-29 (SD-21). No separate use case |
+| **Technician** | Primary | Adds UC-18 Set Standby Preference. Drivers are outside the scheduling logic (DEC-82) |
+| **Manager** | Primary | CSV upload, Jobs, Weekly Rosters, updates and hours, Job Rejection decisions, dashboard |
+| **IT Administrator** | Primary | Accounts, access, Technician profiles, Audit Log |
+| **Email Service** «system» | Secondary, non-human | Login confirmation (UC-01), reset link (UC-02), initial login (UC-03), notifications (UC-15) |
+| **SMS Gateway** «system» | Secondary, non-human | Notifications (UC-15) |
+| **Clock** | Secondary, time event | Lapses a Pending Job Rejection Request at Job start (UC-09) |
 
-## Finalized use cases
+HR system and van vendor are **not actors**. The Manager uploads their CSV files (DEC-74).
 
-| ID | Use case | Primary actor | Connection | SRS requirements |
-|---|---|---|---|---|
-| UC-01 | Log In/out | User | Main | FR-43, FR-48, NFR-07, NFR-09, NFR-11 |
-| UC-02 | Reset Password | User | Extends UC-01 | FR-47, FR-49, NFR-06, NFR-08 |
-| UC-03 | Create User Account | IT Administrator | Main | FR-44, FR-22, FR-49, NFR-06, NFR-09 |
-| UC-04 | Manage User Access | IT Administrator | Main | FR-45, FR-46, FR-48, FR-49, NFR-09, NFR-10 |
-| UC-05 | Manage Job | Manager | Main | FR-01 to FR-05, FR-32, FR-39, FR-50, NFR-06 |
-| UC-06 | Manage Vans and Workshop Servicing | Manager | Main | FR-23, FR-24, FR-25, FR-05, FR-39 |
-| UC-07 | Allocate Jobs/set weekly schedule (includes forming Van Crew and publishing Weekly Roster) | Manager | Main | FR-07 to FR-11, FR-26 to FR-28, FR-30 to FR-36, FR-39 |
-| UC-08 | Compare Staff | Manager | Extends UC-07 | FR-31, FR-35, FR-36 |
-| UC-09 | Manage Staff Request | Manager | Main | FR-16, FR-19 to FR-21, FR-34, FR-38, FR-39, FR-29 |
-| UC-10 | View Manpower Dashboard | Manager | Main | FR-22, FR-14, FR-34, FR-35, FR-36, FR-40 |
-| UC-11 | Set Availability + Preferences | Staff | Main | FR-12, FR-13, FR-15, FR-17 |
-| UC-12 | Manage Requests | Staff | Main | FR-16, FR-18, FR-21, FR-41, FR-37 |
-| UC-13 | View My Assignments and Workload | Staff | Main | FR-09, FR-35, FR-36, FR-41, FR-42, NFR-05 |
-| UC-14 | Complete Job | Technician | Main | FR-05, FR-06, FR-35, NFR-05, NFR-06 |
-| UC-15 | Notify Staff | Email/Phone | Included | FR-09, FR-39, FR-30, NFR-01, NFR-06 |
+## Use cases
 
-The requirement links are the *Linked requirements* printed for each use case in the report. The 50 active FRs and 12 NFRs are listed in [requirements.md](../requirements.md).
+| ID | Use case | Primary actor | Connection | SRS requirements | Wireframe |
+|---|---|---|---|---|---|
+| UC-01 | Log In/out | User | Main | FR-43, FR-48, NFR-07 | W-01 |
+| UC-02 | Reset Password | User | Main (standalone, DEC-91) | FR-47 | W-02 |
+| UC-03 | Create User Account | IT Administrator | Main | FR-44, FR-22 | W-13 |
+| UC-04 | Manage User Access | IT Administrator | Main | FR-45, FR-46, FR-48, FR-22, FR-49 | W-13 |
+| UC-05 | Manage Job | Manager | Main; includes UC-15 | FR-01, FR-02, FR-04, FR-05, FR-34, FR-50 | W-04 |
+| UC-06 | ~~Manage Vans and Workshop Servicing~~ | — | **Withdrawn** (DEC-85, DEC-91) | — | — |
+| UC-07 | Allocate Jobs / Set Weekly Schedule | Manager | Main; includes UC-15 | FR-26, FR-27, FR-07, FR-08, FR-32, FR-33, FR-34, FR-09, FR-10, FR-11, FR-35, FR-36, FR-30, FR-55 | W-06 |
+| UC-08 | Compare Staff | Manager | Extends UC-07 | FR-31 | W-07 |
+| UC-09 | Decide Job Rejection Request | Manager (+ Clock) | Main; includes UC-15 | FR-05, FR-34, FR-38 | W-16 |
+| UC-10 | View Manpower Dashboard | Manager | Main | FR-14, FR-34, FR-35, FR-36, FR-40 | W-03, W-08 |
+| UC-11 | Set Availability | Staff | Main | FR-12, FR-13, FR-15 | W-12 |
+| UC-12 | Submit Job Rejection Request | Staff | Main | FR-41, FR-37 | W-15 |
+| UC-13 | View My Assignments and Workload | Staff | Main | FR-35, FR-36, FR-41, FR-42, NFR-05 | W-11 |
+| UC-14 | ~~Complete Job~~ | — | **Withdrawn** (DEC-76, DEC-91) | — | — |
+| UC-15 | Notify Staff | (included) | Included by UC-05, UC-07, UC-09, UC-17 | FR-09, FR-39 | W-11, W-03 |
+| UC-16 | Upload CSV | Manager | Main | FR-52, FR-53, FR-54 | W-05 |
+| UC-17 | Update Roster and Hours | Manager | Main; includes UC-15 | FR-10, FR-35, FR-56, FR-57 | W-09, W-10 |
+| UC-18 | Set Standby Preference | Technician | Main | FR-15, FR-51 | W-14 |
 
-## Relationships
+## «extend» check (lecturer feedback, DEC-91)
 
-- **Generalisation:** Driver → Staff; Technician → Staff; Staff, Manager and IT Administrator → User.
-- **Secondary actor:** Email Service participates in UC-01, UC-02 and UC-03.
-- **Notification actor:** Email/Phone participates in UC-15.
-- **`<<extend>>`:** UC-02 extends UC-01; UC-08 extends UC-07.
-- **`<<include>>`:** UC-15 is included by UC-05, UC-06, UC-07 and UC-09 whenever their successful flows trigger FR-39 notifications. Other SRS events may also call it.
+| Relationship | M1 | M2 | Why |
+|---|---|---|---|
+| Reset Password → Log In/out | «extend» | **Removed.** UC-02 is a standalone use case of User | A forgotten-password user starts it without logging in, and it does not continue or change the login. It is its own goal |
+| Compare Staff → Allocate Jobs | «extend» | **Kept**, at extension point "Compare Staff", condition {Manager selects 1–3 Staff} | Allocation completes without it; the Manager opens it only when choosing between Staff |
 
-## Merge record
+## Changes from M1 (v2.3)
 
-| Final use case | Capabilities merged into it |
+| Change | Use cases |
 |---|---|
-| UC-01 | Log In and Log Out |
-| UC-04 | Role, lockout and deactivation administration; audit-log viewing is an alternative flow |
-| UC-07 | Form Crew, name Standby Staff, allocate or revise Jobs, validate roster rules and publish the Weekly Roster |
-| UC-09 | Decide Leave, Late Availability Change and Job Rejection Requests |
-| UC-10 | Dashboard reporting and Manager maintenance of Technician Certifications |
-| UC-11 | Availability and Job Preference |
-| UC-12 | Submit Leave, Late Availability Change and Job Rejection Requests |
-| UC-15 | Email and phone notification behaviour formerly separated as a system include |
-
-## Formal files
-
-The drafts are indexed in [README.md](README.md). Each follows [UC-TEMPLATE.md](UC-TEMPLATE.md), cites the SRS/DEC basis for every flow, and keeps diagram IDs pending until OOA and diagram selection.
+| Withdrawn | UC-06, UC-14 |
+| New | UC-16 Upload CSV, UC-17 Update Roster and Hours, UC-18 Set Standby Preference |
+| Narrowed and renamed | UC-09 (Job Rejection only), UC-11 (Availability only), UC-12 (Job Rejection only) |
+| Relationship changes | UC-02 no longer extends UC-01; UC-06's include of UC-15 removed; UC-17 includes UC-15 |
+| Actor changes | "Email/Phone" stick figure replaced by «system» Email Service and SMS Gateway |

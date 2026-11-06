@@ -11,8 +11,11 @@ All UML diagrams are kept as PlantUML source here, **one diagram per file**. The
 | Class diagram | `CD-<slug>.puml` | `CD-domain.puml` (M1), `CD-final.puml` (M2) |
 | Sequence diagram | `SD-nn-<slug>.puml` | `SD-01-reject-job.puml` |
 | Component diagram (M2) | `CMP-<slug>.puml` | `CMP-system.puml` |
+| Architecture diagram (M2) | `ARCH-<slug>.puml` | `ARCH-layered.puml` |
+| Design-pattern excerpt (M2) | `DP-<slug>.puml` | `DP-strategy-ranking.puml` |
+| Control flow graph (M2 white-box) | `CFG-<slug>.puml` | `CFG-classify-technicians.puml` |
 
-`UCD`, `CD` and `CMP` are file prefixes only. Traceable IDs are `UC`, `CL`, `AD` and `SD` (see [AGENTS.md](../AGENTS.md#id-conventions)).
+`UCD`, `CD`, `CMP`, `ARCH`, `DP` and `CFG` are file prefixes only. Traceable IDs are `UC`, `CL`, `AD` and `SD` (see [AGENTS.md](../AGENTS.md#id-conventions)).
 
 ## Conventions
 
@@ -29,6 +32,19 @@ All UML diagrams are kept as PlantUML source here, **one diagram per file**. The
   - **Class:** attributes and methods with visibility, multiplicities on every association, and composition, aggregation or inheritance only where they are semantically right.
   - **Sequence:** actor, then boundary/control/entity lifelines, activation bars, dashed return messages, and `alt`/`opt`/`loop` fragments with guards.
 - Keep the layout readable. Split any diagram that no longer fits on one page.
+
+## M2 diagram set (2026-11-07)
+
+| File | Report section | Notes |
+|---|---|---|
+| `UCD-system.puml` | §1.2 | v3.0: 16 active use cases; Email Service and SMS Gateway as «system» boxes; UC-02 standalone (DEC-91) |
+| `CD-final.puml` | §1.3 | Final class diagram; packages = components; three «interface» classes (DEC-93) |
+| `CMP-system.puml` | §2 | Components with provided (lollipop) and required («use») interfaces |
+| `ARCH-layered.puml` | §3.1 | Layered 3-tier with MVC in the web tier |
+| `DP-strategy-ranking.puml` | §3.2 | Strategy excerpt of CD-final |
+| `CFG-classify-technicians.puml` | §4.2 | CFG for `CrewFormingService.classifyTechnicians()` |
+
+`CD-domain`, `CD-control` and `CD-boundary` are the M1 analysis views (report Figures 4.1a–c), superseded by `CD-final` for M2. The status of the M1 activity and sequence diagrams after M2 is in [traceability.md §5](../traceability.md).
 
 ## Rendering locally
 

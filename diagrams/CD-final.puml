@@ -1,0 +1,589 @@
+@startuml CD-final
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam dpi 150
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor white
+skinparam classBorderColor black
+skinparam packageBackgroundColor white
+skinparam packageBorderColor black
+skinparam noteBackgroundColor white
+skinparam noteBorderColor black
+skinparam ArrowColor black
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 45
+hide circle
+hide empty members
+title CD-final: Final Class Diagram (M2)
+' Traces: SRS v4.0 FR-01, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58, NFR-13, NFR-14; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
+' Sources: DEC-73 to DEC-93; M2-Brief §5. Packages match the components in CMP-system.
+' ECB stereotypes: <<boundary>> = View, <<control>> = Controller/service, <<entity>> = Model (DEC-93).
+' Derived values (hours, activation count, Central base) are methods, not attributes (DEC-87).
+' Design pattern (report §3.2): Strategy = TechnicianRanking + WorkloadRanking/ActivationRanking (DEC-93).
+
+' ======================= Web UI (boundary) =======================
+package "Web UI (Presentation layer)" {
+ class LoginPage <<boundary>> {
+  +logIn(email, password)
+  +confirmDevice(code)
+  +requestReset(email)
+  +submitNewPassword(token, password)
+ }
+ class LandingPage <<boundary>> {
+  +show(role)
+  +selectWeek(week)
+  +selectAssignment(assignment)
+  +markHandled(alert)
+  +loadCachedToday()
+  +logOut()
+ }
+ class AccountAdminPage <<boundary>> {
+  +createAccount(details)
+  +manageAccess(account, action)
+  +updateTechnicianProfile(technician, homeZone, certifications)
+ }
+ class AuditLogPage <<boundary>> {
+  +search(filter)
+ }
+ class JobPage <<boundary>> {
+  +enterJob(details)
+  +editJob(job, changes)
+  +deleteJob(job)
+ }
+ class CsvUploadPage <<boundary>> {
+  +chooseFile(file, type: CsvType)
+  +upload()
+  +showErrors(errors)
+ }
+ class JobAllocationPage <<boundary>> {
+  +openPlanningWeek(week)
+  +suggestRoster()
+  +editCrew(crew, members)
+  +setCrewZone(crew, zone)
+  +editStandby(technician, date)
+  +allocateJob(job, crew, startTime)
+  +compareStaff(selection, date)
+  +confirmWarning(choice, reason)
+  +publish()
+ }
+ class UpdateRosterPage <<boundary>> {
+  +openDay(date)
+  +recordReplacement(crew, outStaff, inStandby, fromJob, reason)
+  +editHours(staff, date, hours, reason)
+ }
+ class StandbyListView <<boundary>> {
+  +show(job, date)
+  +selectStandby(standby)
+ }
+ class AvailabilityPage <<boundary>> {
+  +open(week)
+  +setDay(date, state)
+  +clearDay(date)
+  +submit()
+ }
+ class StandbyPreferencePage <<boundary>> {
+  +open(week)
+  +pick(day, brand)
+  +withdraw()
+ }
+ class RequestPage <<boundary>> {
+  +selectJob(assignment)
+  +confirmWarning()
+  +submitRejection(reason, comment)
+ }
+ class RequestReviewPage <<boundary>> {
+  +openPending()
+  +decide(request, decision, reason)
+ }
+}
+
+
+' ======================= Application layer =======================
+package "Authentication" {
+ class AuthController <<control>> {
+  +logIn(email, password)
+  +confirmDevice(code)
+  +logOut(session)
+  +requestReset(email)
+  +resetPassword(token, password)
+ }
+}
+package "Account Management" {
+ class AccountController <<control>> {
+  +createAccount(details)
+  +manageAccess(account, action)
+  +updateTechnicianProfile(technician, homeZone, certifications)
+  +searchAuditLog(filter): List<AuditLog>
+ }
+}
+package "Staff Inputs" {
+ class AvailabilityController <<control>> {
+  +loadWeek(staff, week)
+  +save(edits)
+  +checkWindowDeadline(dates)
+ }
+ class StandbyPreferenceController <<control>> {
+  +loadWeek(technician, week)
+  +submitPick(technician, week, day, brand: Brand)
+  +withdrawPick(technician, week)
+ }
+ class RequestController <<control>> {
+  +submitRejection(staff, assignment, reason, comment)
+  +listPending()
+  +decideJobRejection(request, decision, reason)
+  +onJobStart(assignment)
+ }
+}
+package "CSV Import" {
+ class CsvImportController <<control>> {
+  +upload(file, type: CsvType): CsvImport
+ }
+ interface CsvRowMapper <<interface>> {
+  +requiredColumns(): List<String>
+  +validateRow(row): List<String>
+  +toRecord(row)
+ }
+ class HrLeaveCsvMapper
+ class VanAvailabilityCsvMapper
+}
+package "Job Management" {
+ class JobController <<control>> {
+  +createJob(details)
+  +editJob(job, changes)
+  +deleteJob(job)
+  +standardDuration(jobType: JobType, units): Decimal
+  +listUnassigned(): List<Job>
+ }
+}
+package "Scheduling Engine" {
+ class CrewFormingService <<control>> {
+  +suggestRoster(week): WeeklyRoster
+  +classifyTechnicians(day)
+  +formCrews(day, ranked)
+  +ensureMinimumCrews(day)
+  +assignDrivers(day)
+ }
+ class StandbyActivationService <<control>> {
+  +listStandbysForJob(job, date): List<Standby>
+ }
+ interface TechnicianRanking <<interface>> {
+  +order(candidates: List<Technician>, context): List<Technician>
+ }
+ class WorkloadRanking {
+  +order(candidates, context): List<Technician>
+ }
+ class ActivationRanking {
+  +order(candidates, context): List<Technician>
+ }
+ class RuleValidator <<control>> {
+  +availabilityDeadline(week): DateTime
+  +checkStandbyPick(technician, day, brand): List<String>
+  +checkCrew(proposal): List<String>
+  +checkAssignment(proposal): List<String>
+  +checkBlocking(proposal): List<String>
+  +checkWarnings(context): List<String>
+  +checkStandbyCover(day): Boolean
+ }
+}
+package "Roster & Hours" {
+ class RosterController <<control>> {
+  +loadWeek(week)
+  +allocateJob(job, crew, startTime)
+  +moveJob(assignment, crew, startTime)
+  +unassignJob(assignment)
+  +changeCrew(crew, members)
+  +setCrewZone(crew, zone: Zone)
+  +nameStandby(technician, date)
+  +removeStandby(standby)
+  +compare(selection, date)
+  +confirmWarnings(choice, reason)
+  +publish(week)
+  +buildTimeline(week)
+  +removeFromFutureRoster(staff)
+ }
+ class HoursController <<control>> {
+  +recordReplacement(crew, outStaff, inStandby, fromJob, reason)
+  +editHours(staff, date, newHours, reason)
+ }
+ class DashboardController <<control>> {
+  +loadDashboard(week)
+  +lowestThree(drivers, technicians)
+  +availabilityGrid(from, to)
+  +loadStaffHome(staff, week)
+ }
+}
+package "Notification" {
+ class NotificationService <<control>> {
+  +notify(event, recipients)
+  +buildMessage(event)
+ }
+ interface NotificationChannel <<interface>> {
+  +send(notification: Notification): Boolean
+ }
+ class EmailChannel
+ class SmsChannel
+}
+package "Audit & Retention" {
+ class RetentionJob <<control>> {
+  +runDaily()
+  +purgeOlderThan(months: Integer)
+ }
+}
+
+' ======================= Data layer =======================
+package "Domain Model (Data layer)" {
+ class Account <<entity>> {
+  -passwordHash: String
+  -role: Role
+  -active: Boolean
+  -locked: Boolean
+  -failedAttempts: Integer
+  -knownDevices: Set<String>
+  +checkCredentials(password): Boolean
+  +recordFailedAttempt()
+  +lock()
+  +unlock()
+  +setRole(role: Role)
+  +setPassword(password)
+  +deactivate()
+  +isKnownDevice(device): Boolean
+  +rememberDevice(device)
+ }
+ class PasswordResetToken <<entity>> {
+  -tokenHash: String
+  -expiresAt: DateTime
+  -used: Boolean
+  +{static} generate(account: Account): PasswordResetToken
+  +validate(token): Boolean
+  +markUsed()
+  +{static} invalidateAll(account: Account)
+ }
+ abstract class User <<entity>> {
+  -userId: String
+  -name: String
+  -email: String
+  -contactNumber: String
+ }
+ class Manager <<entity>>
+ class "IT Administrator" as ITAdministrator <<entity>>
+ abstract class Staff <<entity>> {
+  +availabilityOn(date): AvailabilityState
+  +isWorkingOn(date): Boolean
+  +hoursOn(date): Decimal
+  +workload(week): Decimal
+  +monthlyWorkload(month): Decimal
+  +isOvertime(week): Boolean
+ }
+ class Driver <<entity>>
+ class Technician <<entity>> {
+  -homeZone: Zone
+  +setHomeZone(zone: Zone)
+  +certifications(): List<Certification>
+  +isDual(date): Boolean
+  +holdsValid(brand: Brand, date): Boolean
+  +lastWeekHours(week): Decimal
+  +projectedWeekHours(day): Decimal
+  +activationCount(asOf): Integer
+  +locationOn(date): Zone
+ }
+ class Certification <<entity>> {
+  -brand: Brand
+  -expiryDate: Date
+  +isValidOn(date): Boolean
+  +renew(expiryDate)
+ }
+ class Availability <<entity>> {
+  -date: Date
+  -state: AvailabilityState
+  +setState(state: AvailabilityState)
+  +clear()
+ }
+ class StandbyPreference <<entity>> {
+  -weekStart: Date
+  -chosenDay: Date
+  -brandSlot: Brand
+  +change(day, brand: Brand)
+ }
+ class JobRejectionRequest <<entity>> {
+  -reason: String
+  -comment: String [0..1]
+  -status: RequestStatus
+  -submittedAt: DateTime
+  +approve()
+  +refuse(reason)
+  +lapse()
+ }
+ class CsvImport <<entity>> {
+  -type: CsvType
+  -uploadedAt: DateTime
+  -status: ImportStatus
+  -errors: List<String>
+  +parse(file)
+  +validate(): Boolean
+  +commit()
+ }
+ class LeaveRecord <<entity>> {
+  -date: Date
+  -type: LeaveType
+ }
+ class VanAvailability <<entity>> {
+  -date: Date
+  -vansAvailable: Integer
+ }
+ class Job <<entity>> {
+  -customerName: String
+  -customerPhone: String
+  -address: String
+  -unitNumber: String [0..1]
+  -postalCode: String
+  -zone: Zone
+  -brand: Brand
+  -jobType: JobType
+  -units: Integer
+  -model: String [0..1]
+  -preferredDate: Date
+  -preferredSlot: Slot
+  -durationHours: Decimal
+  -notes: String [0..1]
+  -status: JobStatus
+  +deriveZone()
+  +plannedHours(): Decimal
+  +markAssigned()
+  +markUnassigned(reason)
+  +changeDetails(changes)
+ }
+ class WeeklyRoster <<entity>> {
+  -weekStart: Date
+  -status: RosterStatus
+  +publish()
+  +isPublished(): Boolean
+ }
+ class Crew <<entity>> {
+  -date: Date
+  -vanNumber: Integer
+  -zone: Zone
+  +changeMembers(members)
+  +setZone(zone: Zone)
+  +coversBrands(brands, date): Boolean
+ }
+ class Assignment <<entity>> {
+  -startTime: Time
+  +endTime(): Time
+  +date(): Date
+  +getDetails()
+ }
+ class Standby <<entity>> {
+  -date: Date
+  -source: StandbySource
+  -activated: Boolean
+  +activate()
+  +effectiveZone(): Zone
+  +hours(): Decimal
+ }
+ class HoursEdit <<entity>> {
+  -date: Date
+  -oldHours: Decimal
+  -newHours: Decimal
+  -reason: String
+  -editedAt: DateTime
+ }
+ class Notification <<entity>> {
+  -type: String
+  -message: String
+  -createdAt: DateTime
+  -handled: Boolean
+  +markSent(channel)
+  +markFailed(channel)
+  +markHandled()
+ }
+ class AuditLog <<entity>> {
+  -who: String
+  -action: String
+  -target: String
+  -reason: String [0..1]
+  -when: DateTime
+  +{static} record(actor, action, target, reason)
+  +{static} search(filter): List<AuditLog>
+ }
+ enum Role {
+  Driver
+  Technician
+  Manager
+  ITAdministrator
+ }
+ enum Brand {
+  MElectric
+  Dicon
+ }
+ enum Zone {
+  North
+  East
+  South
+  West
+  Central
+  +{static} fromPostalCode(postalCode): Zone
+  +distanceTo(other: Zone): Integer
+ }
+ enum JobType {
+  Installation
+  Servicing
+ }
+ enum Slot {
+  Morning
+  Afternoon
+ }
+ enum JobStatus {
+  Unassigned
+  Assigned
+ }
+ enum AvailabilityState {
+  Available
+  Unavailable
+ }
+ enum StandbySource {
+  Preference
+  Algorithm
+  Leftover
+  Manager
+ }
+ enum LeaveType {
+  Leave
+  EmergencyLeave
+  MC
+ }
+ enum CsvType {
+  HRLeave
+  VanAvailability
+ }
+ enum ImportStatus {
+  Validating
+  Rejected
+  Committed
+ }
+ enum RosterStatus {
+  Draft
+  Published
+ }
+ enum RequestStatus {
+  Pending
+  Approved
+  Refused
+  Lapsed
+ }
+}
+
+' ======================= Generalisation =======================
+User <|-- Manager
+User <|-- ITAdministrator
+User <|-- Staff
+Staff <|-- Driver
+Staff <|-- Technician
+
+' ======================= Entity associations =======================
+User "1" -- "1" Account
+Account "1" *-- "0..*" PasswordResetToken
+Technician "1" *-- "1..2" Certification
+Staff "1" -- "0..*" Availability
+Staff "1" -- "0..*" LeaveRecord
+Technician "1" -- "0..*" StandbyPreference
+Technician "1" -- "0..*" Standby
+WeeklyRoster "1" *-- "0..*" Crew
+WeeklyRoster "1" *-- "0..*" Standby
+Crew "0..*" -- "1" Driver : driven by
+Crew "0..*" -- "1..2" Technician : staffed by
+Crew "1" *-- "0..*" Assignment
+Job "1" -- "0..1" Assignment
+Assignment "1" -- "0..*" JobRejectionRequest
+Staff "1" -- "0..*" JobRejectionRequest : requester
+Staff "1" -- "0..*" HoursEdit : for
+Manager "1" -- "0..*" HoursEdit : edited by
+Manager "1" -- "0..*" CsvImport : uploaded by
+CsvImport "1" -- "0..*" LeaveRecord : created
+CsvImport "1" -- "0..*" VanAvailability : created
+User "1" -- "0..*" Notification : recipient
+User "1" -- "0..*" AuditLog : who
+
+' ======================= Interface realisation (Strategy etc.) =======================
+CsvRowMapper <|.. HrLeaveCsvMapper
+CsvRowMapper <|.. VanAvailabilityCsvMapper
+TechnicianRanking <|.. WorkloadRanking
+TechnicianRanking <|.. ActivationRanking
+NotificationChannel <|.. EmailChannel
+NotificationChannel <|.. SmsChannel
+
+' ======================= Boundary -> control =======================
+LoginPage ..> AuthController
+LandingPage ..> DashboardController
+AccountAdminPage ..> AccountController
+AuditLogPage ..> AccountController
+JobPage ..> JobController
+CsvUploadPage ..> CsvImportController
+JobAllocationPage ..> RosterController
+JobAllocationPage ..> CrewFormingService
+UpdateRosterPage ..> HoursController
+StandbyListView ..> StandbyActivationService
+AvailabilityPage ..> AvailabilityController
+StandbyPreferencePage ..> StandbyPreferenceController
+RequestPage ..> RequestController
+RequestReviewPage ..> RequestController
+
+' ======================= Control dependencies =======================
+AuthController ..> Account
+AuthController ..> PasswordResetToken
+AccountController ..> User
+AccountController ..> Certification
+AvailabilityController ..> Availability
+AvailabilityController ..> RuleValidator
+StandbyPreferenceController ..> StandbyPreference
+StandbyPreferenceController ..> RuleValidator
+RequestController ..> JobRejectionRequest
+RequestController ..> NotificationService
+CsvImportController ..> CsvImport
+CsvImport "1" o-- "1" CsvRowMapper : maps rows with
+JobController ..> Job
+JobController ..> RuleValidator
+JobController ..> NotificationService
+CrewFormingService "1" o-- "1" TechnicianRanking : ranks with
+StandbyActivationService "1" o-- "1" TechnicianRanking : orders with
+CrewFormingService ..> RuleValidator
+CrewFormingService ..> WeeklyRoster
+CrewFormingService ..> LeaveRecord
+CrewFormingService ..> VanAvailability
+CrewFormingService ..> StandbyPreference
+StandbyActivationService ..> Standby
+RosterController ..> RuleValidator
+RosterController ..> WeeklyRoster
+RosterController ..> NotificationService
+HoursController ..> HoursEdit
+HoursController ..> Standby
+HoursController ..> NotificationService
+DashboardController ..> Staff
+NotificationService "1" o-- "1..*" NotificationChannel : sends through
+NotificationService ..> Notification
+RetentionJob ..> AuditLog
+
+note bottom of TechnicianRanking
+ Strategy (report §3.2, DEC-93).
+ WorkloadRanking: last week's Workload, projected hours,
+ staff ID; classifyTechnicians() puts the 40 h-or-more group last (FR-55).
+ ActivationRanking: fewest activations (12 months),
+ then zone distance, then staff ID (FR-56).
+end note
+
+note bottom of Standby
+ hours(): 4 h unless an HoursEdit exists (FR-35).
+ effectiveZone(): Central if source = Algorithm,
+ else the Technician's homeZone (DEC-81, DEC-87).
+end note
+
+legend bottom
+One Crew per Van number per date; Crews per date <= VanAvailability.vansAvailable (FR-26, FR-32).
+One StandbyPreference per Technician per week, and per day and Brand (FR-51).
+A person is in at most one Crew or one Standby per date (FR-32). Leave Records are read-only (FR-52).
+Every control class that changes data calls AuditLog.record() (FR-49); RetentionJob purges rows older than 12 months (FR-58).
+Drivers: assumed always enough; outside ranking and Standby (A1, DEC-82).
+endlegend
+@enduml
