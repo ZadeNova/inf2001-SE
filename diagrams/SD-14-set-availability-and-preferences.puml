@@ -1,4 +1,4 @@
-@startuml SD-11-set-availability-and-preferences
+@startuml SD-14-set-availability-and-preferences
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-11: Set Availability + Preferences (UC-11)
-' Traces: UC-11, UC-12; FR-13, FR-14, FR-16, FR-17, FR-21, FR-66
+title SD-14: Set Availability + Preferences (UC-11)
+' Traces: UC-11, UC-12; FR-12, FR-13, FR-15, FR-16, FR-17, FR-49
 ' Sources: DEC-02, DEC-03, DEC-07, DEC-30; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
@@ -50,13 +50,13 @@ alt week locked
   Page --> Staff : direct edits refused
   opt Staff requests a Late Availability Change
     Staff -> Page : requestLateChange()
-    ref over Staff, RP, AL : SD-24
+    ref over Staff, RP, AL : SD-16
     RP --> Page : request outcome
   end
 else week open
   loop for each edit
     Staff -> Page : editAvailability(edit)
-    note right of Page : set a Slot; whole day sets both;\nclear removes an entry (FR-13)
+    note right of Page : set a Slot; whole day sets both;\nclear removes an entry (FR-12)
   end
   opt Job Preference
     Staff -> Page : setPreference(preference)
@@ -94,10 +94,10 @@ end
 deactivate Page
 legend bottom
 Today through the same date next month, inclusive; clamp at month end
-(FR-14).
+(FR-13).
 Lock: 18:00 Wednesday, 12 days before the week.
 Blank (Not submitted) counts as unavailable.
 Atomic save retains prior records on failure; retry handling follows
-NFR-09.
+NFR-06.
 endlegend
 @enduml

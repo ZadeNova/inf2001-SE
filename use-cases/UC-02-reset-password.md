@@ -1,6 +1,6 @@
 # UC-02: Reset Password
 
-> **Status: Draft v0.3 (2026-10-07).** Extends UC-01.
+> **Status: M1 submitted v1.0 (2026-11-07).** Transcribed from §3.2 of the submitted M1 report (9 Oct 2026), which is the M1 source of truth (DEC-72). The Source row is kept from the repo; the report does not print it.
 
 | Field | Value |
 |---|---|
@@ -10,10 +10,10 @@
 | **Secondary actors** | Email Service |
 | **Description** | A User who cannot remember the password obtains a reset link through company email and sets a new password. |
 | **Trigger** | The User selects Forgot Password from UC-01. |
-| **Linked requirements** | FR-06, FR-66, NFR-09, NFR-11 |
-| **Source** | INT-ITA [Q: Passwords], [Q: Audit], [Q: Connection failure], [Q: Safeguards]; DEC-17; DEC-56; DEC-61; DEC-71 |
+| **Linked requirements** | FR-47, FR-49, NFR-06, NFR-08 |
+| **Source** | INT-ITA [Q: Passwords], [Q: Audit], [Q: Connection failure], [Q: Safeguards]; DEC-17; DEC-56; DEC-61; DEC-71; DEC-72 |
 | **Related diagrams** | [UCD-system](../diagrams/UCD-system.puml); [SD-02](../diagrams/SD-02-reset-password.puml) |
-| **Status** | Draft |
+| **Status** | Agreed |
 
 ## Preconditions
 
@@ -23,16 +23,16 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Enters the company email and requests a reset. | Accepts the request without disclosing whether another person's account exists (FR-06). |
-| 2 | — | Sends a reset link to the company email and logs the request (FR-06, FR-66). |
-| 3 | Opens the link and enters a new password. | Validates the link, stores the new password as a salted hash (NFR-11), invalidates all outstanding reset tokens for that Account in the same atomic save (DEC-71), and logs the password change (FR-66). |
+| 1 | Enters the company email and requests a reset. | Accepts the request without disclosing whether another person's account exists (FR-47). |
+| 2 | — | Sends a reset link to the company email and logs the request (FR-47, FR-49). |
+| 3 | Opens the link and enters a new password. | Validates the link and atomically stores the new password as a salted hash (NFR-08), invalidates all outstanding reset tokens for that Account, and logs the password change (FR-49). |
 | 4 | Returns to UC-01. | Confirms the reset and allows login with the new password. |
 
 ## Alternative flows
 
 ### A1: Request is resubmitted (branches at step 1)
 
-1. The system processes the latest valid request and sends a reset email. Resubmission does not itself revoke previous links; after any successful reset, all outstanding reset tokens for that Account are invalidated (DEC-71).
+1. The system processes the latest valid request and sends a reset email. Resubmission does not itself revoke previous links; after any successful reset, all outstanding reset tokens for that Account are invalidated.
 
 ## Exception flows
 
@@ -43,7 +43,7 @@
 ### E2: Submission fails (branches at steps 1 or 3)
 
 1. The system retries up to three times.
-2. If saving still fails, it states that the request was not saved and advises retrying or contacting the IT Administrator (NFR-09).
+2. If saving still fails, it states that the request was not saved and advises retrying or contacting the IT Administrator (NFR-06).
 
 ## Postconditions
 
@@ -52,13 +52,10 @@
 
 ## Business rules / notes
 
-- This use case extends UC-01.
-- Reset-token validation, the password change and invalidation of all outstanding reset tokens occur atomically. A concurrent or repeated reset must recheck token validity at save time; failure preserves the prior password/token state (DEC-71).
+- This use case extends UC-01. Reset-token validation, the password change and invalidation of all outstanding reset tokens occur atomically. Concurrent or repeated resets recheck token validity at save time; a failed transaction preserves the prior password and token state.
 - Exact token lifetime and password-complexity rules are not stated in the SRS.
-
-- Reset-token lifetime and password complexity remain open in DEC-61; no numeric policy is assumed.
+- Reset-token lifetime and password complexity remain open; no numeric policy is assumed.
 
 ## Open questions
 
-- Confirm reset-link lifetime and password-complexity policy before implementation (DEC-61). Single-use behaviour is adopted in DEC-56.
-
+- Confirm reset-link lifetime and password-complexity policy before implementation. Single-use behaviour is adopted.

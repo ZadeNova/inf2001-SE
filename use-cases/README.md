@@ -1,6 +1,6 @@
 # Formal use-case drafts (M1)
 
-> **Status: Draft v0.3 (2026-10-01).** These 15 files implement the team's finalized list v2.2 against the minimum SRS v3.3 baseline (DEC-45 to DEC-47).
+> **Status: M1 submitted v1.0 (2026-11-07).** These 15 files are transcribed from §3.2 of the submitted M1 report (DEC-72), against SRS v3.5. Each keeps a Source row from the repo.
 
 ## File convention
 
@@ -41,4 +41,4 @@
 
 ## Review before OOA
 
-Team review should confirm the Certification and audit-log placement, the exactly-48-hour boundary, offline completion conflicts and the FR-44/FR-70 precedence. Once the core flows are stable, derive candidate classes, attributes, relationships and responsibilities, then develop the class and sequence diagrams together.
+Team review should confirm the Certification and audit-log placement, the exactly-48-hour boundary, offline completion conflicts and the FR-32/FR-29 precedence. Once the core flows are stable, derive candidate classes, attributes, relationships and responsibilities, then develop the class and sequence diagrams together.

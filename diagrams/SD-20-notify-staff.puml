@@ -1,4 +1,4 @@
-@startuml SD-15-notify-staff
+@startuml SD-20-notify-staff
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-15: Notify Staff (UC-15)
-' Traces: UC-15; FR-49, FR-64, FR-71; NFR-01, NFR-09
+title SD-20: Notify Staff (UC-15)
+' Traces: UC-15; FR-09, FR-39, FR-30; NFR-01, NFR-06
 ' Round-2 detail sources: DEC-62.
 ' Sources: DEC-43, DEC-46, DEC-48, DEC-50; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
@@ -86,6 +86,6 @@ not undo it.
 Saved changes are visible within 60 s (NFR-01);
 acknowledgement/deduplication remain open (DEC-62).
 Draft roster events create no Staff message and send no email/SMS.
-Publication sends the published roster notification (FR-49, DEC-64).
+Publication sends the published roster notification (FR-39, DEC-64).
 endlegend
 @enduml

@@ -1,4 +1,4 @@
-@startuml SD-19-publish-weekly-roster
+@startuml SD-08-publish-weekly-roster
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,13 +28,13 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-19: Publish Weekly Roster (UC-07)
-' Traces: UC-07; FR-44, FR-45, FR-49, FR-53, FR-55, FR-64, FR-66, FR-71, NFR-09
+title SD-08: Publish Weekly Roster (UC-07)
+' Traces: UC-07; FR-32, FR-33, FR-09, FR-35, FR-36, FR-39, FR-49, FR-30, NFR-06
 ' Sources: DEC-16, DEC-19, DEC-32, DEC-43; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
-' Consistency fix 2026-10-07: week check as in SD-17/18 (FR-41, DEC-16); recheck inside the atomic save (DEC-18, as SD-20);
-' outcome wording aligned with SD-17 and SD-18.
+' Consistency fix 2026-10-07: week check as in SD-07/18(withdrawn) (FR-07, DEC-16); recheck inside the atomic save (DEC-18, as SD-10);
+' outcome wording aligned with SD-07.
 actor Manager
 boundary ":JobAllocationPage" as Page
 control ":RosterController" as RC
@@ -84,7 +84,7 @@ else no blocking violation
     else save committed
   ' Notification payload: Weekly Roster published, assigned and Standby Staff
       RC -> NS : notify(event,recipients)
-      ref over NS : SD-15
+      ref over NS : SD-20
       NS --> RC : notification outcome
       RC --> Page : Weekly Roster Published
     end
@@ -95,13 +95,13 @@ Page --> Manager : current outcome
 deactivate Page
 legend bottom
 Warnings: Workload >40 h, Job Preference, customer Slot,
-fewer than 3 Vans, incomplete Standby (FR-45).
+fewer than 3 Vans, incomplete Standby (FR-33).
 Week Workload is calculated from the saved Weekly Roster.
 Confirmation precedes save; cancellation keeps records unchanged.
 Successful publication notifies every Crew member and Standby
 of that week. Failed publication keeps the Weekly Roster Draft.
-Atomic saves and up to 3 failed-submission retries follow NFR-09.
-Only the next unpublished Planning Week can be published (FR-41, DEC-16).
+Atomic saves and up to 3 failed-submission retries follow NFR-06.
+Only the next unpublished Planning Week can be published (FR-09, DEC-16).
 Blocking rules are rechecked inside the save (another Manager may edit, DEC-18).
 endlegend
 @enduml

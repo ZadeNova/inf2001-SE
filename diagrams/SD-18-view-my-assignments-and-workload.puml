@@ -1,4 +1,4 @@
-@startuml SD-13-view-my-assignments-and-workload
+@startuml SD-18-view-my-assignments-and-workload
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-13: View My Assignments and Workload (UC-13)
-' Traces: UC-13; FR-25, FR-49, FR-53, FR-55, FR-58, FR-59, FR-63, FR-71; NFR-08
+title SD-18: View My Assignments and Workload (UC-13)
+' Traces: UC-13; FR-21, FR-09, FR-35, FR-36, FR-41, FR-42, FR-38, FR-30; NFR-05
 ' Sources: DEC-04, DEC-16, DEC-39, DEC-40, DEC-43; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
@@ -68,7 +68,7 @@ alt online
     alt next week is Published
       DC --> LDP : that week's Assignments
     else next week is Draft
-      DC --> LDP : week not offered (FR-49)
+      DC --> LDP : week not offered (FR-09)
     end
     deactivate DC
   end
@@ -77,9 +77,9 @@ alt online
     LDP -> DC ++ : assignmentDetails(assignment)
     DC -> ASG ++ : getDetails()
     ASG --> DC -- : Job, Van, Crew and request details
-    DC --> LDP -- : Assignment details (FR-59)
+    DC --> LDP -- : Assignment details (FR-42)
   end
-else offline (NFR-08)
+else offline (NFR-05)
   Staff -> LDP : open()
   LDP -> LDP : loadCachedToday()
   alt cache available
@@ -91,8 +91,8 @@ end
 deactivate LDP
 legend bottom
 Every Crew member receives Job credit: Planned for Assigned, Actual
-for Completed (FR-53).
+for Completed (FR-35).
 Standby counts 0 h until Crew placement; above 40 h is highlighted
-(FR-55, FR-71).
+(FR-36, FR-30).
 endlegend
 @enduml

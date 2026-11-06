@@ -94,7 +94,7 @@ U9 ..> U15 : <<include>>
 
 legend bottom
 Clock is the secondary system-event actor for UC-09 Job-start lapse.
-It also starts Certification-expiry checks under FR-10/70 (no separate UC).
-These events are drawn in SD-22 and SD-16 (DEC-59, DEC-68).
+It also starts Certification-expiry checks under FR-22/29 (no separate UC).
+These events are drawn in SD-12 and SD-21 (DEC-59, DEC-68).
 endlegend
 @enduml

@@ -1,4 +1,4 @@
-@startuml SD-24-submit-late-availability-change
+@startuml SD-16-submit-late-availability-change
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-24: Submit Late Availability Change (UC-12)
-' Traces: UC-12; FR-17, FR-56, FR-66; NFR-09
+title SD-16: Submit Late Availability Change (UC-12)
+' Traces: UC-12; FR-16, FR-40, FR-49; NFR-06
 ' Sources: DEC-02; DEC-55, DEC-56; DEC-57; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Current source: INT-DCT [Questionnaire C13: DB01/DB02]; DEC-69.
@@ -72,7 +72,7 @@ legend bottom
 Entry gate: Staff navigation or the calling Availability page.
 Current Availability stays visible beside the requested change.
 Submitting leaves Availability unchanged. Only the Manager decides and
-applies the change (FR-17).
+applies the change (FR-16).
 Failed save creates no usable request; prior Availability remains.
 endlegend
 @enduml

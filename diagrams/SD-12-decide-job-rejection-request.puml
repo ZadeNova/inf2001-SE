@@ -1,4 +1,4 @@
-@startuml SD-22-decide-job-rejection-request
+@startuml SD-12-decide-job-rejection-request
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-22: Decide or Lapse Job Rejection Request (UC-09)
-' Traces: UC-09; FR-36, FR-46, FR-49, FR-56, FR-63, FR-64, FR-66; NFR-09
+title SD-12: Decide or Lapse Job Rejection Request (UC-09)
+' Traces: UC-09; FR-03, FR-34, FR-09, FR-40, FR-38, FR-39, FR-49; NFR-06
 ' Sources: DEC-10, DEC-42, DEC-43, DEC-52, DEC-53, DEC-56, DEC-58, DEC-59; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-66, DEC-67, DEC-68; sequence-diagram-review-round-3.md.
 actor "Clock" as Clock <<system>>
@@ -92,7 +92,7 @@ loop selected request, if any (at most one per Assignment)
       else newly Lapsed
         RQ -> NS : notify(lapsed, requester)
       end
-      ref over NS : SD-15
+      ref over NS : SD-20
       NS --> RQ : notification outcome
     end
   end
@@ -107,7 +107,7 @@ end
 deactivate RQ
 legend bottom
 Clock fires at Job start; a still-Pending request lapses even when
-the Manager never opens it (FR-63, DEC-59). A new lapse is audited
+the Manager never opens it (FR-38, DEC-59). A new lapse is audited
 and the requester notified after commit. Race checks are atomic:
 an already-decided request gets no second decision or notification.
 Approval unassigns the requested Job and active Linked partners

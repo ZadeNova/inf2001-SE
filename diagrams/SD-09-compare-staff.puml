@@ -1,4 +1,4 @@
-@startuml SD-08-compare-staff
+@startuml SD-09-compare-staff
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-08: Compare Staff (UC-08)
-' Traces: UC-08, UC-07; FR-43, FR-55
+title SD-09: Compare Staff (UC-08)
+' Traces: UC-08, UC-07; FR-31, FR-36
 ' Sources: DEC-04, DEC-06, DEC-08, DEC-35; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
@@ -69,7 +69,7 @@ deactivate RC
 [<-- Page : selected Staff / closed
 deactivate Page
 legend bottom
-Five items (FR-43): day/week Availability, week Workload,
+Five items (FR-31): day/week Availability, week Workload,
 Certification expiry,
 Job Preference and postal districts of other Jobs that day, or No
 Jobs.

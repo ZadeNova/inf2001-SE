@@ -22,11 +22,11 @@ title CD-domain: Workload Management Domain Classes
 ' Traces: UC-01 to UC-15; SRS v3.4. Class IDs use CL- plus each alias below.
 ' Sources: DEC-02/03/07/09/10/13/14/16/17/18/19/35/39/40/42/43/45/46/48/49/50/51/52/53/54/55/56.
 ' logOut follows UC-01 and SD-01.
-' C3 operations: sequence-diagrams.md section 4; Audit Log FR-66; Notification FR-56/64.
+' C3 operations: sequence-diagrams.md section 4; Audit Log FR-49; Notification FR-40/39.
 ' Round-2 sources: DEC-58, DEC-59, DEC-60, DEC-63; sequence-diagram-review-round-2.md.
 ' Current Pending-request policy: DEC-66.
 ' Updated signatures follow the adopted sequence review (DEC-56).
-' User decisions 2026-10-03: FR-70 is the later-event exception; Short notice <48 h; email initial password; SMS.
+' User decisions 2026-10-03: FR-29 is the later-event exception; Short notice <48 h; email initial password; SMS.
 left to right direction
 hide circle
 skinparam classAttributeIconSize 0
@@ -236,16 +236,16 @@ Manager "1" -- "0..*" Notification : recipient {xor}
 note right of Notification
  Each Notification has one recipient:
  Staff or Manager, not both ({xor}).
- DashboardAlert: Manager operational alert (SD-10).
- StaffMessage: Staff delivery event (SD-15).
+ DashboardAlert: Manager operational alert (SD-13).
+ StaffMessage: Staff delivery event (SD-20).
  Only StaffMessage uses email/SMS delivery.
- Sources: FR-56, FR-64; DEC-53, DEC-63.
+ Sources: FR-40, FR-39; DEC-53, DEC-63.
 end note
 legend bottom
 One Crew per Van/date; one Weekly Roster per week; one Job Preference per Staff/week.
 At most one Pending Job Rejection Request per Assignment (DEC-66); decided requests remain history.
 Availability is unique per Staff/date/Slot. One current Assignment per Job; older placements are history.
-Valid Crew: 1 Driver + 1-2 Technicians. FR-70 allows temporary gaps marked Needs attention.
+Valid Crew: 1 Driver + 1-2 Technicians. FR-29 allows temporary gaps marked Needs attention.
 Completed-work credit survives Crew changes. Standby is uncrewed, available all day and contributes 0 h.
 Boundary/control classes and operations are in CD-boundary and CD-control (DEC-53/55/56).
 See section 4.1 for responsibilities, remaining attributes and source references.

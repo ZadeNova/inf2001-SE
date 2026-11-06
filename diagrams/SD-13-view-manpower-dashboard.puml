@@ -1,4 +1,4 @@
-@startuml SD-10-view-manpower-dashboard
+@startuml SD-13-view-manpower-dashboard
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
@@ -28,8 +28,8 @@ skinparam wrapWidth 420
 skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
-title SD-10: View Manpower Dashboard (UC-10)
-' Traces: UC-10; FR-10, FR-15, FR-55, FR-56, FR-66, FR-70; NFR-09
+title SD-13: View Manpower Dashboard (UC-10)
+' Traces: UC-10; FR-22, FR-14, FR-36, FR-40, FR-49, FR-29; NFR-06
 ' Round-2 detail sources: DEC-59, DEC-63.
 ' Sources: DEC-04, DEC-05, DEC-30, DEC-35, DEC-51; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
@@ -63,7 +63,7 @@ end
 opt view Availability
   Manager -> LDP : openAvailability()
   LDP -> DC ++ : availabilityGrid(oneMonth)
-  DC --> LDP -- : five-state grid (FR-15)
+  DC --> LDP -- : five-state grid (FR-14)
 end
 opt handle an alert
   Manager -> LDP : markHandled(alert)
@@ -79,7 +79,7 @@ opt maintain Certification
     DC -> DC : checkCrewsUsing(technician)
     opt Crew invalid for its Jobs
       DC -> RC : handleCrewInvalidation(staff, dates)
-      ref over RC, CE, NS, AL : SD-16
+      ref over RC, CE, NS, AL : SD-21
       RC --> DC : crewEvents and recipients
     end
     DC -> AL : record(Manager, Certification edited)
@@ -89,7 +89,7 @@ opt maintain Certification
   else transaction committed
     opt Crew changes saved
       DC -> NS : notify(crewEvents, crewRecipients)
-      ref over NS : SD-15
+      ref over NS : SD-20
       NS --> DC : notification outcome
     end
     DC --> LDP : saved
@@ -98,15 +98,15 @@ opt maintain Certification
 end
 deactivate LDP
 legend bottom
-Lowest three excludes approved Leave; ties use name (FR-56).
+Lowest three excludes approved Leave; ties use name (FR-40).
 Alerts: Vans/Crews/Standby, Unassigned count, requests, Needs
 attention,
 account-change Unassigned Jobs and Certifications expiring within 1
 month.
 Alerts are Manager Notifications of kind DashboardAlert (DEC-63).
-These alerts are not sent through SD-15.
-Clock-driven Certification expiry is drawn in SD-16 (DEC-59).
-Expiry equal to Job date is valid (FR-10). Save failures follow
-NFR-09.
+These alerts are not sent through SD-20.
+Clock-driven Certification expiry is drawn in SD-21 (DEC-59).
+Expiry equal to Job date is valid (FR-22). Save failures follow
+NFR-06.
 endlegend
 @enduml

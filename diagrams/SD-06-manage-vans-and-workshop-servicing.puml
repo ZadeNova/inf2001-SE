@@ -29,7 +29,7 @@ skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
 title SD-06: Manage Vans and Workshop Servicing (UC-06)
-' Traces: UC-06; FR-27, FR-28, FR-29, FR-38, FR-64, FR-66; NFR-09
+' Traces: UC-06; FR-23, FR-24, FR-25, FR-05, FR-39, FR-49; NFR-06
 ' Sources: DEC-14, DEC-45, DEC-50, DEC-54; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-68; sequence-diagram-review-round-3.md.
@@ -91,7 +91,7 @@ else review Workshop Servicing
     end
     deactivate VC
   end
-else breakdown or extra servicing days (FR-29)
+else breakdown or extra servicing days (FR-25)
   Manager -> Page : markUnavailable(van, dates)
   Page -> VC ++ : markUnavailable(van, dates)
   group atomic Van unavailability save
@@ -110,7 +110,7 @@ else breakdown or extra servicing days (FR-29)
     VC --> Page : Not saved; Van and roster unchanged
   else save committed
     VC -> NS : notify(Van unavailable, released Staff)
-    ref over NS : SD-15
+    ref over NS : SD-20
     NS --> VC : notification outcome
     VC --> Page : Van unavailable; Jobs Unassigned
   end
@@ -120,10 +120,10 @@ Page --> Manager : result
 deactivate Page
 legend bottom
 Odd months: Vans 1/2/3; even: 4/5/6; dates 1st/11th/21st. Sunday moves
-to Monday (FR-28).
+to Monday (FR-24).
 Blocked generated dates are unbooked proposals; the Manager adjusts
 them (DEC-54).
 Completed Jobs and unrelated unavailability remain intact. Atomic
-saves/retries follow NFR-09.
+saves/retries follow NFR-06.
 endlegend
 @enduml

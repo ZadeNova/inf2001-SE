@@ -10,6 +10,8 @@
 Quotes are verbatim from [brief/project-description.md](brief/project-description.md) ("Brief") and [brief/rubric-m1.md](brief/rubric-m1.md) / [brief/rubric-m2.md](brief/rubric-m2.md) / [brief/assessment-overview.md](brief/assessment-overview.md).
 DEC-01 to DEC-30 were raised on 2026-09-30 (AI-assisted analysis, see `ai-usage-log.md`). The options listed are possibilities for discussion and are **not recommendations**. The index shows which entries have since been decided. DEC-02 to DEC-41 (except the rubric entries DEC-21, DEC-23 to DEC-29) were decided on 2026-09-30 for SRS v2: the Manager's interview answer was adopted where one exists, and the simplest option consistent with the brief was chosen otherwise. Each decision says which parts were chosen by the team. They are open to change at team review.
 
+> **ID note (2026-11-07, DEC-72):** the submitted M1 report renumbered the requirements and sequence diagrams. **DEC-01 to DEC-71 below are kept as written and cite the repo's draft IDs** (SRS v3.0–v3.4 and the 22-diagram draft). Read their FR/NFR numbers with the mapping in [requirements.md §9](requirements.md) and their SD numbers with [diagrams/README.md](diagrams/README.md). DEC-72 onwards use the report's IDs.
+
 ## Index
 
 | ID | Topic | Category | Ask whom | Status |
@@ -1660,3 +1662,33 @@ Keep the per-recipient Staff-or-Manager xor association and the existing 43 iden
 **Recorded by:** OpenAI Codex for the authorized focused update; no commit or push.
 
 ---
+
+## M. M1 report alignment (2026-11-07)
+
+| ID | Topic | Category | Ask whom | Status |
+|---|---|---|---|---|
+| DEC-72 | The submitted M1 report is the M1 source of truth; repo IDs follow it | Team decision | Team | **Decided** |
+
+### DEC-72: The submitted M1 report is the M1 source of truth; repo IDs follow it
+
+| Category | Team decision | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-07 by JunKeatLim.
+
+**Source text:** JunKeatLim, 2026-11-07: "after the initial M1 report draft, we made multiple changes to the report but not the repo. I have uploaded the final M1 report that we submitted. ... refer to the M1 report and use it as the source of truth. anything that is not in the report (i.e FR requirements) or any contradictions in rules, inconsistencies in numbering, etc fix it all based on the report."
+
+**Question:** The repo (SRS v3.4, 22 SDs) and the submitted report (9 Oct 2026) use different requirement and diagram numbers and slightly different wording. Which governs?
+
+**Decision:**
+1. The **submitted M1 report** (INF2001 P8-1 M1 Report, 9 Oct 2026) is the source of truth for M1 artefacts. Where the repo and the report differ, the repo is changed to match the report.
+2. **Requirements:** the repo uses the report's FR-01–FR-50 and NFR-01–NFR-12 with the report's wording, groups and priorities (SRS v3.5). Source and Test columns are kept from the repo. Draft IDs that were withdrawn before submission are dropped from the active SRS; requirements.md §9 maps every draft ID.
+3. **Use cases:** UC-01 to UC-15 are transcribed from report §3.2. The repo's Source rows are kept.
+4. **Sequence diagrams:** the report's SD-01 to SD-21 numbering and titles. The draft SD-18 Allocate Job is not in the report and is archived (`diagrams/archive/pre-report-2026-10-09/`). The report and its AI declaration say "21 sequence diagrams", which replaces DEC-57's 22.
+5. **Glossary, WBS, AI declaration:** AGENTS.md and the root files `Glossary.md`, `WBS and Timeline.md` and `AI Usage Declaration.md` follow report Tables 1.2, 1.3, 5.1 and 5.2. The team is 6 members (report cover), not 5. File owners follow the report WBS (Table 5.1), pending team confirmation.
+6. **ID rule:** this is a one-off renumbering to match the submitted report. From this baseline on, IDs are never reused or renumbered. DEC-01 to DEC-71, the sequence-review notes, the archives, `requirements-review.md`, `phases.md` and `M1 Report Gap Analysis.md` are history and keep their draft IDs.
+
+**Known report issue (not changed):** report Figure 4.8 (SD-07) labels its Compare Staff reference "SD-08"; in the report's own numbering Compare Staff is SD-09. The repo source uses SD-09.
+
+**Decided by:** JunKeatLim · **Decision date:** 2026-11-07 · **Decision source:** direct instruction in a Claude Code session, 2026-11-07; submitted M1 report.
+

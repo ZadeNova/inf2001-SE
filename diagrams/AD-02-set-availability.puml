@@ -18,7 +18,7 @@ skinparam conditionStyle InsideDiamond
 skinparam wrapWidth 250
 skinparam dpi 180
 title AD-02: Availability and Job Preference Submission
-' Traces: UC-11; FR-13/14/16/17/21/66; NFR-09.
+' Traces: UC-11; FR-12/13/15/16/17/49; NFR-06.
 ' Sources: DEC-01, DEC-02, DEC-03, DEC-07, DEC-30, DEC-45; INT-ITA [Q: Audit], [Q: Connection failure].
 |Staff|
 start

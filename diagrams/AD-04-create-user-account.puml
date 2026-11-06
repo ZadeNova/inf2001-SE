@@ -18,7 +18,7 @@ skinparam conditionStyle InsideDiamond
 skinparam wrapWidth 260
 skinparam dpi 180
 title AD-04: Staff / Manager Account Creation
-' Traces: UC-03; FR-02/10/66; NFR-09/11/12.
+' Traces: UC-03; FR-44/22/49; NFR-06/08/09.
 ' Sources: Brief R11; DEC-17, DEC-18, DEC-35, DEC-45; INT-ITA [Q: Account info], [Q: Audit], [Q: Safeguards].
 ' User decision 2026-10-03: deliver initial password by email; password change remains optional.
 |IT Administrator|

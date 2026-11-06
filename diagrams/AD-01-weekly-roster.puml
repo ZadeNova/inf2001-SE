@@ -18,7 +18,7 @@ skinparam conditionStyle InsideDiamond
 skinparam wrapWidth 260
 skinparam dpi 180
 title AD-01: Weekly Roster Preparation and Publishing
-' Traces: UC-07, UC-08, UC-13, UC-15; FR-30/32/33/41-46/49-51/53/71.
+' Traces: UC-07, UC-08, UC-13, UC-15; FR-26/27/28/07-46/49-51/53/71.
 ' Sources: DEC-09, DEC-10, DEC-16, DEC-19, DEC-31, DEC-32, DEC-39, DEC-43, DEC-45, DEC-46.
 ' SMS chosen by user on 2026-10-03. Detailed guards and exceptions remain in UC-07.
 |Manager|

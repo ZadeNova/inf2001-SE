@@ -29,7 +29,7 @@ skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
 title SD-01: Log In/out (UC-01)
-' Traces: UC-01, UC-02; FR-01, FR-05, FR-07, FR-66; NFR-10, NFR-12
+' Traces: UC-01, UC-02; FR-43, FR-46, FR-48, FR-49; NFR-07, NFR-09
 ' Round-2 detail sources: DEC-61.
 ' Sources: DEC-17, DEC-18, DEC-41, DEC-45; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
@@ -103,8 +103,8 @@ opt authenticated session exists
 end
 legend bottom
 Email confirmation must succeed before a new-device login is
-authenticated (NFR-10).
+authenticated (NFR-07).
 Confirmation-code lifetime remains open (DEC-61).
-Lockout lasts until the IT Administrator unlocks the Account (FR-07).
+Lockout lasts until the IT Administrator unlocks the Account (FR-48).
 endlegend
 @enduml

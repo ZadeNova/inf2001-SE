@@ -29,7 +29,7 @@ skinparam sequenceParticipantFontSize 12
 skinparam sequenceActorFontSize 12
 autonumber
 title SD-05: Manage Job (UC-05)
-' Traces: UC-05; FR-34 to FR-38, FR-44, FR-46, FR-64, FR-66, FR-67; NFR-09
+' Traces: UC-05; FR-01, FR-02, FR-03, FR-04, FR-05, FR-32, FR-34, FR-39, FR-49, FR-50; NFR-06
 ' Sources: DEC-11, DEC-19, DEC-40, DEC-42, DEC-50; DEC-55, DEC-56; sequence-diagram-review.md.
 ' Round-2 source: DEC-58; sequence-diagram-review-round-2.md.
 ' Round-3 source: DEC-67, DEC-68; sequence-diagram-review-round-3.md.
@@ -54,7 +54,7 @@ alt create Job
     JC --> Page : errors
   else valid
     JC -->> Job ** : <<create>>(details)
-    note right of Job : status = Unassigned (FR-46)
+    note right of Job : status = Unassigned (FR-34)
     JC -> AL : record(Manager, Job created)
     JC --> Page : saved
   end
@@ -103,7 +103,7 @@ else edit Job
       else remains valid
         JC -> NS : notify(Assignment changed,Crew)
       end
-      ref over NS : SD-15
+      ref over NS : SD-20
       NS --> JC : notification outcome
     end
     JC --> Page : saved / Unassigned reason
@@ -129,7 +129,7 @@ else cancel Job
     end
     opt any affected Assignment existed before cancellation
       JC -> NS : notify(jobCancelledAndPartnersUnassigned, affectedStaff)
-      ref over NS : SD-15
+      ref over NS : SD-20
       NS --> JC : notification outcome
     end
     JC --> Page : cancelled
@@ -139,13 +139,13 @@ end
 Page --> Manager : result
 deactivate Page
 legend bottom
-Details follow UC-05. Jobs are kept, never deleted (FR-67).
+Details follow UC-05. Jobs are kept, never deleted (FR-50).
 Unassigning a Job also unassigns its active Linked partners (DEC-67).
 Cancellation cancels only the selected Job; active partners become
 Unassigned. Completed/Cancelled partners are unchanged.
 Loop lifelines represent each affected Job and its Assignment;
 collect affected Staff before ending placements.
 Mutation and audit calls commit atomically; notifications follow
-successful save. Save failures follow NFR-09.
+successful save. Save failures follow NFR-06.
 endlegend
 @enduml
