@@ -41,7 +41,7 @@
 
 ### E3: Initial-login email fails (branches at step 4)
 
-1. Warn the IT Administrator that email submission failed and offer a resend.
+1. Warn the IT Administrator that email submission failed and offer a resend. A resend calls `AccountController.resendInitialLogin(account)` from `AccountAdminPage.resendInitialLogin()`.
 2. Keep the saved account; do not create a second account to resend.
 
 ## Postconditions

@@ -44,6 +44,7 @@ package "Web UI (Presentation layer)" {
   +createAccount(details)
   +manageAccess(account, action)
   +updateTechnicianProfile(technician, homeZone, certifications)
+  +resendInitialLogin(account)
  }
  class AuditLogPage <<boundary>> {
   +search(filter)
@@ -116,6 +117,7 @@ package "Account Management" {
   +createAccount(details)
   +manageAccess(account, action)
   +updateTechnicianProfile(technician, homeZone, certifications)
+  +resendInitialLogin(account)
   +searchAuditLog(filter): List<AuditLog>
  }
 }
@@ -211,6 +213,7 @@ package "Roster & Hours" {
  class DashboardController <<control>> {
   +loadDashboard(week)
   +lowestThree(drivers, technicians)
+  +markHandled(alert)
   +availabilityGrid(from, to)
   +loadStaffHome(staff, week)
  }
@@ -258,7 +261,6 @@ package "Domain Model (Data layer)" {
   -used: Boolean
   +{static} generate(account: Account): PasswordResetToken
   +validate(token): Boolean
-  +markUsed()
   +{static} invalidateAll(account: Account)
  }
  abstract class User <<entity>> {

@@ -29,4 +29,4 @@
 
 ### A1: Mark an alert handled
 
-1. `Notification.markHandled()` hides it from the alert list.
+1. `LandingPage.markHandled(alert)` calls `DashboardController.markHandled(alert)`, which calls `Notification.markHandled()` to hide it from the alert list.
