@@ -1,6 +1,6 @@
 # Formal use cases (M2)
 
-> **Status: M2 v1.0 (2026-11-06).** 18 IDs, 16 active, aligned to SRS v4.0 and use-case list v3.0 (DEC-91). The M1 drafts (v0.3) are in git history.
+> **Status: M2 v1.1 (2026-11-07).** 18 IDs, 16 active, aligned to SRS v4.1 and use-case list v3.1 (DEC-91). The M1 drafts (v0.3) are in git history.
 
 ## File convention
 
@@ -11,7 +11,7 @@
 
 ## Index
 
-> **M2 (2026-11-06):** the authoritative list is [use-case-list.md](use-case-list.md) v3.0 (DEC-91). Each active file is at "M2 v1.0" and lists the classes and wireframe it maps to.
+> **M2 (2026-11-06):** the authoritative list is [use-case-list.md](use-case-list.md) v3.1 (DEC-91). Affected scheduling files are at M2 v1.1; unchanged files retain M2 v1.0 and lists the classes and wireframe it maps to.
 
 | ID | File | Primary actor | Connection |
 |---|---|---|---|

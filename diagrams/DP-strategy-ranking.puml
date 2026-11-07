@@ -12,7 +12,7 @@ skinparam noteBorderColor black
 hide circle
 hide empty members
 title DP-strategy-ranking: Strategy Pattern for Technician Ranking (excerpt of CD-final)
-' Traces: FR-55, FR-56; DEC-80, DEC-81, DEC-93. Report §3.2.
+' Traces: FR-55, FR-56; DEC-80, DEC-81, DEC-93, DEC-96, DEC-97. Report §3.2.
 ' Roles: Context = CrewFormingService, StandbyActivationService; Strategy = TechnicianRanking;
 ' ConcreteStrategy = WorkloadRanking, ActivationRanking.
 
@@ -23,7 +23,7 @@ class CrewFormingService <<control>> {
  +ensureMinimumCrews(day)
 }
 class StandbyActivationService <<control>> {
- +listStandbysForJob(job, date): List<Standby>
+ +listStandbysForJob(job, date, crew, outStaff): List<Standby>
 }
 interface TechnicianRanking <<interface>> {
  +order(candidates: List<Technician>, context): List<Technician>
@@ -36,8 +36,9 @@ class ActivationRanking {
 }
 class Technician <<entity>> {
  -homeZone: Zone
- +lastWeekHours(week): Decimal
- +projectedWeekHours(day): Decimal
+ +lastWeekActiveHours(week): Decimal
+ +projectedActiveHours(day): Decimal
+ +projectedCreditedHours(day): Decimal
  +activationCount(asOf): Integer
 }
 
@@ -50,16 +51,16 @@ ActivationRanking ..> Technician
 
 note right of WorkloadRanking
  FR-55 step 4 (applied separately to the
- under-40 h and 40 h-or-more groups that
+ projected Credited under-40 h / >=40 h groups that
  classifyTechnicians() builds):
- 1. last week's Workload (low first)
- 2. projected hours this week (low first)
+ 1. last week's Active Hours (low first)
+ 2. projected Active Hours this week (low first)
  3. staff ID
 end note
 note right of ActivationRanking
- FR-56:
- 1. activations in last 12 months (few first)
- 2. zone distance to the Job's zone
+ FR-56: filter eligible candidates before ordering.
+ 1. distinct activated dates in 12 months (few first)
+ 2. home-Zone distance to the Job's zone
  3. staff ID
 end note
 @enduml

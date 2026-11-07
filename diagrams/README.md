@@ -37,14 +37,16 @@ All UML diagrams are kept as PlantUML source here, **one diagram per file**. The
 
 | File | Report section | Notes |
 |---|---|---|
-| `UCD-system.puml` | §1.2 | v3.0: 16 active use cases; Email Service and SMS Gateway as «system» boxes; UC-02 standalone (DEC-91) |
-| `CD-final.puml` | §1.3 | Final class diagram; packages = components; three «interface» classes (DEC-93) |
+| `UCD-system.puml` | §1.2 | v3.1: 16 active use cases; Email Service and SMS Gateway as «system» boxes; UC-02 standalone (DEC-91) |
+| `CD-final.puml` | §1.3 | Final class diagram; packages = components; three «interface» classes; clarified hours, direct Assignment, Replacement and provisional preferences (DEC-93, DEC-96–98) |
 | `CMP-system.puml` | §2 | Components with provided (lollipop) and required («use») interfaces |
 | `ARCH-layered.puml` | §3.1 | Layered 3-tier with MVC in the web tier |
 | `DP-strategy-ranking.puml` | §3.2 | Strategy excerpt of CD-final |
 | `CFG-classify-technicians.puml` | §4.2 | CFG for `CrewFormingService.classifyTechnicians()` |
 
 `CD-domain`, `CD-control` and `CD-boundary` are the M1 analysis views (report Figures 4.1a–c), superseded by `CD-final` for M2. The status of the M1 activity and sequence diagrams after M2 is in [traceability.md §5](../traceability.md).
+
+All six current M2 sources were rendered locally with PlantUML 1.2026.8 for the v4.1 update. Team review is still required. M1 sources below are historical and have not been rewritten.
 
 ## Rendering locally
 
@@ -103,3 +105,5 @@ PlantUML 1.2026.8 can place a fragment border through a newly created entity lab
 ```sh
 python diagrams/render-layout.py --report diagrams/out/layout-fixes.json
 ```
+
+For the large final class view, raise the renderer size limit to avoid clipping (for example Java option `-DPLANTUML_LIMIT_SIZE=24000`). SVG output preserves readable text when zoomed. Keep the generated images in ignored `diagrams/out/`.

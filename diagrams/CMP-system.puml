@@ -15,9 +15,9 @@ skinparam nodeBackgroundColor white
 skinparam databaseBackgroundColor white
 skinparam linetype polyline
 title CMP-system: Component Diagram (M2)
-' Traces: SRS v4.0; CD-final packages map 1:1 to the components below (DEC-93).
+' Traces: SRS v4.1; CD-final packages map 1:1 to the components below (DEC-93).
 ' Provided interface: component -- ()interface. Required interface: component ..> interface <<use>>.
-' Sources: M2-Brief §6.5; DEC-74; DEC-80; DEC-81; DEC-88; DEC-89; NFR-13.
+' Sources: M2-Brief §6.5; DEC-74; DEC-80; DEC-81; DEC-88; DEC-89; NFR-13; DEC-96 to DEC-98.
 left to right direction
 
 actor Manager
@@ -91,6 +91,7 @@ WebUI ..> IRoster : <<use>>
 WebUI ..> ISched : <<use>>
 
 Roster ..> ISched : <<use>>
+Roster ..> IInputs : <<use>>
 Roster ..> INotify : <<use>>
 Jobs ..> INotify : <<use>>
 Inputs ..> INotify : <<use>>
@@ -116,11 +117,11 @@ Notif ..> ISms : <<use>>
 legend bottom
 IAuthentication: logIn, confirmDevice, logOut, requestReset, resetPassword (AuthController).
 IAccountAdmin: createAccount, manageAccess, updateTechnicianProfile, searchAuditLog (AccountController).
-IStaffInputs: Availability, Standby picks, Job Rejection submit/decide (AvailabilityController, StandbyPreferenceController, RequestController).
+IStaffInputs: Availability, provisional picks/confirmWeek, Job Rejection submit/decide (AvailabilityController, StandbyPreferenceController, RequestController).
 ICsvImport: upload(file, type) (CsvImportController; CsvRowMapper adapters inside).
 IJobManagement: create/edit/delete Job, listUnassigned (JobController).
-IScheduling: suggestRoster, listStandbysForJob, check* rules (CrewFormingService, StandbyActivationService, RuleValidator).
-IRoster: allocate, change Crew/Standby, publish, timeline, compare, record replacement, edit hours, dashboards (RosterController, HoursController, DashboardController).
+IScheduling: suggestRoster, eligible Standby ordering, minimum-coverage feasibility, check* rules (CrewFormingService, StandbyActivationService, RuleValidator).
+IRoster: prepare suggestion/confirmation, Crew/direct allocation, publish, timeline, compare, replacements, Active Hours edits, dashboards (RosterController, HoursController, DashboardController).
 INotify: notify(event, recipients) (NotificationService). IEmailGateway / ISmsGateway are realised through NotificationChannel.
 IDomainModel: the entity classes, including AuditLog.record(). IPersistence: storage on the on-site server (NFR-13).
 Audit & Retention: RetentionJob, started daily by the Clock (FR-58).

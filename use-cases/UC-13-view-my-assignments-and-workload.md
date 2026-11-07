@@ -1,6 +1,6 @@
 # UC-13: View My Assignments and Workload
 
-> **Status: M2 v1.0 (2026-11-06).** Shows Standby days. Workload is planned and Standby hours. Leave balance, Linked Jobs and the Van plate are removed (DEC-78, DEC-90).
+> **Status: M2 v1.1 (2026-11-07).** Shows Standby days. Workload is Total Credited Hours; Active Hours are shown separately (DEC-96). Leave balance, Linked Jobs and the Van plate are removed (DEC-78, DEC-90).
 
 | Field | Value |
 |---|---|
@@ -20,9 +20,9 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Logs in. | `DashboardController.loadStaffHome()` shows a weekly calendar of Assignments and Standby days, the weekly Workload against 40 h, the calendar-month Workload and recent notifications (FR-41, FR-39). |
-| 2 | Selects an Assignment. | `Assignment.getDetails()`: customer, address, postal code and zone, Brand, units, Job Type, start time, notes, Van number, and Crew-mates' names and phones (FR-42). |
-| 3 | Switches to the next week. | Shows it only if it is Published (FR-41). |
+| 1 | Logs in. | `DashboardController.loadStaffHome()` shows a weekly calendar of Assignments and Standby days, the weekly Total Credited Workload against 40 h and separate Active Hours, the calendar-month Workload and recent notifications (FR-41, FR-39). |
+| 2 | Selects an Assignment. | `Assignment.getDetails()`: customer, address, postal code and zone, Brand, units, Job Type, start time, notes, Van number if a Crew duty, per-Job attributed colleagues and their phones; a direct Standby duty shows paid transport/no Van (FR-42). |
+| 3 | Switches to the next week. | Shows Assignments only if Published (FR-41). Preference status/reason is visible independently before publication (DEC-98). |
 
 ## Alternative flows
 
@@ -32,7 +32,7 @@
 
 ### A2: Current week is Draft (step 1)
 
-1. Show "not yet published" without exposing Draft Assignments (FR-09).
+1. Show "not yet published" without exposing Draft Assignments (FR-09). Show preference decisions separately; these do not expose the Draft roster.
 
 ### A3: Reject a Job (step 2)
 
@@ -47,3 +47,5 @@
 ### E2: No cached offline data (A1)
 
 1. The system explains that today's Assignments are unavailable offline.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

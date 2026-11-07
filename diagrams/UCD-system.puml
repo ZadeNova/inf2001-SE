@@ -7,8 +7,8 @@ skinparam ArrowColor black
 skinparam wrapWidth 190
 skinparam dpi 180
 title UCD-system: Aircon Retailer Workload Management System (M2)
-' Traces: UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18; SRS v4.0; use-case list v3.0.
-' Sources: DEC-17, DEC-18, DEC-45, DEC-88, DEC-91; Brief R1-R11; M2-Brief §1, §5.4.
+' Traces: UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18; SRS v4.1; use-case list v3.1.
+' Sources: DEC-17, DEC-18, DEC-45, DEC-88, DEC-91, DEC-96-98; Brief R1-R11; M2-Brief §1, §5.4.
 ' UC-06 and UC-14 are Withdrawn (DEC-91). UC-02 is standalone (no <<extend>>).
 ' Email Service and SMS Gateway are non-human <<system>> actors drawn as boxes (DEC-88).
 ' Arrows from an actor point to the use case it starts; arrows to a <<system>> actor show the system calling it.
@@ -90,6 +90,8 @@ U15 --> SMS
 legend bottom
 Clock: time event that lapses a still-Pending Job Rejection Request at Job start (UC-09).
 The daily 12-month purge (FR-58) is a Clock event with no use case.
+UC-18 requests a provisional pick; UC-07 confirms after capacity checks and notifies via UC-15.
+UC-17 includes direct Standby Jobs, per-Job replacements and Active Hours corrections.
 Withdrawn: UC-06 Manage Vans and Workshop Servicing; UC-14 Complete Job (DEC-91).
 endlegend
 @enduml

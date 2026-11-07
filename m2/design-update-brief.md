@@ -1,6 +1,6 @@
 # INF2001 P8-1: M2 Design Update Brief
 
-> **Source record.** This is the team's M2 Design Update Brief (`M2_Design_Update_Brief.md`), copied into the repo on 2026-11-06 so that M2 decisions can cite it as `M2-Brief §<n>`. Sections 1–4 are final team decisions. Sections 5–6 are suggestions. Section 7 was resolved by the team on 2026-11-06 (see DEC-73 to DEC-95 in [decisions.md](../decisions.md)). The wording below is unchanged from the supplied file, except that the availability horizon in §5.1 ("5 weeks") is superseded by DEC-01 (1 month), as recorded in DEC-83.
+> **Source record and revision.** The team's original M2 Design Update Brief was copied here on 2026-11-06. This working copy now incorporates the member-confirmed 2026-11-07 clarifications in DEC-96–98 and SRS v4.1; the unchanged original is available in git history. Sections 1–4 contain the current team decisions; sections 5–6 retain design guidance. The availability horizon is 1 month (DEC-01/83).
 
 ## How to use this document
 
@@ -72,8 +72,8 @@ Writing rules from our prof's M1 feedback:
 | **Audit Log** | Every hours edit and every manager override of the suggested roster is logged: who, what changed, why, when. |
 | **Job status** | Only **Assigned** or **Unassigned**. |
 | **Cancelled jobs** | When a customer cancels, the job is **deleted**. Affected staff are notified. |
-| **Zones** | Jobs are sorted into **North, East, South, West, Central**. The manager decides which zone each van/crew covers; the algorithm does not. |
-| **Crews** | Stay together **all day**. They **can go home** after their last job (no reporting back to base). |
+| **Zones** | Jobs are sorted into **North, East, South, West, Central**. The manager decides which Zone or group of Zones each van/crew covers; the algorithm does not. |
+| **Crews** | Start with a fixed Crew; recorded replacements take effect from a specified Job. They **can go home** after their last job (no reporting back to base). |
 | **Home zone** | New attribute on every technician. Used to find the closest standby. |
 | **Manager availability page** | Shows who is available and not on leave (from the HR CSV). |
 | **Notifications** | Sent for the **initial roster publication and every later change** (roster changes, job changes, deletions, standby assignment, job rejection outcomes). |
@@ -83,32 +83,34 @@ Writing rules from our prof's M1 feedback:
 | **Retention** | Records and logs are kept for a **rolling 12 months**, then purged. |
 | **40-hour highlight** | Kept (brief requirement 6). Manager landing page shows the 3 lowest-workload staff and highlights anyone over 40 h. |
 
-### 3.3 Hours and workload
+### 3.3 Hours and workload (DEC-96)
 
-- **Workload** = a technician's **active hours**: planned job hours + activated standby hours + manager edits.
-- An **unused standby day** counts as **half hours** (e.g. 4 h for an 8 h day).
-- If a standby is **activated**, the actual hours entered by the manager **replace** the half hours (not added on top).
-- **Leave does not count as hours.**
-- Half hours **do** count toward the 40-hour highlight.
-- The crew-forming algorithm ranks technicians by **last week's hours**, then this week's running total.
+- Active Hours are the Planned Hours of Jobs attributed to each person, including direct/replacement duties and audited Active Hours corrections.
+- Total Credited Hours are Active Hours on ordinary days; on a rostered Standby day use **max(4, Active Hours)**. Apply that minimum once per date. Full-day Leave without duties gives zero; preserve earlier Jobs on a mid-day departure.
+- Workload sums Total Credited Hours for the week/month. Use it for the 40 h target/highlight and display Active Hours separately.
+- Crew rotation uses last week's Active Hours, including the dual >=20 h rule. Projected Credited >=40 h is demoted; then rank by last week's Active, projected Active and staff ID.
+- Before Job allocation, estimate Active/Credited as Crew 8/8 and Standby 0/4. After allocation use attributed Planned Hours.
+- Standby examples Active/Credited: unused 0/4, 2 h duty 2/4, 4 h duty 4/4, 5 h duty 5/5. Two duties of 2+3 h give 5/5.
 
-### 3.4 Preferences (standby day)
+### 3.4 Preferences (DEC-98)
 
-- The only preference is the **standby day**: each technician picks **one standby day per week**.
-- Each day allows **at most 2 picks: one M Electric slot and one Dicon slot**, first come first served. A dual-brand technician can take either slot. Once both slots are taken, that day is greyed out.
-- Because the system only accepts picks that still have room, **every accepted preference is guaranteed** (this answers the prof's "if you offer it, you must follow it" point).
-- Priority order: **leave / emergency leave / MC > preference pick > normal standby**.
-- A technician already on standby should not take leave; but leave approved earlier in the HR system always wins.
-- The manager sees each technician's standby-day pick when comparing staff (brief requirement 5).
+- One provisional day/Brand slot request per Technician/week; one M Electric and one Dicon slot per day, first come first served. Change/withdraw before Wednesday's deadline.
+- After inputs lock and HR/Van CSVs arrive, process by submittedAt/staff ID. Confirm only when valid eligibility, **three initial Crews and Full Standby cover** remain feasible with previously confirmed picks reserved.
+- Store Provisional / Confirmed / NotConfirmed, decision time and reason; notify outcomes. A provisional slot is not a guarantee.
+- Confirmed means initial Standby placement. Managers cannot override it. Leave takes precedence; activation for genuine direct/replacement work remains permitted.
+- Re-running the suggestion preserves confirmations. Later shortages are flagged for repair; no silent revocation.
+- The member reports the professor's work-life-balance clarification as the basis for binding confirmation (DEC-98).
 
-### 3.5 Standby
+### 3.5 Standby (DEC-96/97)
 
-- **Standby** = technicians who are available but were not placed in a crew that day.
-- **Minimum standby per day:** one team covering both brands (1 M Electric + 1 Dicon, or 1 dual). No maximum.
-- If there are not enough people for both 3 crews and a standby team, **3 crews win**.
-- Duals moved to standby by the algorithm are based in **Central** (they can reach any zone and cover either brand: the "trump card").
-- Standby and active work are **paid the same**.
-- The system tracks each technician's **activation count** over a **rolling 12 months**, so the manager can spread activations fairly.
+- Standby initially means an available Technician outside the active Van Crews. Keep the record after activation for history and credit.
+- Full Standby cover means valid coverage for both Brands (one M Electric + one Dicon, or a dual); no maximum.
+- Required initial Crews take priority; no preference is confirmed unless both minimum Crews and Full Standby cover are feasible.
+- Standby uses the Technician's **home Zone**, including Algorithm-source duals. Three Crews can cover groups of the existing five Zones.
+- A direct activation may send a certified Technician to extra Jobs using paid transport without a Driver/Van, then return when finished. A replacement travels to join a Crew from an unstarted Job. Transport booking/payment remains outside the system.
+- Filter eligibility first, then rank by distinct activated dates over 12 months, home-Zone distance and staff ID. Recheck before saving.
+- Repeated duties/call-outs on one date count **one activated day**. Low count earns priority; it does not prove laziness or prevent refusal by itself.
+- Standby and active work are paid the same; this application does not calculate payroll.
 
 ### 3.6 Drivers
 
@@ -123,41 +125,20 @@ Writing rules from our prof's M1 feedback:
 
 ---
 
-## 4. Crew-forming algorithm (final)
+## 4. Crew-forming algorithm (DEC-96–98)
 
-The algorithm **suggests** a roster. The **manager reviews, edits and publishes** it (the brief says the manager allocates; the algorithm only assists).
+1. Staff submit Availability and provisional preference requests before Wednesday's deadline. Manager uploads HR/Van CSVs before Thursday planning.
+2. Resolve requests in submission order using a feasible minimum arrangement: >=3 valid initial Crews plus Full Standby cover, while reserving earlier confirmations. Record outcomes and notify.
+3. Per date, exclude unavailable/Leave Staff and reserve confirmed picks. Put duals with >=20 **Active Hours** last week on Algorithm Standby.
+4. Rank the remaining Technicians: projected **Credited** <40 first; then last week's Active Hours, projected Active Hours, staff ID.
+5. Form both-Brand Crews (one dual or an opposite-Brand pair), up to Van count. Beyond three, preserve Full Standby cover. If below three, recall Algorithm then Leftover Standby, lowest-ranked first; never take confirmed picks.
+6. If greedy pairing loses a feasible minimum/cover arrangement, use the feasibility result. This is a small search over 11 Technicians, not an optimisation framework.
+7. Put leftovers on Standby; assign available Drivers by ID. Project Crew 8/8 and Standby 0/4 Active/Credited before the next date.
+8. Manager reviews, sets coverage Zones, allocates Jobs and publishes. Confirmed picks are hard constraints. Publication below three valid initial Crews is blocked; missing full cover can still be a reasoned warning where the minimum Crews take priority.
+9. During the day, activate eligible Standby for direct Jobs or replacements. Store per-Job attributed Staff and Replacement boundaries; preserve earlier members. Recompute the two hours figures and count the activated date once.
+10. Regeneration preserves confirmations and is refused when Jobs/manual edits would be discarded.
 
-### Before planning
-1. Manager uploads the **HR leave CSV** and the **van availability CSV**.
-2. Technicians submit their **standby-day pick** for the week (max 2 per day, one per brand, first come first served).
-
-### For each working day of the Planning Week
-3. **Remove** technicians on leave, emergency leave or MC.
-4. Put technicians who **picked today** as their standby day **on standby**.
-5. **Duals with 20 h or more last week** go on **standby, based in Central**.
-6. **Rank** the remaining technicians:
-   - by **last week's hours** (lowest first), then
-   - by **this week's hours so far** (lowest first);
-   - anyone at **40 h or more** goes to the **bottom**;
-   - ties broken by **staff ID**; new staff start at **0 h**.
-7. **Suggest crews** from the top of the ranked list. Each crew must **cover both brands** (one dual, or one M Electric + one Dicon). Max 3 people per van (1 driver + up to 2 technicians).
-8. If **fewer than 3 crews** can be formed, bring standbys back into crews, **starting with the step 5 duals**. Never use someone on leave.
-9. Everyone left over is **on standby** (assumed: usually at least 1 per brand).
-10. **Update hours** (including half hours for unused standby) before planning the next day.
-
-### After planning
-11. Manager **reviews and edits** the suggestion, then **publishes**. Overrides are **logged**. Staff are **notified**.
-
-### During the day (standby activation)
-12. If someone drops out, the system lists **today's standbys**, sorted by:
-    1. **fewest activations** (rolling 12 months), then
-    2. **closest home zone** to the job's zone.
-13. The manager **phones the top person outside the system**, then uses **Update Roster / Edit Hours** to record who took over from whom and the hours worked. Activated hours **replace** the half hours, and the technician's **activation count +1**. Staff are notified of the roster change.
-
-### Intended effects (state these in the report)
-- Technicians who were short of 40 h last week get priority this week; those who hit 40 h step back or go to standby. Hours alternating between heavier and lighter weeks is **intended** fair rotation.
-- Someone returning from leave has low hours and gets priority, which helps them reach 40 h. This is **intended**.
-- Ranking uses planned hours, so working slowly gains nothing (answers the prof's "people will delay on purpose" point).
+**Intended effects:** unused Standby credit cannot trap duals in the >=20 Active Hours branch. Lower Active Hours give crew priority; fewer activated dates give call-up priority. These rules distribute opportunities among eligible Staff; the Manager handles non-attendance. Planned duration avoids rewards for stalling.
 
 ---
 
@@ -178,7 +159,7 @@ The attribute and method names below are **suggestions** to make the mechanism v
 | IT Administrator | Keep | Creates accounts, sets home zone and certifications at creation, views Audit Log. |
 | Staff (abstract) | Modify | Remove leave balance. Keep it simple; most logic now sits on Technician. |
 | Driver | Keep (minimal) | No scheduling logic. One per crew. Note the "always available" assumption. |
-| Technician | Modify | **Add** homeZone, lastWeekHours, currentWeekHours, activationCount (rolling 12 months). Remove job-completion methods. e.g. `getActiveHours()`, `incrementActivation()`. |
+| Technician | Modify | homeZone; derived lastWeekActiveHours, projectedActiveHours, projectedCreditedHours and distinct activated-day count. No stored mutable fairness counter. |
 | Certification | Modify | **Remove** certificate number. Keep brand, expiryDate. `isValidOn(date)`. |
 | Van | **Remove** as a managed entity | Replace with **VanAvailability** (below). Crew may keep a simple vanNumber reference from the CSV. |
 | Workshop Servicing | **Remove** | Vendor's concern. |
@@ -187,14 +168,15 @@ The attribute and method names below are **suggestions** to make the mechanism v
 | **CsvImport** | **Add** | type (HR / Van), uploadedBy, uploadedAt, status, errors. `parse()`, `validate()`. |
 | Leave Request | **Remove** | Replaced by LeaveRecord. |
 | Late Availability Change Request | **Remove** | Handled outside the system. |
-| Availability | Keep | Staff still indicate availability up to 5 weeks ahead (brief requirement 8). *[Superseded: 1 month in advance, DEC-01, DEC-83.]* |
-| Job Preference | **Replace** with **StandbyPreference** | technician, weekStart, chosenDay, brandSlot (M Electric / Dicon). One per technician per week. Max 2 per day (one per brand), first come first served. |
+| Availability | Keep | Staff still indicate availability up to 1 month ahead (brief requirement 8). *[Superseded: 1 month in advance, DEC-01, DEC-83.]* |
+| Job Preference | Replace with StandbyPreference | weekStart, chosenDay, brandSlot, submittedAt, status, decidedAt, decisionReason; provisional request then capacity-checked confirmation. |
 | Job | Modify | **Remove** actual times, remark, follow-up flag, invoice photo, Completed status. **Add** zone (N/E/S/W/C). Status = Assigned / Unassigned. Cancelled = deleted. Keep customer/address/postal code, brand, job type, units, preferred date/slot, planned duration. |
 | Weekly Roster | Keep | weekStart, status (Draft / Published). `publish()` triggers notifications. |
-| Crew | Modify | date, zone, members (1 driver + 1–2 technicians), must cover both brands. Stays together all day. |
-| Assignment | Simplify | Links Job to Crew on a date. Remove completion-related history. |
-| Standby | Modify | technician, date, source (Preference / Algorithm / Leftover), activated (bool), basedInCentral (for duals). Unused = half hours; activated = actual hours. |
-| **HoursEdit** (or put on Audit Log) | **Add** | technician, date, oldHours, newHours, reason, editedBy. Created by Edit Hours. Supports "who took over whom". |
+| Crew | Modify | date, vanNumber, coverage zones, initial Driver/Technicians; membersFor(job) applies recorded replacements. |
+| Assignment | Modify | Job, dutyDate, startTime and attributed Staff. Optional Crew; a direct duty has exactly one Technician. Earlier Job Staff survive replacements. |
+| Standby | Modify | Technician/date/source/activated; retained after activation. Home Zone for ranking, max(4, Active Hours) credit, activated date counted once. |
+| **HoursEdit** | Add | Staff/date/oldActiveHours/newActiveHours/reason/Manager/time. Correct Active Hours, derive credited total. |
+| **Replacement** | Add | Crew, outgoing/incoming Technician, fromJobId, effectiveFrom, Manager/reason/time. Preserve earlier Job attribution. |
 | Job Rejection Request | Simplify | requester, assignment, reason, status (Pending / Approved / Declined). Warning shown before submission. Approved → job becomes Unassigned. |
 | Audit Log | Keep | who, what, when, why. Logs hours edits and roster overrides. Retention: rolling 12 months. |
 | Notification | Keep / make explicit | recipient, type, message, sentAt, channel. Sent on publish and every change. Backs FR-40–42. |
@@ -204,10 +186,10 @@ The attribute and method names below are **suggestions** to make the mechanism v
 | Class | Action | Responsibility |
 |---|---|---|
 | **CrewFormingService** (or RosterSuggestionEngine) | **Add** | Runs the Section 4 algorithm. e.g. `suggestRoster(week)`, `rankTechnicians(day)`, `assignStandby(day)`, `ensureMinimumCrews(day)`. |
-| **StandbyActivationService** | **Add** | `listStandbysForJob(job)` sorted by activation count then home-zone distance. |
+| **StandbyActivationService** | Add | Filter eligible candidates for direct/replacement duty before ordering by activated-day count, home-Zone distance and staff ID. |
 | **CsvImportController** | **Add** | Handles upload, parsing, validation; creates LeaveRecord / VanAvailability. |
 | **HoursController** | **Add** | Edit Hours and Update Roster; writes HoursEdit + Audit Log; recalculates workload. |
-| RuleValidator | Keep | Hard rules: certification expiry, brand coverage per crew, max 3 per van, no double booking, standby cap per day, ≥3 crews per day. |
+| RuleValidator | Keep | Certifications, person-level conflicts, Crew size/capacity, confirmed preferences, minimum-Crew feasibility plus standby coverage. No overall Standby cap. |
 | NotificationService | Keep | Sends notifications on publish and every change. |
 | **RetentionJob** (or a method on a storage class) | **Add** | Purges records and logs older than 12 months. Backs FR-10 / FR-46. |
 | Existing controllers for login, accounts, jobs, roster, requests | Keep, trimmed | Remove leave-approval and job-completion logic. |
@@ -241,7 +223,7 @@ Keep LoginPage, LandingPage, AccountAdminPage, JobAllocationPage, RequestPage. A
 ### 6.2 Design patterns (pick 2–4 and show them in the class diagram)
 | Pattern | Where it fits |
 |---|---|
-| **Strategy** | Ranking rules in CrewFormingService (e.g. `RankingStrategy` by last-week hours; standby activation ordering). Lets rules change without rewriting the engine. |
+| **Strategy** | Ranking rules in CrewFormingService (e.g. `RankingStrategy` by last-week Active Hours; standby activation ordering). Lets rules change without rewriting the engine. |
 | **Observer** | NotificationService observes roster/job changes and notifies affected staff. |
 | **Adapter** (or Factory) | CsvImport: one adapter per external format (HR CSV, Van CSV) converting to LeaveRecord / VanAvailability. |
 | **Singleton** | A single NotificationService or database connection (only if justified). |
@@ -249,10 +231,10 @@ Keep LoginPage, LandingPage, AccountAdminPage, JobAllocationPage, RequestPage. A
 
 ### 6.3 Testing: black box and white box
 **Black-box (equivalence partitioning + boundary value analysis)**, good test targets:
-- Dual 20 h threshold: 19.5 / 20 / 20.5 h last week.
+- Dual 20 h threshold: 19.5 / 20 / 20.5 Active Hours last week.
 - 40 h rule: 39.5 / 40 / 40.5 h.
 - Standby pick cap: 0, 1, 2 picks on a day; 3rd pick rejected; same-brand second pick rejected.
-- Unused standby = half hours; activated standby replaces half hours.
+- Standby daily minimum: Active/Credited 0/4, 2/4, 4/4, 5/5; multiple duties share one floor/count.
 - Minimum 3 crews: 2 / 3 / 4 crews formable.
 - Certification expiry: expires the day before / on / after the job date.
 - CSV upload: valid file, wrong columns, empty file, duplicate rows.
@@ -261,7 +243,7 @@ Keep LoginPage, LandingPage, AccountAdminPage, JobAllocationPage, RequestPage. A
 **White-box (statement / branch / path coverage)**, good targets:
 - `rankTechnicians()`: branches for ≥40 h, ties, new staff at 0 h.
 - `ensureMinimumCrews()`: path where standbys are pulled back, starting with duals.
-- `listStandbysForJob()`: sort by activation count, then distance.
+- `listStandbysForJob()`: filter eligibility, then sort by activated-day count and distance.
 - Show a control-flow graph and cyclomatic complexity for at least one of these.
 
 ### 6.4 Wireframes (screens to draw)
@@ -292,8 +274,8 @@ Show provided/required interfaces between them, e.g. Scheduling Engine requires 
 
 ## 7. Still open / kept aside (do not invent answers; flag them)
 
-- **Kept aside:** what happens when an uploaded HR CSV adds leave on a day someone already holds a standby pick or roster place (likely: the system flags the clash, and the manager resolves it).
-- How a job gets its zone (suggestion: automatically from postal code).
+- **Resolved in DEC-98:** later Leave overrides placement, is flagged for Manager repair and does not silently revoke other confirmed preferences.
+- Job Zone derives from postal sector (DEC-77); the actual lookup table remains to be supplied (SRS A6).
 - CSV upload details: deadline (before Thursday planning?), what happens to an already-published roster if a newer CSV changes availability, and handling of badly formatted files.
 
 ---
@@ -303,10 +285,11 @@ Show provided/required interfaces between them, e.g. Scheduling Engine requires 
 | Term | Meaning |
 |---|---|
 | Dual / dual-brand technician | Certified for both M Electric and Dicon. |
-| Crew | 1 driver + 1–2 technicians on one van for one day, covering both brands. |
-| Standby | Available technician not placed in a crew that day. |
-| Activation | A standby being called in to replace someone during the day. |
-| Active hours | Planned job hours + activated standby hours + manager edits (+ half hours for unused standby). |
+| Crew | Initial Driver + 1–2 Technicians on a Van/date, with one or more coverage Zones and effective membership per Job. |
+| Standby | Initially reserved Technician; record retained after activation for daily credit/history. |
+| Activation | Direct Standby duty or Crew replacement; repeated duties count one activated date. |
+| Active hours | Attributed Planned Hours of actual assigned duties; unused Standby credit is excluded. |
+| Total Credited Hours / Workload | Active Hours on ordinary days; max(4, Active Hours) on rostered Standby dates. |
 | Planning Week | The week being scheduled; allocation runs one week at a time. |
 | Zone | North, East, South, West or Central. |
 | Home zone | A technician's base zone, used to find the closest standby. |

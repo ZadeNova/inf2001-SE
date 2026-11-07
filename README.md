@@ -31,3 +31,7 @@ The submitted M1 report (9 Oct 2026) is the source of truth for M1 artefacts; th
 2. Record meetings in `elicitation/`, then update decisions and requirements with a citation to the MTG.
 3. Write use cases and diagrams from agreed requirements, and keep `traceability.md` in sync.
 4. Work on a branch and open a PR. Never push to `main`.
+
+## Current M2 clarification baseline
+
+SRS v4.1 and DEC-96–98 separate Active Hours from Total Credited Hours, retain a once-daily 4 h Standby minimum, count activated dates once, support direct Standby duties and per-Job replacements, and confirm provisional preferences after staffing checks. Start with [requirements.md](requirements.md), [m2/design.md](m2/design.md), [m2/testing.md](m2/testing.md) and [traceability.md](traceability.md). The M1 artefacts remain historical; CD-final is the current class model.

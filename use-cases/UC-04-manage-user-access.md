@@ -1,6 +1,6 @@
 # UC-04: Manage User Access
 
-> **Status: M2 v1.0 (2026-11-06).** Adds Technician profile updates (home zone, Certification expiry). The IT Administrator now owns these updates (DEC-75).
+> **Status: M2 v1.1 (2026-11-07).** Adds Technician profile updates (home zone, Certification expiry). The IT Administrator now owns these updates (DEC-75).
 
 | Field | Value |
 |---|---|
@@ -62,3 +62,5 @@
 
 - **Success:** The change is saved and logged.
 - **Failure:** Nothing changes.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

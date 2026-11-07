@@ -1,6 +1,6 @@
 # UC-16: Upload CSV
 
-> **Status: M2 v1.0 (2026-11-06).** New in M2 (DEC-74, DEC-91).
+> **Status: M2 v1.1 (2026-11-07).** New in M2 (DEC-74, DEC-91).
 
 | Field | Value |
 |---|---|
@@ -43,4 +43,4 @@
 
 ## Business rules / notes
 
-- A Leave Record overrides Availability and any Standby pick for that day (FR-52). A clash with an existing Crew place is assumed not to happen (A3); if it does, the Manager fixes it in UC-17.
+- A Leave Record overrides Availability and any Standby pick for that day (FR-52). A later clash with an existing placement is flagged for Manager repair (A3, DEC-98); preserve confirmed-request history and earlier Job attribution. CSV readiness is required before provisional picks can be confirmed.
