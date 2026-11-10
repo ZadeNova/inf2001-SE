@@ -248,7 +248,7 @@ The v4.1.1 baseline includes uncommitted corrections on codex/m2-review-fixes ab
 |---|---|---|
 | DEC-105: NFR-08 covers the offline copy; approved Option A local password unlock and successful-online-load refresh | NFR-05/08; LandingPage cache/unlock methods and note; ARCH-layered; UC-13; W-11; design notes | Planned inspection of persisted encrypted data/key protection; successful online refresh; offline reopened locked state, wrong password stays locked, correct password reveals only today Published data, no repeated prompt while unlocked. Prototype demonstrates sample states only; encryption and key lifecycle remain to be implemented/verified |
 
-Current baseline: SRS v4.1.2, commit 0ab8f1e plus uncommitted corrections on codex/m2-review-fixes. Earlier baseline sections remain historical. Existing-session key lifecycle, password change/reset handling and DEC-61 authentication details remain follow-ups; no additional offline attempt limit or session policy is inferred.
+Current baseline: SRS v4.1.2, incorporating the reviewed corrections recorded in DEC-99 and DEC-102–106. Earlier baseline sections remain historical. Existing-session key lifecycle, password change/reset handling and DEC-61 authentication details remain follow-ups; no additional offline attempt limit or session policy is inferred.
 
 
 ## 10. 2026-11-11 review representation corrections
