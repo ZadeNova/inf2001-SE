@@ -1,0 +1,25 @@
+@startuml DP-strategy-standard
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+hide circle
+title DP-strategy-standard: Standard Strategy Structure (M2)
+' Source: DEC-93; m2/design.md §4. Report §3.2 explanatory pattern roles, not additional domain classes or requirements.
+class Context {
+ -strategy: Strategy
+ +operation()
+}
+interface Strategy <<interface>> {
+ +algorithm()
+}
+class ConcreteStrategyA {
+ +algorithm()
+}
+class ConcreteStrategyB {
+ +algorithm()
+}
+Context "1" o-- "1" Strategy : delegates algorithm step
+Strategy <|.. ConcreteStrategyA
+Strategy <|.. ConcreteStrategyB
+@enduml

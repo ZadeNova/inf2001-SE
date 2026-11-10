@@ -18,8 +18,8 @@ skinparam ranksep 45
 hide circle
 hide empty members
 title CD-final: Final Class Diagram (M2)
-' Traces: SRS v4.1 FR-01, FR-02, FR-04, FR-05, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-22, FR-26, FR-27, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58; NFR-13, NFR-14; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
-' Sources: DEC-73 to DEC-98; M2-Brief §5. Packages match the components in CMP-system.
+' Traces: SRS v4.1.2 FR-01, FR-02, FR-04, FR-05, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-22, FR-26, FR-27, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58; NFR-05, NFR-08, NFR-13, NFR-14; DEC-105; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
+' Sources: DEC-73 to DEC-99; DEC-102 to DEC-105; DEC-106; M2-Brief §5. Packages match the components in CMP-system.
 ' ECB stereotypes: <<boundary>> = View, <<control>> = Controller/service, <<entity>> = Model (DEC-93).
 ' Derived values (Active/Credited hours and activated-day count) are methods, not attributes (DEC-87).
 ' Design pattern (report §3.2): Strategy = TechnicianRanking + WorkloadRanking/ActivationRanking (DEC-93).
@@ -37,7 +37,10 @@ package "Web UI (Presentation layer)" {
   +selectWeek(week)
   +selectAssignment(assignment)
   +markHandled(alert)
+  +cacheToday(staff, assignments)
   +loadCachedToday()
+  +unlockCachedToday(password)
+  +clearCachedToday()
   +logOut()
  }
  class AccountAdminPage <<boundary>> {
@@ -251,16 +254,17 @@ package "Domain Model (Data layer)" {
   -active: Boolean
   -locked: Boolean
   -failedAttempts: Integer
-  -knownDevices: Set<String>
+  -firstFailedAt: DateTime [0..1]
+  -knownDevices: Map<String, DateTime>
   +checkCredentials(password): Boolean
-  +recordFailedAttempt()
+  +recordFailedAttempt(at: DateTime)
   +lock()
   +unlock()
   +setRole(role: Role)
   +setPassword(password)
   +deactivate()
-  +isKnownDevice(device): Boolean
-  +rememberDevice(device)
+  +isKnownDevice(device, now: DateTime): Boolean
+  +rememberDevice(device, usedAt: DateTime)
  }
  class PasswordResetToken <<entity>> {
   -tokenHash: String
@@ -339,8 +343,8 @@ package "Domain Model (Data layer)" {
   -uploadedAt: DateTime
   -status: ImportStatus
   -errors: List<String>
-  +parse(file)
-  +validate(): Boolean
+  +parse(file): List<Map<String, String>>
+  +recordValidation(errors: List<String>)
   +commit()
  }
  class LeaveRecord <<entity>> {
@@ -424,6 +428,7 @@ package "Domain Model (Data layer)" {
   -message: String
   -createdAt: DateTime
   -handled: Boolean
+  -deliveryState: Map<String, String>
   +markSent(channel)
   +markFailed(channel)
   +markHandled()
@@ -562,7 +567,6 @@ AuditLogPage ..> AccountController
 JobPage ..> JobController
 CsvUploadPage ..> CsvImportController
 JobAllocationPage ..> RosterController
-JobAllocationPage ..> CrewFormingService
 UpdateRosterPage ..> HoursController
 StandbyListView ..> StandbyActivationService
 AvailabilityPage ..> AvailabilityController
@@ -575,15 +579,17 @@ AuthController ..> Account
 AuthController ..> PasswordResetToken
 AccountController ..> User
 AccountController ..> Certification
+AccountController ..> RosterController : remove future roster places
 AvailabilityController ..> Availability
 AvailabilityController ..> RuleValidator
 StandbyPreferenceController ..> StandbyPreference
 StandbyPreferenceController ..> RuleValidator
 StandbyPreferenceController ..> NotificationService
 RequestController ..> JobRejectionRequest
+RequestController ..> RosterController : approved unassignment
 RequestController ..> NotificationService
 CsvImportController ..> CsvImport
-CsvImport "1" o-- "1" CsvRowMapper : maps rows with
+CsvImportController "1" o-- "1" CsvRowMapper : maps rows with
 JobController ..> Job
 JobController ..> RuleValidator
 JobController ..> NotificationService
@@ -600,6 +606,8 @@ RosterController ..> RuleValidator
 RosterController ..> StandbyPreferenceController
 RosterController ..> CrewFormingService
 RosterController ..> WeeklyRoster
+RosterController ..> Assignment
+RosterController ..> Job
 RosterController ..> NotificationService
 HoursController ..> HoursEdit
 HoursController ..> Standby
@@ -612,12 +620,49 @@ NotificationService "1" o-- "1..*" NotificationChannel : sends through
 NotificationService ..> Notification
 RetentionJob ..> AuditLog
 
+note bottom of LandingPage
+ NFR-05/08/13; DEC-102/105: per-user today Published Assignments only.
+ Each successful online load refreshes the encrypted read-only copy.
+ Password-derived/protected key; no readable persisted decryption key.
+ Stored device data must not reveal the copy without the Staff password.
+ Reopening offline after app closure needs unlockCachedToday(password),
+ checked locally with no connection/server login. Wrong password stays locked;
+ no repeated prompt while unlocked. loadCachedToday() checks Staff/date.
+ logOut() clears the copy; passed dates cannot be viewed.
+ Algorithm/library and key lifecycle details remain to be specified.
+ Authoritative database records and logs remain on-site.
+end note
+
+note bottom of CsvImport
+ FR-52-54; DEC-104/106: parse(file) returns rows only.
+ CsvImportController uses its CsvRowMapper to check columns/rows,
+ collects whole-file errors and calls recordValidation(errors).
+ Errors => Rejected; save no LeaveRecord/VanAvailability.
+ No errors => controller maps validated rows; in one transaction,
+ replaces records for the file dates, calls commit() to mark Committed
+ and writes the successful-upload AuditLog entry.
+ The entity has no dependency on the application-layer mapper.
+end note
+
+note bottom of Account
+ firstFailedAt anchors the 15-minute failed-login window (FR-48).
+ knownDevices maps each device to its last-used time;
+ isKnownDevice() checks the 30-day rule (NFR-07).
+end note
+
+note bottom of Notification
+ deliveryState stores Pending/Sent/Failed separately for email and SMS.
+ Landing Page handled state is independent of delivery (FR-39, FR-40).
+end note
+
 note bottom of TechnicianRanking
  Strategy (report §3.2, DEC-93).
  WorkloadRanking: last week's Active Hours, projected Active Hours,
  staff ID; classifyTechnicians() puts projected Credited >=40 h last (FR-55).
  ActivationRanking: eligible candidates only; fewest activated dates (12 months),
  then zone distance, then staff ID (FR-56).
+ At application construction, CrewFormingService receives WorkloadRanking;
+ StandbyActivationService receives ActivationRanking (DEC-93).
 end note
 
 note bottom of Standby

@@ -12,7 +12,7 @@
 | **Trigger** | A pending request appears on the Manager's Landing Page, or the Job's start time arrives while it is pending. |
 | **Linked requirements** | FR-05, FR-34, FR-40, FR-38, FR-39, FR-49 |
 | **Source** | Brief R10; INT-MGR [Conflicts Q3]; DEC-42; DEC-59; DEC-66; DEC-91 |
-| **Classes** | RequestReviewPage, RequestController, JobRejectionRequest, Assignment, Job, NotificationService, AuditLog |
+| **Classes** | RequestReviewPage, RequestController, JobRejectionRequest, RosterController, Assignment, Job, NotificationService, AuditLog |
 | **Wireframe** | W-16 Request review |
 | **Status** | Agreed |
 
@@ -26,7 +26,7 @@
 |---|---|---|
 | 1 | Opens pending requests. | Lists Pending Job Rejection Requests with the Job, date, Crew or direct Technician, reason and comment (FR-40). |
 | 2 | Chooses Approve or Refuse, optionally with a reason. | `RequestController.decideJobRejection()`. |
-| 3 | — | **Approve:** `JobRejectionRequest.approve()` and `Job.markUnassigned()`; the Job leaves its Crew or direct allocation and the Unassigned count rises (FR-34). **Refuse:** `refuse(reason)`; the Assignment stands. |
+| 3 | — | **Approve:** `JobRejectionRequest.approve()` and delegate to `RosterController.unassignJob()`, which calls `Job.markUnassigned()`; the Job leaves its Crew or direct allocation and the Unassigned count rises (FR-34). **Refuse:** `refuse(reason)`; the Assignment stands. |
 | 4 | — | Logs the decision and notifies the requester and affected attributed Staff through UC-15 (FR-39, FR-49). |
 
 ## Alternative flows

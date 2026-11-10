@@ -1,6 +1,6 @@
 # Traceability Matrix
 
-> **M2 baseline v4.1 (2026-11-07):** SRS v4.1, use-case list v3.1, [CD-final](diagrams/CD-final.puml), [CMP-system](diagrams/CMP-system.puml), [m2/testing.md](m2/testing.md) and [m2/wireframes.md](m2/wireframes.md) (DEC-73 to DEC-98).
+> **M2 working baseline v4.1.2 (2026-11-10):** SRS v4.1.2 (DEC-99/102–105), use-case list v3.1, [CD-final](diagrams/CD-final.puml), [CMP-system](diagrams/CMP-system.puml), [m2/testing.md](m2/testing.md) and [m2/wireframes.md](m2/wireframes.md) (DEC-73 to DEC-98).
 > Builds on the M1 report baseline (DEC-72): SRS v3.5, 43-class analysis model and 21 sequence diagrams SD-01–SD-21, whose matrix is in git history. M1 diagram status after the M2 changes is in §5; the draft SD-18 Allocate Job was already archived before M2.
 > Component names match the CD-final packages. W-nn = wireframe screen. BB/WB = black-box and white-box test cases.
 
@@ -23,8 +23,8 @@
 | FR-27 | Brief §Company ¶2–3; DEC-84; DEC-97 | UC-07, UC-17 | Assignment, Crew, Certification, RuleValidator | Scheduling Engine | SC-13 | W-06, W-10 |
 | FR-01 | DEC-11; DEC-77 | UC-05 | Job, JobController, Zone | Job Management | SRS note | W-04 |
 | FR-02 | DEC-22 | UC-05 | JobController, Job | Job Management | SRS note | W-04 |
-| FR-04 | DEC-76 | UC-05 | JobController, Job, NotificationService | Job Management | SRS note | W-04 |
-| FR-05 | DEC-42; DEC-76 | UC-05, UC-09 | Job | Job Management | SRS note | W-04, W-16 |
+| FR-04 | DEC-76; DEC-103 | UC-05 | JobController, Job, NotificationService | Job Management | SRS note | W-04 |
+| FR-05 | DEC-42; DEC-76 | UC-05, UC-09 | Job, RequestController, AccountController, RosterController | Job Management, Staff Inputs, Account Management, Roster & Hours | SRS note | W-04, W-16 |
 | FR-07 | Brief R3; DEC-16; DEC-97 | UC-07, UC-17 | RosterController, HoursController, Assignment, Job | Roster & Hours | SC-05, SC-14 | W-06, W-09 |
 | FR-08 | DEC-12; DEC-31; DEC-97 | UC-07, UC-17 | Assignment, RuleValidator | Roster & Hours | SC-14 | W-06, W-09 |
 | FR-31 | Brief R4, R5; DEC-77; DEC-79 | UC-08 | RosterController, Technician, StandbyPreference | Roster & Hours | SRS note | W-07 |
@@ -35,36 +35,36 @@
 | FR-10 | DEC-16; DEC-88; DEC-97, DEC-98 | UC-07, UC-17 | RosterController, HoursController, Assignment, Replacement | Roster & Hours | SC-05, SC-15 | W-06, W-09 |
 | FR-11 | INT-MGR [System Q2]; DEC-85 | UC-07 | RosterController, Crew | Roster & Hours | SRS note | W-06 |
 | FR-35 | DEC-31; DEC-78; DEC-96, DEC-97 | UC-07, UC-10, UC-13, UC-17 | Staff, Job, Assignment, Replacement, Standby, HoursEdit | Domain Model | SC-01–05 | W-03, W-09, W-11 |
-| FR-36 | Brief R6; DEC-04; DEC-86 | UC-07, UC-10, UC-13 | Staff | Domain Model | SRS boundary 40.0/40.5 | W-03, W-11 |
+| FR-36 | Brief R6; DEC-04; DEC-86; DEC-104 | UC-07, UC-10, UC-13 | Staff | Domain Model | SRS boundary 40.0/40.5; Driver/Technician display check | W-03, W-06, W-07, W-09, W-10, W-11 |
 | FR-40 | Brief R2, R6; DEC-05 | UC-10 | DashboardController, Notification | Roster & Hours | SRS note | W-03 |
 | FR-41 | Brief R7 | UC-12, UC-13 | DashboardController, Staff | Roster & Hours | SRS note | W-11 |
 | FR-42 | DEC-37 | UC-13 | Assignment | Domain Model | SRS note | W-11 |
 | FR-37 | Brief R10; DEC-42; DEC-66 | UC-12 | RequestController, JobRejectionRequest, RequestPage | Staff Inputs | SRS note | W-15 |
-| FR-38 | Brief R10; DEC-42 | UC-09 | RequestController, JobRejectionRequest, Job | Staff Inputs | SRS note | W-16 |
-| FR-39 | DEC-46; DEC-48; DEC-88 | UC-15 | NotificationService, NotificationChannel, EmailChannel, SmsChannel, Notification | Notification | SRS note | W-11, W-03 |
+| FR-38 | Brief R10; DEC-42 | UC-09 | RequestController, JobRejectionRequest, RosterController, Assignment, Job | Staff Inputs, Roster & Hours | SRS note | W-16 |
+| FR-39 | DEC-46; DEC-48; DEC-88; DEC-103 | UC-15 | NotificationService, NotificationChannel, EmailChannel, SmsChannel, Notification | Notification | SRS note | W-11, W-03 |
 | FR-49 | DEC-17; DEC-89 | UC-04 (view); all changing UCs | AuditLog, AccountController | Domain Model | SRS note | W-13 |
 | FR-50 | DEC-34; DEC-76 | UC-05 | JobController | Job Management | SRS note | W-04 |
 | FR-30 | DEC-81; DEC-96, DEC-97, DEC-98 | UC-07, UC-17 | Standby, RosterController, RuleValidator | Roster & Hours | SC-01–04, SC-15 | W-06, W-09 |
-| FR-51 | Brief R9; DEC-79; DEC-98 | UC-18; confirmation in UC-07 | StandbyPreferenceController, StandbyPreference, RuleValidator, NotificationService | Staff Inputs | BB-01–06 (submission); SC-06–09, SC-15 (confirmation) | W-06, W-14 |
-| FR-52 | DEC-74 | UC-16 | CsvImportController, CsvImport, HrLeaveCsvMapper, LeaveRecord | CSV Import | SRS note | W-05 |
+| FR-51 | Brief R9; DEC-79; DEC-98; DEC-104 | UC-18; confirmation in UC-07 | StandbyPreferenceController, StandbyPreference, RuleValidator, NotificationService | Staff Inputs | BB-01–06 (six submission rules), BB-07 (R6 no-op); SC-06–09, SC-15 (confirmation) | W-06, W-14 |
+| FR-52 | DEC-74; DEC-104; DEC-106 | UC-16 | CsvImportController, CsvImport, HrLeaveCsvMapper, LeaveRecord | CSV Import | SRS note | W-05 |
 | FR-53 | DEC-74; DEC-85 | UC-16 | CsvImportController, CsvImport, VanAvailabilityCsvMapper, VanAvailability | CSV Import | SRS note | W-05 |
-| FR-54 | DEC-74 | UC-16 | CsvImport, CsvRowMapper | CSV Import | SRS note | W-05 |
-| FR-55 | Brief R3; DEC-80; DEC-96, DEC-98 | UC-07 | CrewFormingService, RuleValidator, TechnicianRanking, WorkloadRanking, Crew, Standby | Scheduling Engine | WB-01–07; SC-10–12 | W-06 |
+| FR-54 | DEC-74; DEC-104; DEC-106 | UC-16 | CsvImportController, CsvImport, CsvRowMapper | CSV Import | SRS note | W-05 |
+| FR-55 | Brief R3; DEC-80; DEC-96, DEC-98 | UC-07 | RosterController, StandbyPreferenceController, CrewFormingService, RuleValidator, TechnicianRanking, WorkloadRanking, Crew, Standby | Roster & Hours, Staff Inputs, Scheduling Engine | WB-01–07; SC-10–12 | W-06 |
 | FR-56 | DEC-81; DEC-96, DEC-97 | UC-17 | StandbyActivationService, RuleValidator, ActivationRanking, Standby | Scheduling Engine | SC-13, SC-14 | W-10 |
 | FR-57 | DEC-78; DEC-81; DEC-96, DEC-97 | UC-17 | HoursController, HoursEdit, Standby, Assignment, Replacement | Roster & Hours | SC-01–05, SC-14 | W-09 |
 | FR-58 | DEC-89 | — (Clock) | RetentionJob | Audit & Retention | SRS note | — |
 | NFR-01 | INT-ITA [Q: Response time] | All | — | All | Load test | — |
 | NFR-02 | INT-ITA [Q: Concurrency] | All | — | All | Load test | — |
 | NFR-03, NFR-04 | INT-ITA [Q: Outage], [Q: Restore] | — | RetentionJob | Database | Ops check | — |
-| NFR-05 | INT-DCT [Questionnaire C18/C19] | UC-13 | LandingPage | Web UI | Airplane-mode test | W-11 |
+| NFR-05 | INT-DCT [Questionnaire C18/C19]; DEC-102/105 | UC-01, UC-13 | LandingPage | Web UI | Successful-online-load refresh; local unlock/wrong-password/no-repeat checks; offline scope, per-user isolation, logout and date expiry | W-11 |
 | NFR-06 | INT-ITA [Q: Connection failure] | All | — | Web UI | SRS note | — |
 | NFR-07 | DEC-41 | UC-01 | Account | Authentication | SRS note | W-01 |
-| NFR-08 | INT-ITA [Q: Safeguards] | UC-01–UC-03 | Account, PasswordResetToken | Database | DB inspection | — |
+| NFR-08 | INT-ITA [Q: Safeguards]; DEC-105 | UC-01–UC-03, UC-13 | Account, PasswordResetToken, LandingPage | Database, Web UI | DB/browser storage inspection; no readable persisted decryption key; offline correct/incorrect password unlock | W-11 |
 | NFR-09 | DEC-17; DEC-18 | All | all controllers | Application layer | Permission matrix | — |
 | NFR-10 | DEC-34; DEC-89 | — | RetentionJob | Audit & Retention | SRS note | — |
 | NFR-11 | Brief R1 | All | all boundaries | Web UI | Browser matrix | All |
 | NFR-12 | INT-MGR [Closing] | UC-11, UC-12, UC-18 | — | Web UI | Walkthrough | W-12, W-14, W-15 |
-| NFR-13 | DEC-89 | — | — | Database | Deployment check | — |
+| NFR-13 | DEC-89; DEC-102 | UC-13 (offline exception) | LandingPage | Database, Web UI | On-site authoritative-store check; NFR-05 cache-scope/lifecycle checks | W-11 |
 | NFR-14 | DEC-87 | — | all entities | Domain Model | Attribute review | — |
 
 Withdrawn requirements (SRS §3.15, §4.1) have no row here.
@@ -81,7 +81,7 @@ Withdrawn requirements (SRS §3.15, §4.1) have no row here.
 | UC-06 | — | — (Withdrawn) | — | — | — |
 | [UC-07](use-cases/UC-07-allocate-jobs-set-weekly-schedule.md) | Manager | UCD-system | Scheduling Engine, Roster & Hours | W-06 | WB-01 to WB-07 |
 | [UC-08](use-cases/UC-08-compare-staff.md) | Manager | UCD-system | Roster & Hours | W-07 | — |
-| [UC-09](use-cases/UC-09-manage-staff-request.md) | Manager; Clock | UCD-system | Staff Inputs | W-16 | — |
+| [UC-09](use-cases/UC-09-manage-staff-request.md) | Manager; Clock | UCD-system | Staff Inputs, Roster & Hours | W-16 | — |
 | [UC-10](use-cases/UC-10-view-manpower-dashboard.md) | Manager | UCD-system | Roster & Hours | W-03, W-08 | — |
 | [UC-11](use-cases/UC-11-set-availability-and-preferences.md) | Staff | UCD-system | Staff Inputs | W-12 | — |
 | [UC-12](use-cases/UC-12-manage-requests.md) | Staff | UCD-system | Staff Inputs | W-15 | — |
@@ -145,7 +145,7 @@ Withdrawn requirements (SRS §3.15, §4.1) have no row here.
 | CL-SmsChannel | class | Notification | FR-39 | **New** |
 | CL-RetentionJob | control | Audit & Retention | FR-58, NFR-10 | **New** |
 | CL-LoginPage | boundary | Web UI | FR-43, FR-47 | Kept |
-| CL-LandingPage | boundary | Web UI | FR-14, FR-40, FR-41, NFR-05 | Kept |
+| CL-LandingPage | boundary | Web UI | FR-14, FR-40, FR-41, NFR-05, NFR-08, NFR-13 | Kept |
 | CL-AccountAdminPage | boundary | Web UI | FR-44, FR-45, FR-46, FR-22 | Kept |
 | CL-AuditLogPage | boundary | Web UI | FR-49 | **New** (split from AccountAdminPage) |
 | CL-JobPage | boundary | Web UI | FR-01, FR-04 | Kept |
@@ -169,6 +169,7 @@ Withdrawn requirements (SRS §3.15, §4.1) have no row here.
 | [CMP-system](diagrams/CMP-system.puml) | §2 | v4.1 rules; rendered locally with PlantUML 1.2026.8; team review pending |
 | [ARCH-layered](diagrams/ARCH-layered.puml) | §3.1 | v4.1 rules; rendered locally with PlantUML 1.2026.8; team review pending |
 | [DP-strategy-ranking](diagrams/DP-strategy-ranking.puml) | §3.2 | v4.1 rules; rendered locally with PlantUML 1.2026.8; team review pending |
+| [DP-strategy-standard](diagrams/DP-strategy-standard.puml) | §3.2 | Standard pattern-role exposition; DEC-93/99; no additional domain classes or requirements |
 | [CFG-classify-technicians](diagrams/CFG-classify-technicians.puml) | §4.2 | v4.1 rules; rendered locally with PlantUML 1.2026.8; team review pending |
 
 ## 5. M1 diagrams after the M2 changes
@@ -226,5 +227,34 @@ The draft IDs SD-07, SD-09, SD-12 and SD-26 to SD-30 were consolidated before su
 | DEC-97 Direct duty, eligible replacement, per-Job history, coverage Zones | CD-final Assignment/Replacement/Crew; CMP/ARCH; UC-05/07/09/12/17 | SC-05, SC-11, SC-13/14 |
 | DEC-98 Provisional confirmation, no override, capacity | CD-final StandbyPreference/RuleValidator; CMP IStaffInputs; UC-07/18 and UC-15 exception | BB-01–06; SC-06–09, SC-12, SC-15 |
 
-The 16 active UC IDs and 45 active FR IDs are unchanged. M1 sources/interviews and historical decision entries are preserved. Current diagrams render locally; this is design verification, not execution of an implemented scheduling application. Wireframe descriptions are updated, but finished screen screenshots remain a separate deliverable.
+The 16 active UC IDs and 45 active FR IDs are unchanged. M1 sources/interviews and historical decision entries are preserved. Current diagrams render locally; this is design verification, not execution of an implemented scheduling application. The corrected prototype is retained in m2/wireframes-prototype.html. Screenshots are report illustrations; production-code execution is not claimed.
 
+
+
+## 8. v4.1.1 second-review coverage
+
+| Decision | Current design / use cases | Verification |
+|---|---|---|
+| DEC-102 resolves historical DEC-100 | NFR-05/13; LandingPage cache methods/note; ARCH-layered; UC-01/13; W-11 | Per-user today-only offline scope, no changes, logout clear and date expiry; on-site authoritative-store inspection |
+| DEC-103 resolves historical DEC-101 | FR-04/39; UC-05/15; W-04 | Draft deletion sends no Staff notice; Published Assigned Job deletion notifies attributed Staff; existing preference exception retained |
+| DEC-104 source/quality/design presentation corrections | SRS §11 lecture-trait assessment; CsvImportController → CsvRowMapper checks → CsvImport.recordValidation(errors); CD/CMP/ARCH; UC-16; W-06 | BB-07 supplements R6 without a seventh rule; full 32-combination table and CFG unchanged; Driver >40 h display; prototype syntax/data checks and report/source parity |
+
+The v4.1.1 baseline includes uncommitted corrections on codex/m2-review-fixes above 0ab8f1e. Historical decision/log entries are preserved; no new commit or team review is claimed.
+
+
+## 9. v4.1.2 encrypted offline-copy clarification
+
+| Decision | Current design / use cases | Verification |
+|---|---|---|
+| DEC-105: NFR-08 covers the offline copy; approved Option A local password unlock and successful-online-load refresh | NFR-05/08; LandingPage cache/unlock methods and note; ARCH-layered; UC-13; W-11; design notes | Planned inspection of persisted encrypted data/key protection; successful online refresh; offline reopened locked state, wrong password stays locked, correct password reveals only today Published data, no repeated prompt while unlocked. Prototype demonstrates sample states only; encryption and key lifecycle remain to be implemented/verified |
+
+Current baseline: SRS v4.1.2, commit 0ab8f1e plus uncommitted corrections on codex/m2-review-fixes. Earlier baseline sections remain historical. Existing-session key lifecycle, password change/reset handling and DEC-61 authentication details remain follow-ups; no additional offline attempt limit or session policy is inferred.
+
+
+## 10. 2026-11-11 review representation corrections
+
+| Decision | Current artefacts | Verification |
+|---|---|---|
+| DEC-106: D1–D4 editorial/design clarification; no behavioural decision change | SRS §11; FR-52/54 mechanisms; UC-16; CD-final CsvImport note; design and wireframe prose; report | Source/report parity; one transaction includes file-date replacement, Committed status and successful-upload AuditLog; all requirement statements, IDs, class definitions/relationships, tests and prototype unchanged |
+
+The SRS remains v4.1.2. Historical decision/log entries remain unchanged; the correction does not resolve existing source gaps or add a workflow.

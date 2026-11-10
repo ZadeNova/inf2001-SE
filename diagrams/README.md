@@ -42,11 +42,14 @@ All UML diagrams are kept as PlantUML source here, **one diagram per file**. The
 | `CMP-system.puml` | §2 | Components with provided (lollipop) and required («use») interfaces |
 | `ARCH-layered.puml` | §3.1 | Layered 3-tier with MVC in the web tier |
 | `DP-strategy-ranking.puml` | §3.2 | Strategy excerpt of CD-final |
+| `DP-strategy-standard.puml` | §3.2 | Standard Strategy roles for comparison with the applied excerpt; explanatory roles only (DEC-93/99) |
 | `CFG-classify-technicians.puml` | §4.2 | CFG for `CrewFormingService.classifyTechnicians()` |
 
 `CD-domain`, `CD-control` and `CD-boundary` are the M1 analysis views (report Figures 4.1a–c), superseded by `CD-final` for M2. The status of the M1 activity and sequence diagrams after M2 is in [traceability.md §5](../traceability.md).
 
 All six current M2 sources were rendered locally with PlantUML 1.2026.8 for the v4.1 update. Team review is still required. M1 sources below are historical and have not been rewritten.
+
+The 10 November consistency correction (DEC-99) adds the standard Strategy source and aligns the final CD/CMP dependencies with the existing controller flows: prepare/confirm before suggestion, roster delegation for account/request changes, Job edit validation and application-owned CSV mapping. Account/device timestamps and per-channel delivery state make FR-48, NFR-07 and FR-39/40 representable without adding requirements. The historical DEC-100/101 questions are resolved by DEC-102/103. SRS v4.1.1 / DEC-104 adds the scoped LandingPage cache lifecycle, makes the controller-to-mapper CSV validation hand-off explicit through CsvImport.recordValidation(errors), and explains the two-way application-component dependency. SRS v4.1.2 / DEC-105 adds the encrypted-copy refresh trigger and LandingPage local password unlock, with locked/wrong-password/no-repeat behaviour; the stored-data protection goal and unresolved key-lifecycle details are explicit. Current report projections must be regenerated from these canonical sources; no M1 source is rewritten.
 
 ## Rendering locally
 

@@ -49,6 +49,13 @@ TechnicianRanking <|.. ActivationRanking : <<ConcreteStrategy>>
 WorkloadRanking ..> Technician
 ActivationRanking ..> Technician
 
+note top of TechnicianRanking
+ Application construction supplies WorkloadRanking to CrewFormingService
+ and ActivationRanking to StandbyActivationService (DEC-93).
+ Tests can supply another implementation of the same interface.
+ Runtime user switching is not required.
+end note
+
 note right of WorkloadRanking
  FR-55 step 4 (applied separately to the
  projected Credited under-40 h / >=40 h groups that

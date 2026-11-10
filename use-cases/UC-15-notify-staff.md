@@ -1,6 +1,6 @@
 # UC-15: Notify Staff
 
-> **Status: M2 v1.1 (2026-11-07).** Delivery goes through the «system» actors Email Service and SMS Gateway via the NotificationChannel interface (DEC-88, DEC-91).
+> **Status: M2 v1.1.1 (2026-11-10).** SRS v4.1.1; Draft deletion suppression follows DEC-103. Delivery goes through the «system» actors Email Service and SMS Gateway via the NotificationChannel interface (DEC-88, DEC-91).
 
 | Field | Value |
 |---|---|
@@ -12,7 +12,7 @@
 | **Trigger** | UC-05, UC-07, UC-09 or UC-17 commits a notifying event (FR-39). |
 | **Included by** | UC-05, UC-07, UC-09, UC-17 |
 | **Linked requirements** | FR-09, FR-39, NFR-06 |
-| **Source** | M2-Brief §3.2; DEC-46; DEC-48; DEC-62; DEC-64; DEC-88 |
+| **Source** | M2-Brief §3.2; DEC-46; DEC-48; DEC-62; DEC-64; DEC-88; DEC-103 |
 | **Classes** | NotificationService, NotificationChannel, EmailChannel, SmsChannel, Notification |
 | **Wireframe** | W-11 (notification list); W-03 (Manager alerts) |
 | **Status** | Agreed |
@@ -21,7 +21,7 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | — | `NotificationService.notify(event, recipients)` skips Draft Assignment events (DEC-64). Preference decisions made during UC-07 are an explicit exception: notify Confirmed/NotConfirmed once, without exposing Draft Jobs (DEC-98). |
+| 1 | — | `NotificationService.notify(event, recipients)` skips Draft Assignment events, including deletion of an Assigned Job in a Draft (DEC-64/103). Preference decisions made during UC-07 are an explicit exception: notify Confirmed/NotConfirmed once, without exposing Draft Jobs (DEC-98). |
 | 2 | — | Creates one `Notification` per recipient with what changed, the date and a link (FR-39). |
 | 3 | Email Service, SMS Gateway | Each `NotificationChannel.send()` delivers it, and `Notification.markSent(channel)` records the delivery. |
 
@@ -31,4 +31,4 @@
 
 1. `Notification.markFailed(channel)`; the message stays on the Landing Page and is retried under NFR-06.
 
-**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.
+**v1.1.1 basis:** DEC-96–98; DEC-103; SRS v4.1.1. Historical M1 sequence sources require review before reuse.

@@ -1,6 +1,6 @@
 # UC-05: Manage Job
 
-> **Status: M2 v1.1 (2026-11-07).** The zone comes from the postal code. A customer cancellation deletes the Job. Linked Jobs and Completed status are removed (DEC-76, DEC-77, DEC-90).
+> **Status: M2 v1.1.1 (2026-11-10).** SRS v4.1.1; Draft deletion notices follow DEC-103. The zone comes from the postal code. A customer cancellation deletes the Job. Linked Jobs and Completed status are removed (DEC-76, DEC-77, DEC-90).
 
 | Field | Value |
 |---|---|
@@ -11,7 +11,7 @@
 | **Description** | The Manager creates, edits or deletes a customer Job. |
 | **Trigger** | A customer books, changes or cancels a service. |
 | **Linked requirements** | FR-01, FR-02, FR-04, FR-05, FR-34, FR-50 |
-| **Source** | INT-MGR [Process Q2], [added follow-up: cancellations]; DEC-11; DEC-22; DEC-76; DEC-77 |
+| **Source** | INT-MGR [Process Q2], [added follow-up: cancellations]; DEC-11; DEC-22; DEC-76; DEC-77; DEC-103 |
 | **Classes** | JobPage, JobController, RuleValidator, NotificationService, Job, Assignment, AuditLog |
 | **Wireframe** | W-04 Job form |
 | **Status** | Agreed |
@@ -32,12 +32,12 @@
 ### A1: Edit (branches at step 1)
 
 1. The Manager changes a future Job. `Job.changeDetails()` runs and, if the Job is Assigned, `RuleValidator.checkBlocking()`.
-2. If the edit breaks a rule, `Job.markUnassigned(reason)` runs and the Manager is told why. If the Job is still Assigned, the attributed Staff is notified (UC-15).
+2. If the edit breaks a rule, `Job.markUnassigned(reason)` runs and the Manager is told why. If its Assignment is Published and remains Assigned, the attributed Staff are notified (UC-15); Draft Assignment changes remain suppressed (FR-39).
 
 ### A2: Customer cancels (branches at step 1)
 
 1. The Manager chooses Delete and confirms.
-2. If the Job is Assigned, its attributed Staff is notified through UC-15 first. `JobController.deleteJob()` then removes the Job and its Assignment and logs it (FR-04).
+2. If the Job is Assigned in a Published Weekly Roster, its attributed Staff are notified through UC-15 first. If its Assignment is Draft, no Staff notice is sent. `JobController.deleteJob()` then removes the Job and its Assignment and logs it (FR-04/39; DEC-103).
 
 ## Exception flows
 
@@ -58,4 +58,4 @@
 - **Success:** The Job is saved, changed or deleted, and the change is logged.
 - **Failure:** The Job is unchanged.
 
-**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.
+**v1.1.1 basis:** DEC-96–98; DEC-103; SRS v4.1.1. Historical M1 sequence sources require review before reuse.

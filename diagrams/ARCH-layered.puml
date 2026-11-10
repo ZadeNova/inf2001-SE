@@ -10,7 +10,7 @@ skinparam rectangleBorderColor black
 skinparam componentStyle rectangle
 skinparam packageBackgroundColor white
 title ARCH-layered: Layered (3-tier) Architecture with MVC in the Web Tier (M2)
-' Traces: DEC-93; DEC-96-98; NFR-11; NFR-13; CD-final; CMP-system.
+' Traces: DEC-93; DEC-96-99; DEC-102; DEC-104; DEC-105; NFR-05; NFR-08; NFR-11; NFR-13; CD-final; CMP-system.
 ' Each layer only calls the layer directly below it. ECB mapping: boundary = View, control = Controller/service, entity = Model.
 top to bottom direction
 
@@ -35,10 +35,23 @@ rectangle "<<system>>\nSMS Gateway" as SMS
 
 Users --> Views : HTTPS
 Views --> Controllers : requests / page data
+Views --> Services : eligible Standby list (read)
 Controllers --> Services : scheduling, validation,\nnotification
 Controllers --> Model : read / change entities
 Services --> Model : read / change entities
 Model --> DB : persist
 Services --> Email : NotificationChannel
 Services --> SMS : NotificationChannel
+
+note left of Views
+ NFR-05/08/13; DEC-102/105:
+ today's Published Assignments only, per user;
+ encrypted, with no readable persisted decryption key.
+ Refresh after successful online today-data load.
+ Reopen offline: local password unlock, no connection
+ or server login; no repeated prompt while unlocked.
+ Clear at logout; expire when its date passes.
+ Key-lifecycle details remain to be specified.
+ Authoritative records and logs stay on-site.
+end note
 @enduml

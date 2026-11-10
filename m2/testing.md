@@ -1,7 +1,7 @@
 # M2 Test Design (report §4)
 
-> **Status: Draft v1.1 (2026-11-07).** Built from SRS v4.1 and CD-final (DEC-94). The black-box and white-box sections use **different methods**, as the template requires.
-> Example dates: Planning Week Monday 19 to Saturday 24; Availability Deadline Wednesday 7, 18:00.
+> **Status: Draft v1.1.1 (2026-11-10).** Built from SRS v4.1.1 and CD-final (DEC-94/104). The black-box and white-box sections use **different methods**, as the template requires.
+> Example dates: Planning Week 19–24 October 2026; Availability Deadline 7 October 2026, 18:00. Test fixtures are synthetic and independent.
 
 ---
 
@@ -9,7 +9,7 @@
 
 ### 1.1 Method and expected behaviour
 
-`submitPick(technician, week, day, brand)` saves a Technician's one **provisional** Standby-day request for a Planning Week (FR-51, UC-18). It calls `RuleValidator.checkStandbyPick()`, which checks the conditions **in the order below and reports the first that fails**. If every check passes, it saves a Provisional pick with submittedAt, replacing any earlier pick the Technician had that week and freeing that slot.
+`submitPick(technician, week, day, brand)` saves a Technician's one **provisional** Standby-day request for a Planning Week (FR-51, UC-18). It calls `RuleValidator.checkStandbyPick()`, which checks the conditions **in the order below and reports the first that fails**. If every check passes, it saves a Provisional pick with submittedAt, replacing a different earlier pick the Technician had that week and freeing that slot. Re-submitting the same day/Brand is a no-op and preserves submittedAt (UC-18 Alternatives).
 
 ### 1.2 Causes (conditions) and effects
 
@@ -28,13 +28,13 @@
 | E3 | Refuse: "You are not certified for this Brand on that day" |
 | E4 | Refuse: "This slot has just been taken" |
 | E5 | Save the new provisional pick |
-| E6 | Replace the existing provisional pick: free the old slot and save the new one |
+| E6 | If day/Brand changed, replace the existing provisional pick, free the old slot and reset submittedAt; the same day/Brand is a no-op preserving submittedAt |
 
 ### 1.3 Complete decision table (2⁵ = 32 combinations)
 
 | # | C1 | C2 | C3 | C4 | C5 | Effect | Reduced rule |
 |---|---|---|---|---|---|---|---|
-| 1 | T | T | T | T | T | E6 Replace provisional pick (free old slot) | R6 |
+| 1 | T | T | T | T | T | E6 Existing pick: change or retain unchanged (R6 constraint) | R6 |
 | 2 | T | T | T | T | F | E5 Save provisional pick | R5 |
 | 3 | T | T | T | F | T | E4 Refuse: slot already taken | R4 |
 | 4 | T | T | T | F | F | E4 Refuse: slot already taken | R4 |
@@ -78,13 +78,15 @@ Rules with the same effect are merged where the remaining conditions do not chan
 | R3 | T | T | F | – | – | E3 Refuse: not certified | 4 (#5–8) |
 | R4 | T | T | T | F | – | E4 Refuse: slot taken | 2 (#3–4) |
 | R5 | T | T | T | T | F | E5 Save provisional pick | 1 (#2) |
-| R6 | T | T | T | T | T | E6 Replace provisional pick | 1 (#1) |
+| R6 | T | T | T | T | T | E6 Existing pick (see constraint below) | 1 (#1) |
 
 Check: 16 + 8 + 4 + 2 + 1 + 1 = 32.
 
+**R6 constraint:** C5 covers both an actual change and re-submitting the same slot. It does not imply a new timestamp for the latter. For example, a pick submitted Mon 5 at 09:00 for Tue 20 / M Electric, re-submitted unchanged at 10:00, retains 09:00 and its slot. The six-rule reduction is unchanged (FR-51; UC-18 Alternatives).
+
 ### 1.5 Test cases (one per reduced rule)
 
-Setup: Technician **T07** (M Electric only, Certification expiry 30 Jun). Planning Week Mon 19 – Sat 24. **T03** already holds Wed 21 / Dicon.
+Setup: Technician **T07** (M Electric only, Certification expiry 30 Jun 2027). Planning Week Mon 19 – Sat 24. **T03** already holds Wed 21 / Dicon.
 
 | TC | Rule | Inputs (now, day, Brand, other state) | Expected output |
 |---|---|---|---|
@@ -94,6 +96,14 @@ Setup: Technician **T07** (M Electric only, Certification expiry 30 Jun). Planni
 | BB-04 | R4 | Now Mon 5, 10:00; Wed 21; M Electric; **T09 already holds Wed 21 / M Electric** | Refused: "This slot has just been taken" |
 | BB-05 | R5 | Now Mon 5, 10:00; Tue 20; M Electric; T07 has no pick this week | Provisional (not yet guaranteed): T07 → Tue 20 / M Electric. Tue 20's M Electric slot shows as taken |
 | BB-06 | R6 | Now Mon 5, 10:00; Fri 23; M Electric; T07 already holds Tue 20 / M Electric | Provisional (not yet guaranteed): T07 → Fri 23 / M Electric. Tue 20's M Electric slot is free again |
+
+### 1.6 Supplementary check for R6 (no new reduced rule)
+
+| TC | Existing rule | Independent setup and action | Expected output |
+|---|---|---|---|
+| BB-07 | R6 / complete combination #1 | T07 is Available with no Leave and valid M Electric Certification on 20 Oct 2026. One Provisional pick for 20 Oct / M Electric was saved on 5 Oct 2026 at 09:00; its own slot counts as free. Re-submit the same day/Brand at 10:00 on 5 Oct, before the 7 Oct deadline. | Keep the original submittedAt = 09:00, the same held slot and exactly one Provisional request. Do not release/recreate the slot or change its submission priority. |
+
+BB-07 checks the unchanged branch within R6; BB-06 checks the changed branch. The complete table still has 32 combinations and six reduced rules (FR-51; UC-18 Alternatives; DEC-104). These are designed expected results, not claimed production execution.
 
 Extra boundary checks (equivalence partitions and boundary values, not required by the template): C1 at 17:59 → passes and at 18:00 → fails. C3 with expiry equal to the day → passes and the day before → fails. A Dual-Certified Technician on a day where only the Dicon slot is free → can take Dicon (R5).
 
@@ -109,7 +119,7 @@ Extra boundary checks (equivalence partitions and boundary values, not required 
 
 ```text
 classifyTechnicians(day):
- 1  standby ← []; ranked ← []; bottom ← []
+ 1  week ← planningWeekContaining(day); standby ← []; ranked ← []; bottom ← []
  2  for each t in activeTechnicians():
  3      if not t.isWorkingOn(day) then          // Unavailable, Not submitted or Leave Record
  4          continue
@@ -135,7 +145,7 @@ Source: [diagrams/CFG-classify-technicians.puml](../diagrams/CFG-classify-techni
 
 | Node | Pseudocode line(s) | Kind |
 |---|---|---|
-| N1 | 1 | Statement |
+| N1 | 1 (derive Planning Week and initialise lists) | Statement |
 | N2 | 2 (loop test: more Technicians?) | **Decision** |
 | N3 | 3 | **Decision** |
 | N4 | 4 | Statement (back to N2) |

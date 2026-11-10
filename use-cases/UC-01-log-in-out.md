@@ -1,6 +1,6 @@
 # UC-01: Log In/out
 
-> **Status: M2 v1.0 (2026-11-06).** Updated for SRS v4.0. Reset Password is now a standalone use case, not an extension (DEC-91).
+> **Status: M2 v1.0.1 (2026-11-10).** Updated for SRS v4.1.1; the logout cache lifecycle follows DEC-102. Reset Password is now a standalone use case, not an extension (DEC-91).
 
 | Field | Value |
 |---|---|
@@ -10,8 +10,8 @@
 | **Secondary actors** | Email Service «system» (new-device confirmation) |
 | **Description** | A User signs in to reach the role-specific Landing Page and ends the session when finished. |
 | **Trigger** | The User opens the web application or chooses Log Out. |
-| **Linked requirements** | FR-43, FR-48, NFR-07, NFR-09, NFR-11 |
-| **Source** | Brief R1, R2, R7, R11; INT-ITA [Q: Passwords], [Q: Safeguards], [Q: Permissions]; DEC-17; DEC-18; DEC-41; DEC-91 |
+| **Linked requirements** | FR-43, FR-48, NFR-05, NFR-07, NFR-09, NFR-11 |
+| **Source** | Brief R1, R2, R7, R11; INT-ITA [Q: Passwords], [Q: Safeguards], [Q: Permissions]; DEC-17; DEC-18; DEC-41; DEC-91; DEC-102 |
 | **Classes** | LoginPage, LandingPage, AuthController, Account |
 | **Wireframe** | W-01 Login (m2/wireframes.md) |
 | **Status** | Agreed |
@@ -27,7 +27,7 @@
 | 1 | Enters email and password on the Login page. | `AuthController.logIn()` checks `Account.checkCredentials()` and the account status (FR-48). |
 | 2 | — | If `Account.isKnownDevice()` is true, creates a session (NFR-07). |
 | 3 | — | Shows the Landing Page for `Account.role` (FR-43). |
-| 4 | Chooses Log Out when finished. | Ends the session and returns to the Login page. |
+| 4 | Chooses Log Out when finished. | `LandingPage.logOut()` clears this Staff member's offline Assignment copy through `clearCachedToday()`, ends the session and returns to the Login page (NFR-05; DEC-102). |
 
 ## Alternative flows
 

@@ -2277,3 +2277,132 @@ The 18 IDs give 16 active use cases.
 7. Technical safeguards: resolve/save each day's confirmations atomically; revalidate before publication. Refuse regeneration when Jobs or manual Crew/Standby edits exist instead of silently discarding them.
 
 **Supersedes:** immediate guaranteed acceptance and Manager overrides in DEC-79, related DEC-80/89 rules and the fewer-than-three publication warning. Existing FR/UC IDs are retained.
+
+---
+
+### DEC-99: M2 consistency corrections after report review
+
+| Category | Artefact consistency | Ask whom | Requesting team member / file owners | Status | **Recorded correction** |
+|---|---|---|---|---|---|
+
+**Raised and authorised:** 2026-11-10 by the requesting team member (identity not supplied), asking GPT-6.1 Sol to make minimal consistency fixes following the supplied Claude Opus 5.5 report review. Preserve agreed workflows and DEC-96–98; prepare local reviewable changes without committing or pushing. This records the current request, not a claim of ratification by all six members.
+
+**Existing sources:** FR-04/05/08/39/40/45/46/48/51–55, NFR-07/09; DEC-74/93/94/96–98; UC-18 Alternatives. No new requirement or fairness policy is adopted.
+
+**Corrections:**
+1. Repair FR-36's broken sentence without changing the Total Credited Hours rule; identify FR-08 as changed in v4.1; correct NFR-09's permission-matrix reference to §4.1.
+2. Align CD-final and CMP-system: suggestion goes through `RosterController.prepareSuggestion()` and preference confirmation; Job edits require IScheduling; account changes and approved requests delegate roster removal/unassignment to `RosterController`; application-layer `CsvImportController` owns `CsvRowMapper`.
+3. Represent the existing 15-minute failure window, 30-day device-use rule and per-channel notification outcomes with Account timestamps and a Notification delivery-state map. Explain the existing Strategy configuration at application construction; runtime switching is not a requirement. Add the standard explanatory Strategy diagram to the source index.
+4. Preserve the six black-box reduced rules, explicitly retaining submittedAt on a same-slot resubmission as UC-18 already states. Derive the Planning Week on pseudocode line 1 without changing CFG edges or complexity.
+5. Correct sample roster eligibility, dates, hours, chronology and unsupported wording in a copy of the supplied HTML prototype. Direct duties remain operational updates to today's Published roster. A 2 h Planned Hours example may use a Manager-adjusted 1.5 h duration under FR-02; no new duration constraint is introduced.
+
+**Append-only erratum:** DEC-94 decision item 2 says “FR-54 steps 1–4”; read this as **FR-55 steps 1–4**. FR-54 concerns CSV validation. The historical entry above is retained unchanged.
+
+**Still unconfirmed:** actual M2 contributions/signatures; named authorship of the supplied HTML prototype; named decision-makers and team review/ratification of DEC-73–98. Existing sources retain their recorded status; this correction does not fabricate approval. The offline-storage and Draft deletion-notification conflicts are separately Open below.
+
+---
+
+### DEC-100: Offline Assignment view versus on-site-only storage
+
+| Category | Requirement conflict | Ask whom | Team / client / IT Administrator | Status | **Open** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-10 during the M2 report consistency review (DEC-99).
+
+**Source text:** NFR-05: “Staff must be able to view **today's** published Assignments without a connection. Changes are not accepted offline”. NFR-13: “The application and its database must run on an **on-site server**. Records and logs are stored only there”. Existing `LandingPage.loadCachedToday()` supports the offline view; DEC-89 records on-site deployment/storage.
+
+**Question:** Does NFR-13 permit a per-user browser copy for NFR-05, and if so what data, protection and lifecycle apply, or must one requirement be revised? No cache exception or lifecycle is chosen in this correction. Keep both requirements and flag their unresolved boundary in the report and architecture notes.
+
+---
+
+### DEC-101: Notifications when deleting an Assigned Job in a Draft week
+
+| Category | Requirement conflict | Ask whom | Team / Manager | Status | **Open** |
+|---|---|---|---|---|---|
+
+**Raised:** 2026-11-10 during the M2 report consistency review (DEC-99).
+
+**Source text:** FR-04: “Deleting an Assigned Job notifies its attributed Staff first.” FR-39: “Draft Assignment changes send nothing until publication.” The separately recorded FR-51 exception concerns preference outcomes only (DEC-98).
+
+**Question:** Does deletion of a Job assigned in a Draft week notify attributed Staff, or follow Draft suppression? Do not infer a new exception or silently amend either requirement. The corrected W-04 illustration uses an unstarted Job in a Published week, for which the current requirements agree that Staff are notified.
+
+---
+
+### DEC-102: Resolution of DEC-100 — bounded offline Assignment copy
+
+| Category | Requirement clarification | Ask whom | Requesting team member | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not supplied), M2 second-review conversation, 2026-11-10. The member expressly approved retaining offline viewing of today's Published Assignments through a limited per-user browser cache, cleared at logout and expired when its date passes, while authoritative database records and logs remain on-site. This records that authorisation, not ratification by all six members.
+
+**Decision:** NFR-05 permits a read-only browser copy containing only the signed-in Staff member's Published Assignments for today. Clear it at logout and expire it when its Assignment date passes. Offline changes remain unavailable. NFR-13 requires the application, authoritative database records and logs to remain on the on-site server; this bounded copy is the explicit exception for offline viewing. No encryption method, authentication extension or further security policy is added by this resolution.
+
+**Resolves:** DEC-100. Keep its historical Open entry unchanged and read it with this resolution. Update NFR-05/13, UC-01/13, the architecture and W-11 consistently. SRS v4.1.1 records this change.
+
+---
+
+### DEC-103: Resolution of DEC-101 — Draft deletion follows notification suppression
+
+| Category | Requirement clarification | Ask whom | Requesting team member | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not supplied), M2 second-review conversation, 2026-11-10. The member expressly approved no Staff notices when deleting an Assigned Job in a Draft, and notification when deleting it after publication. The existing preference-outcome exception is unchanged.
+
+**Decision:** FR-04's deletion notice applies only to an Assignment in a Published Weekly Roster. Deleting an Assigned Job in a Draft sends no Staff notification, consistently with FR-39. For an eligible unstarted Published Job, notify attributed Staff before deleting the Job and its Assignment as already specified. FR-51's immediate preference-outcome notification remains the existing exception to Draft suppression; it does not expose Draft Assignments. The existing editing/deletion time limits remain unchanged.
+
+**Resolves:** DEC-101. Keep its historical Open entry unchanged and read it with this resolution. Update FR-04/39, UC-05/15 and W-04 consistently. SRS v4.1.1 records this change.
+
+---
+
+### DEC-104: Second-review traceability and presentation corrections
+
+| Category | Artefact consistency | Ask whom | Requesting team member / file owners | Status | **Recorded correction** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not supplied), 2026-11-10, authorised the supplied second-review content fixes while preserving the agreed workflows. The member supplied screenshots titled **“What Makes a Requirement Good? (1/2)”** and **“What Makes a Requirement Good? (2/2)”**. No lecturer name, slide date or publication metadata was supplied.
+
+**Corrections:**
+1. Bump the SRS to **v4.1.1 (2026-11-10)** for DEC-99's requirement/use-case corrections and DEC-102/103. The report baseline is commit `0ab8f1e` plus the uncommitted corrections on `codex/m2-review-fixes`; do not describe that commit alone as containing them. Keep all FR/NFR/UC IDs. Label clauses within the longest requirement rows for clarity without changing policy, and distinguish the Mechanism column's design traceability from requirement statements.
+2. Assess the actual requirements against the supplied lecture's seven traits: **Verifiable; Clear & Concise; Traceable; Viable; Consistent; Implementation Free; Complete**. Retain the lecture's indivisibility criterion under Traceable. Do not claim full atomicity for bundled legacy rows or verified viability without budget, schedule and skills evidence. Sourced operating/security constraints remain requirements; the design mechanism is separate.
+3. Preserve the six reduced black-box rules. Add supplementary test **BB-07** for the existing UC-18 no-op case: an unchanged resubmission at 10:00 keeps the original 09:00 timestamp, slot and one Provisional request. No new cause, rule or behaviour is added.
+4. Clarify the CSV validation hand-off: `CsvImport.parse(file)` returns parsed rows; application-layer `CsvImportController` uses its `CsvRowMapper` for column and row checks, collects whole-file errors and calls `CsvImport.recordValidation(errors)`. Only an error-free file is mapped/saved atomically and marked Committed; rejected files save no Leave Record or Van Availability. The entity does not depend upward on a mapper. This refines DEC-99's design representation of FR-52–54, not the validation workflow.
+5. Apply FR-36's strictly-above-40 h highlight to Driver as well as Technician Workload in W-06. Label its illustrated state **Draft after Manager edits to the Suggested Roster**, rather than claiming raw algorithm output. W-11's offline illustration contains only today's Assigned data for its Staff member. Preserve the supplied original HTML and keep the revised prototype with M2 materials.
+6. Explain the legitimate bidirectional application-component dependencies: Roster & Hours requests preference confirmation through IStaffInputs; Staff Inputs delegates approved Job unassignment through IRoster. These are different use-case operations within one layer, with no cross-layer upward dependency. Provide a whole-screen overview plus labelled detail panels for each screenshot set and check final pagination.
+
+**Still requires human input:** named requester/AI attribution, original prototype authorship, actual contributions, signatures, dates and team review/ratification. No administrative facts are inferred and no commit, push or sharing change is authorised by this entry.
+
+
+---
+
+### DEC-105: Encrypted offline Assignment copy and local password unlock (Option A)
+
+| Category | Requirement / design clarification | Ask whom | Requesting team member | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not supplied), M2 review conversation, 2026-11-10. After reviewing the supplied Claude assessment, the member explicitly approved Option A and asked for the repository and M2 report to be updated. This records that requester approval, not ratification by all six members.
+
+**Decision:** Retain NFR-08 encryption at rest for the bounded NFR-05 offline copy as well as the on-site store. Persist only this Staff member's Published Assignments for today in encrypted form. The stored device data must not reveal that copy without the Staff member's password: the encryption key is derived from or protected by that password, and no readable decryption key is persistently stored. This protects the persisted copy; it does not claim protection of a view that is already unlocked. The encryption algorithm, library and key derivation/protection technique remain implementation choices.
+
+When the app was closed and the copy is reopened offline, require a local password unlock checked on the device only. No connection or server login is needed. An incorrect password keeps the copy locked and reveals no Assignment data; do not prompt again while the copy remains unlocked. This is a local unlock, separate from online login. Each successful online load of today's Published Assignments refreshes the encrypted per-user copy; refreshing within an existing authenticated online session must not require a fresh daily login. This records the directly related refresh-trigger clarification (D3) as well as Option A. Existing scope, read-only behaviour, logout clearing and date expiry from DEC-102 continue. Expiry prevents later viewing on the app's date check; no claim is made that a closed app can delete device data at midnight.
+
+**Unresolved implementation follow-ups:** Specify and verify key protection and lifecycle across existing authenticated sessions, password change/reset handling and the relevant browser support before implementation acceptance. DEC-61's session/token-lifetime questions remain Open. No new offline attempt limit, password-reset behaviour, session duration or daily-login requirement is adopted from the supplied Claude assumptions. Those details must not be inferred from this decision.
+
+**Artefacts:** SRS v4.1.2 (NFR-05/08 and quality/open-item notes); UC-13; CD-final LandingPage method/note; ARCH-layered; design/wireframe notes; traceability; W-11 locked, incorrect-password and unlocked prototype states; corresponding report requirements, architecture and screen descriptions. The prototype illustrates local sample transitions only and implements neither encryption nor credential checking. Historical DEC-102 and other entries stay unchanged. No commit, push or sharing change is authorised.
+
+
+---
+
+### DEC-106: Fourth-review D1–D4 editorial and transaction representation corrections
+
+| Category | Editorial / design representation clarification | Ask whom | Requesting team member | Status | **Recorded** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not supplied), 2026-11-11, explicitly requested the supplied fourth-review D1–D4 corrections in the repository and M2 report while preserving established workflows and decisions. This records that correction request, not ratification by all six members.
+
+**Corrections (no new behavioural decision):**
+1. Broaden the SRS §11/report seven-trait assessment: FR-04/32/33/39/40/51/55/57 and NFR-05 bundle obligations under retained IDs, so single-requirement/indivisibility conformance remains partial. Distinguish stakeholder evidence from team-decided constraints: NFR-08's backend-encryption goal cites INT-ITA [Q: Safeguards], salted hashes† are team-set, and offline password/key protection is DEC-105. DEC-105 is a valid team-decision source, not stakeholder testimony. FR-55 retains the agreed algorithmic policy in M2-Brief §4 / DEC-80, refined by DEC-96/98.
+2. Make the existing successful CSV save boundary explicit across FR-52/54 mechanisms, UC-16, CD-final and design/report prose: after whole-file validation and mapping, one transaction replaces Leave Records or Van Availability for the dates in the file, marks the import Committed through CsvImport.commit(), and writes the successful-upload AuditLog entry. This clarifies existing atomicity; validation/rejection, upload logging and date-scoped replacement policies are unchanged.
+3. Describe report figures as complete-screen views and labelled details, with the Saturday W-06 figures identified as additional details. Do not claim every screenshot set has an overview; no additional screenshot is required.
+4. Replace the leftover report phrase “The draft preserves them” with “The SRS records them”.
+
+**Limits:** Retain SRS v4.1.2, all requirement statements/IDs, policies, test design, diagrams' classes/relationships and the prototype. D5's optional offline metadata clause, cancelled-Leave representation, security/session/reset details and administrative items are outside this correction. Existing follow-ups remain open. Historical decisions and AI log rows are preserved; no commit, push or sharing change is authorised.

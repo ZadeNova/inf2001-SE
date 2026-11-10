@@ -1,6 +1,6 @@
 # UC-16: Upload CSV
 
-> **Status: M2 v1.1 (2026-11-07).** New in M2 (DEC-74, DEC-91).
+> **Status: M2 v1.1.1 (2026-11-10).** SRS v4.1.1; controller/mapper hand-off clarified by DEC-104. The existing successful-import transaction is made explicit by the 2026-11-11 editorial correction (DEC-106); behaviour is unchanged. New in M2 (DEC-74, DEC-91).
 
 | Field | Value |
 |---|---|
@@ -11,7 +11,7 @@
 | **Description** | The Manager uploads the HR leave CSV or the van availability CSV. The system validates the whole file before saving anything. |
 | **Trigger** | Before planning starts on Thursday (assumption A4), or when an updated file arrives. |
 | **Linked requirements** | FR-52, FR-53, FR-54, FR-49 |
-| **Source** | M2-Brief §2, §3.2, §7; DEC-74; DEC-85 |
+| **Source** | M2-Brief §2, §3.2, §7; DEC-74; DEC-85; DEC-104; DEC-106 |
 | **Classes** | CsvUploadPage, CsvImportController, CsvImport, CsvRowMapper, HrLeaveCsvMapper, VanAvailabilityCsvMapper, LeaveRecord, VanAvailability, AuditLog |
 | **Wireframe** | W-05 CSV upload |
 | **Status** | Agreed |
@@ -25,8 +25,8 @@
 | Step | Actor | System |
 |---|---|---|
 | 1 | Opens CSV Upload, picks the file type (HR leave or van availability) and chooses the file. | Shows the expected columns for that type (`CsvRowMapper.requiredColumns()`). |
-| 2 | Uploads. | `CsvImportController.upload()` creates a `CsvImport`; `parse()` and `validate()` check every row through the matching `CsvRowMapper` (FR-54). |
-| 3 | — | No errors: `commit()` replaces the Leave Records or Van Availability for the dates in the file and logs the upload (FR-52, FR-53, FR-49). |
+| 2 | Uploads. | `CsvImportController.upload()` creates a `CsvImport`; `CsvImport.parse(file)` returns rows. The controller uses its matching `CsvRowMapper` to check required columns and every row, collects whole-file errors and calls `CsvImport.recordValidation(errors)` (FR-54; DEC-104). |
+| 3 | — | No errors: the controller maps the validated rows and, in one transaction, replaces the Leave Records or Van Availability for the dates in the file, calls `CsvImport.commit()` to mark the import `Committed`, and writes the successful-upload `AuditLog` entry (FR-52, FR-53, FR-54, FR-49; DEC-106). |
 | 4 | — | Shows a summary: rows saved, dates covered, duplicates merged. |
 
 ## Exception flows
