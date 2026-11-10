@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P8-1 M2 Wireframes</title>
+<!-- Draft clickable wireframe of m2/wireframes.md v1.1 (W-01 to W-16), updated for SRS v4.1 and DEC-96 to DEC-98. Self-contained: no external scripts, fonts or services (AGENTS.md rule 5). Sample names and numbers are placeholders. -->
+<style>
+:root{
+  --paper:#f4f3ef; --sheet:#ffffff; --ink:#1c1c1e; --ink2:#3a3a3d; --muted:#6c6b68; --line:#cfccc4; --line2:#e4e1da;
+  --box:#efede8; --fill:#dcd9d1; --fill2:#c4c0b6;
+  --accent:#2c56c9; --accent-bg:#e7edfb;
+  --warn:#9a5b00; --warn-bg:#fdf1d8; --warn-line:#e7c27a;
+  --block:#a8261b; --block-bg:#fbe6e3;
+  --ok:#2b6f47; --ok-bg:#e3f2e8;
+  --me:#1c1c1e; --dc:#1c1c1e;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.mono{font-family:var(--mono);font-size:.92em}
+
+/* ---------- doc shell ---------- */
+.doc{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.side{border-right:1px solid var(--line);background:#fbfaf7;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.side h1{font-size:15px;margin:0 0 2px}
+.side .sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.side h2{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 6px 6px}
+.side a{display:flex;gap:8px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink2);text-decoration:none;font-size:13px}
+.side a:hover{background:var(--box)}
+.side a.on{background:var(--ink);color:#fff}
+.side a .id{font-family:var(--mono);font-size:11px;opacity:.7;min-width:34px}
+.side .mode{display:flex;gap:4px;margin-top:4px}
+.side .mode button{flex:1;border:1px solid var(--line);background:var(--sheet);border-radius:6px;padding:5px 4px;font-size:12px;cursor:pointer}
+.side .mode button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.main{padding:24px 28px 80px;min-width:0}
+.scr{margin:0 auto 56px;max-width:1500px}
+.scr-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin-bottom:10px}
+.scr-head h2{margin:0;font-size:20px}
+.scr-head .wid{font-family:var(--mono);font-size:13px;background:var(--ink);color:#fff;padding:2px 7px;border-radius:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.meta span{font-size:12px;border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:2px 9px;color:var(--ink2)}
+.meta b{font-weight:600}
+.notes{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.notes div{display:flex;gap:8px}
+.notes .n{flex:none}
+.purpose{font-size:13.5px;color:var(--ink2);max-width:900px;margin:-4px 0 12px}
+
+/* ---------- frames ---------- */
+.scaler{position:relative;width:100%;overflow:hidden}
+.desk{width:1366px;transform-origin:0 0;position:absolute;left:0;top:0;background:var(--sheet);border:1px solid var(--ink2);border-radius:8px;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.chrome{height:34px;background:var(--box);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 12px}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--fill2);display:inline-block}
+.chrome .url{margin-left:14px;background:var(--sheet);border:1px solid var(--line);border-radius:5px;padding:2px 10px;font-size:12px;color:var(--muted);width:420px;font-family:var(--mono)}
+.appbar{display:flex;align-items:center;gap:4px;padding:0 20px;height:52px;border-bottom:1px solid var(--line)}
+.logo{font-weight:700;margin-right:18px;display:flex;align-items:center;gap:8px}
+.logo::before{content:"";width:22px;height:22px;border:2px solid var(--ink);border-radius:5px;background:repeating-linear-gradient(45deg,transparent 0 4px,var(--fill) 4px 6px)}
+.appbar .tab{padding:6px 11px;border-radius:6px;color:var(--ink2);font-size:13.5px}
+.appbar .tab.on{background:var(--ink);color:#fff}
+.appbar .who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.bell{position:relative;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
+.bell::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--fill)}
+.page{padding:20px 24px 28px}
+.ph{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ph h3{margin:0;font-size:20px}
+.ph .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+.phone-row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+.phone-cap{font-size:12px;color:var(--muted);margin:8px 0 0;max-width:360px}
+.phone{width:360px;min-height:720px;background:var(--sheet);border:1px solid var(--ink2);border-radius:26px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.sbar{height:28px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.mtop{padding:8px 16px 12px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:10px}
+.mtop h4{margin:0;font-size:16px}
+.mbody{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:12px}
+.mnav{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);height:58px}
+.mnav span{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--muted);gap:3px}
+.mnav span::before{content:"";width:18px;height:18px;border:1.5px solid currentColor;border-radius:5px}
+.mnav span.on{color:var(--ink);font-weight:600}
+.mnav span.on::before{background:var(--ink)}
+
+/* ---------- primitives ---------- */
+.card{border:1px solid var(--line);border-radius:8px;background:var(--sheet)}
+.card>.hd{padding:10px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:8px;font-weight:600}
+.card>.hd .r{margin-left:auto;font-weight:400;font-size:12.5px;color:var(--muted)}
+.card>.bd{padding:12px 14px}
+.grid{display:grid;gap:16px}
+.btn{border:1px solid var(--ink2);background:var(--sheet);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
+.btn:hover{background:var(--box)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{filter:brightness(.95)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.ghost{border-color:var(--line)}
+.btn.danger{border-color:var(--block);color:var(--block)}
+.btn.sm{padding:3px 8px;font-size:12px}
+.btn.full{width:100%;padding:10px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.link{color:var(--accent);text-decoration:underline;cursor:pointer;background:none;border:0;padding:0}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:11.5px;background:var(--sheet);white-space:nowrap}
+.chip.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn)}
+.chip.block{background:var(--block-bg);border-color:#efb3ab;color:var(--block)}
+.chip.ok{background:var(--ok-bg);border-color:#a9d3b8;color:var(--ok)}
+.chip.acc{background:var(--accent-bg);border-color:#b8c8f2;color:var(--accent)}
+.brand{display:inline-block;font-size:10.5px;font-weight:600;border:1.5px solid var(--ink);border-radius:3px;padding:0 4px;line-height:15px;letter-spacing:.02em}
+.brand.dc{background:var(--ink);color:#fff}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--ink2)}
+.field>label{font-weight:600;font-size:12px}
+.inp{border:1px solid var(--fill2);border-radius:6px;padding:7px 10px;background:var(--sheet);min-height:34px;font-size:13.5px;width:100%}
+.inp.ro{background:var(--box);color:var(--ink2)}
+.inp.ph{color:var(--muted)}
+select.inp{appearance:auto}
+.hint{font-size:11.5px;color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.row.wrap{flex-wrap:wrap}
+.spacer{flex:1}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.sep{height:1px;background:var(--line2);margin:8px 0}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;padding:7px 10px;border-bottom:1px solid var(--line)}
+table.t td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+table.t tr:last-child td{border-bottom:0}
+.banner{border-radius:8px;padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.banner.warn{background:var(--warn-bg);border:1px solid var(--warn-line);color:#5c3a00}
+.banner.block{background:var(--block-bg);border:1px solid #efb3ab;color:#6e1a12}
+.banner.ok{background:var(--ok-bg);border:1px solid #a9d3b8;color:#174a2c}
+.banner.info{background:var(--accent-bg);border:1px solid #b8c8f2;color:#1b3a8a}
+.banner.grey{background:var(--box);border:1px solid var(--line);color:var(--ink2)}
+.ico{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;border:1.5px solid currentColor}
+.seg{display:inline-flex;border:1px solid var(--fill2);border-radius:7px;overflow:hidden}
+.seg button{border:0;background:var(--sheet);padding:5px 10px;font-size:12.5px;cursor:pointer;border-right:1px solid var(--fill2)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:#fff}
+.radio{display:flex;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:7px;cursor:pointer;font-size:13.5px}
+.radio input{accent-color:var(--ink)}
+.pin{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#e8590c;color:#fff;font:700 10.5px/1 system-ui;font-style:normal;flex:none;vertical-align:middle}
+.ann .pin{display:none}
+body.pins .ann .pin{display:inline-grid}
+body:not(.pins) .notes .pin{background:var(--fill2)}
+
+/* ---------- modal / toast ---------- */
+.scrim{position:absolute;inset:0;background:rgba(28,28,30,.38);display:none;align-items:center;justify-content:center;z-index:5}
+.scrim.on{display:flex}
+.modal{background:var(--sheet);border-radius:10px;border:1px solid var(--ink2);width:520px;max-width:92%;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.modal .hd{padding:14px 18px;border-bottom:1px solid var(--line2);font-weight:700;font-size:16px}
+.modal .bd{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.modal .ft{padding:12px 18px;border-top:1px solid var(--line2);display:flex;justify-content:flex-end;gap:8px}
+.toast{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:8px;padding:10px 16px;font-size:13px;z-index:6;display:none;max-width:80%}
+.toast.on{display:block}
+.toast.block{background:var(--block)}
+
+/* ---------- W-03 ---------- */
+.wl{display:grid;grid-template-columns:150px 1fr 96px;align-items:center;gap:6px 10px;font-size:12.5px}
+.wl .bar{position:relative;height:16px;background:var(--box);border-radius:3px}
+.wl .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--fill2);border-radius:3px}
+.wl .bar i.ot{background:repeating-linear-gradient(135deg,#e2a23b 0 5px,#f3c56f 5px 10px);outline:1.5px solid var(--warn)}
+.wl .bar .forty{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--block)}
+.wl .v{text-align:right;font-family:var(--mono);font-size:12px}
+.wl .v.ot{color:var(--warn);font-weight:700}
+.wl .grp{grid-column:1/-1;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:6px}
+.alert{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line2);font-size:13px;align-items:flex-start}
+.alert:last-child{border-bottom:0}
+.alert .count{font-family:var(--mono);font-weight:700;font-size:18px;min-width:30px}
+.alert.done{opacity:.45}
+.mini-crew{border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:12.5px}
+
+/* ---------- W-06 ---------- */
+.alloc{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.days{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px}
+.days button{border:0;background:none;padding:9px 16px;cursor:pointer;border-bottom:3px solid transparent;font-size:13.5px;color:var(--ink2)}
+.days button.on{border-bottom-color:var(--ink);font-weight:700;color:var(--ink)}
+.days button small{display:block;font-size:11px;color:var(--muted)}
+.crews{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.crew{border:1.5px solid var(--ink2);border-radius:8px;background:var(--sheet)}
+.crew.over{outline:3px dashed var(--accent);outline-offset:2px}
+.crew .ch{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line2)}
+.crew .ch b{font-size:15px}
+.crew .ch select{border:1px solid var(--fill2);border-radius:5px;padding:2px 6px;font-size:12.5px}
+.crew .mem{padding:6px 12px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid var(--line2)}
+.person{display:flex;align-items:center;gap:8px;font-size:13px}
+.person .role{font-size:10.5px;color:var(--muted);width:66px;text-transform:uppercase;letter-spacing:.04em}
+.person .hrs{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.person .hrs.ot{color:var(--warn);font-weight:700}
+.jobs{padding:8px 12px;display:flex;flex-direction:column;gap:5px;min-height:58px}
+.job{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:12.5px;background:var(--sheet)}
+.job .t{font-family:var(--mono);font-size:12px;border:1px solid var(--fill2);border-radius:4px;padding:1px 4px;width:58px}
+.job.warnj{border-color:var(--warn-line);background:var(--warn-bg)}
+.drop{border:1.5px dashed var(--fill2);border-radius:6px;padding:7px;text-align:center;color:var(--muted);font-size:12px}
+.uj{cursor:grab}
+.uj:active{cursor:grabbing}
+.uj .grip{width:8px;height:16px;background:radial-gradient(circle,var(--fill2) 1.2px,transparent 1.4px) 0 0/4px 4px}
+.sb{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line2);font-size:13px}
+.sb:last-child{border-bottom:0}
+.src{font-size:10.5px;border:1px solid var(--fill2);border-radius:4px;padding:0 5px;color:var(--ink2);background:var(--box);white-space:nowrap}
+.src.pick{background:var(--accent-bg);border-color:#b8c8f2;color:var(--accent)}
+.warnrow{border-bottom:1px solid var(--line2);padding:9px 0;font-size:12.5px}
+.warnrow:last-child{border-bottom:0}
+.warnrow .why{display:flex;gap:6px;margin-top:6px}
+.warnrow.done{opacity:.6}
+.status-chip{font-size:12px;padding:3px 10px;border-radius:999px;border:1.5px solid var(--ink2);font-weight:600}
+.status-chip.pub{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+
+/* ---------- W-07 ---------- */
+.cmp{display:grid;grid-template-columns:180px repeat(3,1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px}
+.cmp>div{padding:9px 12px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
+.cmp>div:nth-child(4n){border-right:0}
+.cmp .k{background:var(--box);font-weight:600;font-size:12px;color:var(--ink2)}
+.cmp .h{background:var(--ink);color:#fff;font-weight:600}
+.daydots{display:flex;gap:3px}
+.daydots span{width:22px;height:22px;border-radius:4px;display:grid;place-items:center;font-size:10px;border:1px solid var(--fill2)}
+.daydots span.a{background:var(--fill)}
+.daydots span.l{background:repeating-linear-gradient(135deg,var(--fill2) 0 3px,transparent 3px 6px)}
+.daydots span.today{outline:2px solid var(--ink)}
+
+/* ---------- W-08 ---------- */
+.ag{border-collapse:separate;border-spacing:2px;font-size:11px}
+.ag th{font-weight:600;color:var(--muted);padding:2px;text-align:center}
+.ag th.nm{text-align:left;padding-right:10px;color:var(--ink);font-size:12px;white-space:nowrap}
+.ag td{width:36px;height:24px;border-radius:3px;text-align:center;font-weight:700;font-size:10.5px;position:relative}
+.ag td.A{background:var(--fill)}
+.ag td.L{background:repeating-linear-gradient(135deg,#8f8a7e 0 2px,#fff 2px 5px);color:#000}
+.ag td.L span{background:#fff;padding:0 2px;border-radius:2px}
+.ag td.U{background:#fff;border:1px dashed var(--fill2)}
+.ag td .st{position:absolute;top:-3px;right:-2px;font-size:11px;color:var(--accent)}
+.ag th.wk{border-left:2px solid var(--ink2)}
+.ag td.wk{box-shadow:-3px 0 0 -1px var(--ink2)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;align-items:center}
+.legend i:not(.pin){display:inline-block;width:22px;height:14px;border-radius:3px;vertical-align:middle;margin-right:5px}
+
+/* ---------- mobile bits ---------- */
+.week{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.week div{border:1px solid var(--line);border-radius:7px;padding:5px 3px;text-align:center;font-size:10.5px;min-height:64px;display:flex;flex-direction:column;gap:2px;align-items:center}
+.week div b{font-size:12px}
+.week div.today{border:2px solid var(--ink)}
+.week div.sbd{background:var(--accent-bg);border-color:#b8c8f2}
+.week div .tag{font-size:9.5px;line-height:1.2;color:var(--ink2)}
+.assign{border:1px solid var(--ink2);border-radius:9px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.assign .tm{font-family:var(--mono);font-weight:700;font-size:13px;min-width:44px}
+.assign .x{font-size:12.5px;color:var(--ink2)}
+.meter{height:12px;background:var(--box);border-radius:6px;position:relative;overflow:visible}
+.meter i{position:absolute;left:0;top:0;bottom:0;background:var(--ink2);border-radius:6px}
+.meter .forty{position:absolute;right:0;top:-4px;bottom:-4px;border-left:2px dashed var(--block)}
+.notif{display:flex;gap:10px;font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.notif:last-child{border-bottom:0}
+.notif .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex:none}
+.notif .dot.read{background:transparent;border:1.5px solid var(--fill2)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-top:1px solid var(--ink2);border-radius:18px 18px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.15);padding:10px 16px 16px;display:none;z-index:4;max-height:88%;overflow:auto}
+.sheet.on{display:block}
+.sheet .grab{width:40px;height:4px;background:var(--fill2);border-radius:2px;margin:0 auto 10px}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:5px 10px;font-size:12.5px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.offline{background:var(--ink);color:#fff;font-size:11.5px;padding:6px 16px;display:none}
+.offline.on{display:block}
+.avrow{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line2);padding:8px 0}
+.avrow:last-child{border-bottom:0}
+.avrow .d{width:62px;font-size:13px}
+.avrow .d small{display:block;color:var(--muted);font-size:11px}
+.wkchips{display:flex;gap:6px;overflow:auto}
+.wkchips button{border:1px solid var(--line);background:var(--sheet);border-radius:8px;padding:5px 8px;font-size:11.5px;white-space:nowrap;cursor:pointer;text-align:left}
+.wkchips button.on{border:2px solid var(--ink);font-weight:600}
+.sday{border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+.sday.grey{background:var(--box);color:var(--muted)}
+.sday .sl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.slot{border:1.5px solid var(--ink2);border-radius:7px;padding:6px 8px;font-size:12px;cursor:pointer;background:var(--sheet);text-align:left}
+.slot small{display:block;font-size:10.5px;color:var(--muted)}
+.slot.you{background:var(--ink);color:#fff;border-color:var(--ink)}
+.slot.you small{color:#d8d8d8}
+.slot.off{border-style:dashed;border-color:var(--fill2);color:var(--muted);cursor:not-allowed;background:transparent}
+.dlg{position:absolute;inset:0;background:rgba(28,28,30,.4);display:flex;align-items:center;justify-content:center;padding:20px;z-index:4}
+.dlg .box{background:var(--sheet);border-radius:14px;padding:18px;border:1px solid var(--ink2)}
+.step{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+.src.pick{background:var(--accent-bg)}
+.ag td .st.ov{color:var(--warn)}
+details>summary.hd{list-style:none}
+details>summary.hd::-webkit-details-marker{display:none}
+/* print / all-screens */
+@media print{.side{display:none}.doc{display:block}.scr{break-inside:avoid;page-break-after:always}}
+@media (max-width:900px){.doc{grid-template-columns:1fr}.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}.main{padding:16px}}
+</style>
+</head>
+<body class="pins">
+<div class="doc">
+  <nav class="side" id="side">
+    <h1>Workload Management System</h1>
+    <div class="sub">P8-1 · M2 wireframes W-01–W-16<br>Draft from <span class="mono">m2/wireframes.md</span> v1.1<br>(SRS v4.1, DEC-96 to DEC-98)</div>
+    <div class="mode">
+      <button id="m-one" class="on">One screen</button>
+      <button id="m-all">All screens</button>
+    </div>
+    <div class="mode" style="margin-top:6px">
+      <button id="m-pins" class="on">Pins on</button>
+      <button id="m-flow">Demo flow</button>
+    </div>
+    <div id="navlist"></div>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* =====================================================================
+   SAMPLE DATA (placeholders). Scenario: today is Thu 5 Nov 2026.
+   Current week Mon 2 – Sat 7 Nov. Planning Week Mon 16 – Sat 21 Nov
+   (Availability Deadline Wed 4 Nov 18:00 has passed; publish Mon 9 Nov).
+   ===================================================================== */
+const TECH = {
+  T01:{n:'Ahmad', b:['ME','DC'], z:'Central'},
+  T02:{n:'Bala',  b:['ME','DC'], z:'East'},
+  T03:{n:'Chen',  b:['ME'], z:'North'},
+  T04:{n:'Daniel',b:['ME'], z:'East'},
+  T05:{n:'Eugene',b:['ME'], z:'West'},
+  T06:{n:'Farid', b:['ME'], z:'South'},
+  T07:{n:'Gopal', b:['ME'], z:'Central'},
+  T08:{n:'Hui Min',b:['DC'], z:'North'},
+  T09:{n:'Irfan', b:['DC'], z:'East'},
+  T10:{n:'Jason', b:['DC'], z:'West'},
+  T11:{n:'Kumar', b:['DC'], z:'South'},
+};
+const DRV = {D01:'Lim',D02:'Mani',D03:'Nizam',D04:'Osman',D05:'Peter',D06:'Rajesh'};
+const ZONES = ['North','East','South','West','Central'];
+const BR = {ME:'M Electric', DC:'Dicon'};
+const brand = b => `<span class="brand ${b==='DC'?'dc':''}">${BR[b]}</span>`;
+const brands = id => TECH[id].b.map(brand).join(' ');
+const nm = id => id.startsWith('T') ? `${id} ${TECH[id].n}` : `${id} ${DRV[id]}`;
+const zdist = (a,b) => a===b?0 : (a==='Central'||b==='Central')?1 : ((a==='North'&&b==='South')||(a==='South'&&b==='North')||(a==='East'&&b==='West')||(a==='West'&&b==='East'))?2:1;
+
+// Active Hours from CREW days only (max 8 h per Crew day: 09:00-13:00 and 14:00-18:00). Standby credit and direct duties are added below from DAYS (DEC-96).
+const CREW_ACT = {T01:0,T02:32.0,T03:32.0,T04:40.0,T05:35.0,T06:22.0,T07:8.0,T08:37.5,T09:36.0,T10:33.5,T11:22.0};
+const DRV_PW = {D01:38.0,D02:40.0,D03:36.0,D04:30.0,D05:8.0,D06:0.0};
+const PW_HRS = {}, PW_ACT = {};
+// current week 2–7 Nov
+const CW_HRS = {T01:34.0,T02:38.5,T03:40.0,T04:43.5,T05:36.0,T06:41.0,T07:22.5,T08:39.5,T09:33.0,T10:37.0,T11:28.0,
+                D01:40.5,D02:38.0,D03:36.5,D04:34.0,D05:24.0,D06:16.0};
+const CW_ACT = {T01:26.0,T02:34.5,T03:36.0,T04:43.5,T05:32.0,T06:37.0,T07:18.5,T08:39.5,T09:33.0,T10:33.0,T11:24.0,
+                D01:40.5,D02:38.0,D03:36.5,D04:34.0,D05:24.0,D06:16.0};
+// Distinct activated Standby dates in the rolling 12 months (DEC-96 #6)
+const ACTD = {T01:1,T02:2,T03:1,T04:3,T05:2,T06:2,T07:0,T08:0,T09:1,T10:0,T11:0};
+// Standby Preferences for the Planning Week after the Availability Deadline and CSV checks (DEC-98)
+const PREFS = [
+  {t:'T06',day:'Mon 16',b:'ME',n:1,st:'Confirmed'},
+  {t:'T11',day:'Mon 16',b:'DC',n:2,st:'Confirmed'},
+  {t:'T04',day:'Tue 17',b:'ME',n:3,st:'Confirmed'},
+  {t:'T09',day:'Tue 17',b:'DC',n:4,st:'Confirmed'},
+  {t:'T03',day:'Wed 18',b:'ME',n:5,st:'Confirmed'},
+  {t:'T10',day:'Wed 18',b:'DC',n:6,st:'Confirmed',note:'Placement overridden: MC Leave Record imported later. Leave takes precedence; the confirmed-request history is kept.'},
+  {t:'T08',day:'Fri 20',b:'DC',n:7,st:'NotConfirmed',why:'T08 has a Leave Record on Fri 20 Nov (HR CSV), so the request is no longer eligible. Leave takes precedence.'},
+  {t:'T07',day:'Fri 20',b:'ME',n:8,st:'Confirmed'},
+];
+
+// Unassigned Jobs (Planning Week)
+let UNASSIGNED = [
+  {id:'J-1041', zone:'East',   b:'DC', type:'Servicing',    u:2, day:'Mon 16', slot:'Morning'},
+  {id:'J-1042', zone:'North',  b:'ME', type:'Installation', u:1, day:'Mon 16', slot:'Afternoon'},
+  {id:'J-1043', zone:'West',   b:'ME', type:'Servicing',    u:3, day:'Tue 17', slot:'Morning'},
+  {id:'J-1044', zone:'Central',b:'DC', type:'Installation', u:2, day:'Wed 18', slot:'Morning'},
+  {id:'J-1045', zone:'South',  b:'ME', type:'Servicing',    u:1, day:'Mon 16', slot:'Afternoon'},
+];
+const dur = j => (j.type==='Installation'?3:1)*j.u;
+
+// Suggested Roster, Planning Week. Crews cover a SET of Zones (DEC-97); Standby source: Preference / Algorithm / Leftover / Manager (DEC-98)
+const DAYS = [
+ {k:'Mon 16', vans:4, leave:['T07 Leave'], crews:[
+   {zones:['North'],d:'D01',t:['T03','T08'],jobs:[{id:'J-1031',zone:'North',b:'ME',type:'Servicing',u:2,at:'09:00'},{id:'J-1034',zone:'North',b:'DC',type:'Installation',u:1,at:'14:00'}]},
+   {zones:['East'], d:'D02',t:['T04','T09'],jobs:[{id:'J-1035',zone:'East',b:'ME',type:'Installation',u:2,at:'09:00'}]},
+   {zones:['West'], d:'D03',t:['T05','T10'],jobs:[{id:'J-1037',zone:'West',b:'DC',type:'Servicing',u:3,at:'09:00'},{id:'J-1046',zone:'Central',b:'ME',type:'Servicing',u:1,at:'14:00'}]},
+   {zones:['Central','South'],d:'D04',t:['T02'],jobs:[{id:'J-1038',zone:'Central',b:'ME',type:'Installation',u:1,at:'09:00'},{id:'J-1039',zone:'Central',b:'DC',type:'Servicing',u:2,at:'14:00'}]}],
+  sb:[['T06','pref','Preference · M Electric'],['T11','pref','Preference · Dicon'],['T01','alg','Algorithm']],
+  direct:[{t:'T01',id:'J-1040',zone:'South',b:'ME',type:'Servicing',u:1,at:'15:00',planned:2}]},
+ {k:'Tue 17', vans:4, leave:[], crews:[
+   {zones:['North'],d:'D01',t:['T03','T08'],jobs:[]},{zones:['West'],d:'D03',t:['T05','T10'],jobs:[]},
+   {zones:['South'],d:'D05',t:['T06','T11'],jobs:[]},{zones:['Central','East'],d:'D04',t:['T02'],jobs:[]}],
+  sb:[['T04','pref','Preference · M Electric'],['T09','pref','Preference · Dicon'],['T07','left','Leftover']], direct:[]},
+ {k:'Wed 18', vans:3, leave:['T10 MC'], crews:[
+   {zones:['North','Central'],d:'D01',t:['T07','T08'],jobs:[]},{zones:['East'],d:'D02',t:['T04','T09'],jobs:[]},{zones:['South','West'],d:'D03',t:['T06','T11'],jobs:[]}],
+  sb:[['T03','pref','Preference · M Electric'],['T01','alg','Algorithm'],['T02','left','Leftover'],['T05','left','Leftover']], direct:[]},
+ {k:'Thu 19', vans:4, leave:[], crews:[
+   {zones:['West'],d:'D01',t:['T05','T10'],jobs:[]},{zones:['Central'],d:'D02',t:['T02'],jobs:[]},
+   {zones:['North'],d:'D03',t:['T03','T08'],jobs:[]},{zones:['East'],d:'D04',t:['T04','T09'],jobs:[]}],
+  sb:[['T01','alg','Algorithm'],['T06','left','Leftover'],['T07','left','Leftover'],['T11','left','Leftover']], direct:[]},
+ {k:'Fri 20', vans:4, leave:['T03 Leave','T08 Leave'], crews:[
+   {zones:['East'],d:'D01',t:['T04','T09'],jobs:[]},{zones:['West'],d:'D02',t:['T05','T10'],jobs:[]},
+   {zones:['South'],d:'D03',t:['T06','T11'],jobs:[]},{zones:['Central','North'],d:'D04',t:['T02'],jobs:[]}],
+  sb:[['T07','pref','Preference · M Electric'],['T01','alg','Algorithm']], direct:[]},
+ {k:'Sat 21', vans:3, leave:[], crews:[
+   {zones:['North'],d:'D01',t:['T03','T08'],jobs:[]},{zones:['East'],d:'D02',t:['T04','T09'],jobs:[]},{zones:['West','South'],d:'D03',t:['T05','T10'],jobs:[]}],
+  sb:[['T06','left','Leftover'],['T11','left','Leftover'],['T02','left','Leftover']], direct:[]},
+];
+// Derive Planning Week hours: Total Credited = Crew-day Active + 4 h per Standby day (max(4, Active) once per date); Active adds direct duties
+(()=>{ const sb={}, dir={};
+  DAYS.forEach(d=>{ d.sb.forEach(([t])=>sb[t]=(sb[t]||0)+1); d.direct.forEach(x=>dir[x.t]=(dir[x.t]||0)+x.planned); });
+  Object.keys(TECH).forEach(t=>{ const a=CREW_ACT[t]+(dir[t]||0); PW_ACT[t]=a; PW_HRS[t]=CREW_ACT[t]+4*(sb[t]||0)+Math.max(0,(dir[t]||0)-4*Math.min(1,(dir[t]?1:0))); });
+  Object.keys(DRV).forEach(d=>{ PW_ACT[d]=DRV_PW[d]; PW_HRS[d]=DRV_PW[d]; });
+})();
+
+/* ===================================================================== */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const P = n => `<i class="pin">${n}</i>`;
+
+function desk(url, tabs, active, who, body, extra=''){
+  const tabHtml = tabs.map(t=>`<span class="tab ${t===active?'on':''}">${t}</span>`).join('');
+  return `<div class="scaler"><div class="desk">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">${url}</span></div>
+    <div class="appbar"><span class="logo">Aircon Workload</span>${tabHtml}
+      <span class="who"><span class="bell"></span>${who}<span class="avatar"></span></span></div>
+    <div class="page">${body}</div>${extra}
+    <div class="scrim"></div><div class="toast"></div>
+  </div></div>`;
+}
+const MGR_TABS = ['Landing Page','Availability','Jobs','CSV upload','Job Allocation','Update Roster','Requests'];
+const mgr = (url,active,body,extra) => desk('workload.local/'+url, MGR_TABS, active, 'Sarah Tan · Manager', body, extra);
+
+function phone(title, body, nav, opts={}){
+  const tabs = ['Home','Availability','Standby','Alerts'];
+  return `<div><div class="phone">
+    <div class="sbar"><span>09:41</span><span>4G ▮▮▮</span></div>
+    ${opts.offline?'<div class="offline on">Offline · showing today\'s Assignments saved at 07:42. Changes are disabled.</div>':''}
+    ${title?`<div class="mtop">${opts.back?'<span style="font-size:18px">‹</span>':''}<h4>${title}</h4>${opts.right||''}</div>`:''}
+    <div class="mbody">${body}</div>
+    ${nav!==null?`<div class="mnav">${tabs.map(t=>`<span class="${t===nav?'on':''}">${t}</span>`).join('')}</div>`:''}
+    ${opts.overlay||''}
+  </div>${opts.cap?`<p class="phone-cap">${opts.cap}</p>`:''}</div>`;
+}
+
+function toast(root, msg, kind=''){
+  const t = $('.toast', root); t.className = 'toast on '+kind; t.innerHTML = msg;
+  clearTimeout(t._h); t._h = setTimeout(()=>t.className='toast', 3200);
+}
+function modal(root, html){ const s=$('.scrim',root); s.innerHTML = html; s.classList.add('on'); return s; }
+function closeModal(root){ const s=$('.scrim',root); s.classList.remove('on'); s.innerHTML=''; }
+
+/* =====================================================================
+   SCREENS
+   ===================================================================== */
+const S = [];
+
+/* ---------- W-01 Login ---------- */
+S.push({id:'W-01', name:'Login', role:'All', cls:'LoginPage', uc:'UC-01', fr:'FR-43, FR-48, NFR-07', group:'All roles',
+purpose:'Every user signs in here. After login each role lands on its own Landing Page (FR-43). Shown at 360 px; Manager and IT Administrator see the same card centred at 1366 px.',
+notes:['Email and password; "Forgot password?" opens W-02.','A device not used in the last 30 days needs the code emailed to the company address (NFR-07).','After 5 failed attempts within 15 minutes the account locks; only the IT Administrator can unlock it (FR-48).','After login: Manager → W-03, Staff → W-11, IT Administrator → W-13 (FR-43).'],
+render(){
+  const login = phone('', `
+    <div style="margin-top:40px;text-align:center"><span class="logo" style="justify-content:center">Aircon Workload</span>
+    <p class="muted small" style="margin:6px 0 0">Sign in with your company account</p></div>
+    <div class="field ann"><label>Email ${P(1)}</label><div class="inp ph">name@company.com.sg</div></div>
+    <div class="field"><label>Password</label><div class="inp ph">••••••••</div></div>
+    <div class="row"><span class="spacer"></span><button class="link small" data-go="W-02">Forgot password?</button></div>
+    <button class="btn pri full" data-go="W-11">Sign in</button>
+    <p class="hint" style="text-align:center">Accounts are created by the IT Administrator.</p>`, null, {cap:'1 · Sign in'});
+  const device = phone('', `
+    <div style="margin-top:40px"><h4 style="margin:0 0 6px;font-size:17px">Confirm it's you ${P(2)}</h4>
+    <p class="small muted" style="margin:0">This device hasn't been used with your account in the last 30 days. We emailed a 6-digit code to <b>c***n@company.com.sg</b>.</p></div>
+    <div class="row" style="gap:6px">${'<div class="inp" style="width:44px;text-align:center;font-family:var(--mono)">_</div>'.repeat(6)}</div>
+    <label class="row small"><input type="checkbox" checked> Remember this device</label>
+    <button class="btn pri full">Confirm</button>
+    <button class="link small">Send a new code</button>`, null, {cap:'2 · New device: email code (NFR-07)'});
+  const locked = phone('', `
+    <div style="margin-top:40px;text-align:center"><span class="logo" style="justify-content:center">Aircon Workload</span></div>
+    <div class="banner block ann"><span class="ico">!</span><div><b>Account locked ${P(3)}</b><br>Too many failed sign-ins. Contact your IT Administrator to unlock it.</div></div>
+    <div class="field"><label>Email</label><div class="inp">chen@company.com.sg</div></div>
+    <div class="field"><label>Password</label><div class="inp ro">••••••••</div></div>
+    <button class="btn pri full" disabled>Sign in</button>
+    <div class="banner grey small"><span class="ico">i</span><div>Wrong email or password shows: "Email or password is incorrect." It never says which one.</div></div>`, null, {cap:'3 · Locked after 5 failed attempts (FR-48)'});
+  return `<div class="phone-row">${login}${device}${locked}</div>`;
+}});
+
+/* ---------- W-02 Reset ---------- */
+S.push({id:'W-02', name:'Forgot / reset password', role:'All', cls:'LoginPage', uc:'UC-02', fr:'FR-47', group:'All roles',
+purpose:'A user who forgot their password gets a single-use link by company email. A successful reset invalidates every other outstanding link (FR-47).',
+notes:['The confirmation message is the same whether or not the account exists.','The link is single-use; a second request makes both links unusable once one is used.','Expired or used link shows its own message with a way to request a new one.'],
+render(){
+  const a = phone('Reset password', `
+    <p class="small muted" style="margin:0">Enter your company email. We'll send a link to set a new password.</p>
+    <div class="field"><label>Email</label><div class="inp">chen@company.com.sg</div></div>
+    <button class="btn pri full">Send reset link</button>
+    <button class="link small" data-go="W-01">Back to sign in</button>`, null, {back:true, cap:'1 · Request a link'});
+  const b = phone('Reset password', `
+    <div class="banner info ann"><span class="ico">✓</span><div>If an account exists for <b>chen@company.com.sg</b>, a reset link has been sent. ${P(1)}</div></div>
+    <p class="small muted">The link works once. Requesting another link replaces this one.</p>
+    <button class="btn ghost full" data-go="W-01">Back to sign in</button>`, null, {back:true, cap:'2 · Same message for any email'});
+  const c = phone('Set a new password', `
+    <div class="field"><label>New password</label><div class="inp ph">••••••••••</div></div>
+    <div class="field"><label>Confirm new password</label><div class="inp ph">••••••••••</div></div>
+    <p class="hint">Saving signs you out of other devices and cancels any other reset links. ${P(2)}</p>
+    <button class="btn pri full">Save password</button>`, null, {cap:'3 · From the email link'});
+  const d = phone('Set a new password', `
+    <div class="banner block ann"><span class="ico">!</span><div><b>This link can't be used</b><br>It has expired or was already used. ${P(3)}</div></div>
+    <button class="btn pri full">Request a new link</button>`, null, {cap:'4 · Expired or used link'});
+  return `<div class="phone-row">${a}${b}${c}${d}</div>`;
+}});
+
+/* ---------- W-03 Manager Landing ---------- */
+S.push({id:'W-03', name:'Manager Landing Page', role:'Manager', cls:'LandingPage', uc:'UC-10, UC-15', fr:'FR-36, FR-40', group:'Manager',
+purpose:'The Manager\'s first page: Total Credited Workload against the 40 h target with Active Hours shown separately, the lowest-Workload Staff with their activated-day counts, today\'s Crews and Standby, and the alerts that need action.',
+notes:['Week switch: current week (default) or the Planning Week (projected from the Draft) (FR-40).','Bars are Total Credited Workload (Active Hours, or at least 4 h on a Standby day); Active Hours is the small figure under each bar. Over 40 h means strictly above 40.0: 40.0 h is not highlighted, 40.5 h is (FR-36, DEC-86, DEC-96).','Lowest three exclude anyone with a Leave Record that week; each row shows distinct activated Standby days in 12 months (FR-40, DEC-96).','Alerts include pending rejection requests, staffing shortages and missing van CSV days; each has "Mark handled" (UC-15).','Today\'s Crews show their coverage Zones and Standby source; a direct duty (paid transport, no Van) is listed apart. "Open Update Roster" goes to W-09 (DEC-97).'],
+render(){
+  const body = `
+  <div class="ph"><h3>Good morning, Sarah</h3><span class="muted">Thu 5 Nov 2026</span>
+    <div class="r ann">${P(1)}<div class="seg" id="w3-week"><button class="on" data-w="cw">This week · 2–7 Nov</button><button data-w="pw">Planning Week · 16–21 Nov (Draft)</button></div></div></div>
+  <div class="grid" style="grid-template-columns:1.35fr 1fr 1fr">
+    <div class="card"><div class="hd">Workload <span class="chip">40 h target</span><span class="r" id="w3-sub">Total Credited Hours, Mon–Sat</span></div>
+      <div class="bd"><div class="wl" id="w3-bars"></div>
+      <div class="legend" style="margin-top:12px"><span><i style="background:var(--fill2)"></i>Total Credited</span><span><i style="background:repeating-linear-gradient(135deg,#e2a23b 0 5px,#f3c56f 5px 10px)"></i>Over 40 h ${P(2)}</span><span><i style="border-left:2px dashed var(--block);border-radius:0;width:10px"></i>40 h target</span><span class="muted">Small figure = Active Hours</span></div></div></div>
+    <div class="grid" style="align-content:start">
+      <div class="card ann"><div class="hd">Lowest Workload ${P(3)}<span class="r">excl. Leave this week</span></div><div class="bd" id="w3-low"></div></div>
+      <div class="card ann"><div class="hd">Today's Crews · Thu 5 Nov ${P(5)}<span class="r"><button class="link" data-go="W-09">Open Update Roster</button></span></div>
+        <div class="bd grid" style="gap:6px">
+          ${[['Van 1',['North'],'D01',['T03','T08']],['Van 2',['East'],'D02',['T04','T09']],['Van 3',['West','South'],'D03',['T05','T10']],['Van 4',['Central'],'D04',['T02']]].map(([v,z,d,t])=>
+          `<div class="mini-crew"><div class="row"><b>${v}</b>${z.map(x=>`<span class="chip">${x}</span>`).join('')}</div><div class="small">${DRV[d]} · ${t.map(x=>TECH[x].n).join(', ')}</div></div>`).join('')}
+          <div class="small" style="margin-top:4px"><b>Standby:</b> ${[['T01','Algorithm'],['T06','Preference · M Electric'],['T11','Preference · Dicon'],['T07','Leftover']].map(([t,s])=>`${TECH[t].n} <span class="src ${s.startsWith('Pref')?'pick':''}">${s}</span>`).join(' ')}</div>
+          <div class="small"><b>Direct duties today (no Van):</b> none yet. Record one in Update Roster.</div>
+        </div></div>
+    </div>
+    <div class="card ann"><div class="hd">Needs action ${P(4)}<span class="r">5 open</span></div><div class="bd" id="w3-alerts">
+      ${[
+        ['5','Unassigned Jobs','For the Planning Week 16–21 Nov','W-06','Allocate'],
+        ['3','Pending Job Rejection Requests','T08 Hui Min · J-1036 · Fri 6 Nov 09:00<br>D03 Nizam · J-1050 · Sat 7 Nov 14:00<br>T11 Kumar · J-1054 · Fri 6 Nov 15:00 (direct duty)','W-16','Review'],
+        ['1','Staffing shortage','Wed 18 Nov: 3 Vans, exactly 3 Crews (the minimum). T10 is on MC, so there is no spare Crew.','W-06','Review'],
+        ['2','Certifications expiring within 1 month','T05 Eugene · M Electric · 28 Nov<br>T09 Irfan · Dicon · 2 Dec','W-13',''],
+        ['12','Working days with no van CSV','23 Nov – 5 Dec','W-05','Upload'],
+        ['0','Jobs made Unassigned by account changes','None','',''],
+      ].map(([c,t,s,go,b])=>`<div class="alert"><span class="count">${c}</span><div style="flex:1"><b>${t}</b><div class="small muted">${s}</div>
+        <div class="row" style="margin-top:5px">${b?`<button class="btn sm" data-go="${go}">${b}</button>`:''}${c!=='0'?'<button class="link small" data-handled>Mark handled</button>':''}</div></div></div>`).join('')}
+    </div></div>
+  </div>`;
+  return mgr('manager', 'Landing Page', body);
+},
+init(root){
+  const set = (w)=>{
+    const H = w==='cw'?CW_HRS:PW_HRS, A = w==='cw'?CW_ACT:PW_ACT;
+    const row = id => { const h=H[id], ot=h>40; return `<span>${nm(id)}</span><span class="bar"><i class="${ot?'ot':''}" style="width:${Math.min(h,48)/48*100}%"></i><span class="forty" style="left:${40/48*100}%"></span></span><span class="v ${ot?'ot':''}">${h.toFixed(1)}${ot?' ▲':''}<br><small class="muted" style="font-weight:400">Active ${A[id].toFixed(1)}</small></span>`; };
+    $('#w3-bars',root).innerHTML = `<div class="grp">Technicians</div>`+Object.keys(TECH).map(row).join('')+`<div class="grp">Drivers</div>`+Object.keys(DRV).map(row).join('');
+    $('#w3-sub',root).textContent = w==='cw'?'Total Credited Hours, Mon–Sat':'Projected from the Draft roster';
+    const leave = w==='cw'?['T07']:['T07','T10','T03','T08'];
+    const low = ids => ids.filter(i=>!leave.includes(i)).sort((a,b)=>H[a]-H[b]||nm(a).localeCompare(nm(b))).slice(0,3);
+    const lrow = i => `<div class="row small"><span>${nm(i)}</span><span class="spacer"></span><span class="mono">${H[i].toFixed(1)} h</span>${ACTD[i]!==undefined?`<span class="chip" title="Distinct activated Standby dates, last 12 months">${ACTD[i]} activated day${ACTD[i]===1?'':'s'}</span>`:''}</div>`;
+    $('#w3-low',root).innerHTML = `<div class="small muted" style="margin-bottom:4px">Technicians (Total Credited)</div>`+low(Object.keys(TECH)).map(lrow).join('')
+      +`<div class="sep"></div><div class="small muted" style="margin-bottom:4px">Drivers (Total Credited)</div>`+low(Object.keys(DRV)).map(lrow).join('')
+      +`<p class="hint" style="margin:8px 0 0">Excluded (Leave Record this week): ${leave.map(nm).join(', ')}</p>`;
+  };
+  set('cw');
+  $$('#w3-week button',root).forEach(b=>b.onclick=()=>{$$('#w3-week button',root).forEach(x=>x.classList.toggle('on',x===b));set(b.dataset.w);});
+  $$('[data-handled]',root).forEach(b=>b.onclick=()=>{b.closest('.alert').classList.add('done');b.textContent='Handled';});
+}});
+
+/* ---------- W-04 Job form ---------- */
+S.push({id:'W-04', name:'Job form', role:'Manager', cls:'JobPage', uc:'UC-05', fr:'FR-01, FR-02, FR-04', group:'Manager',
+purpose:'The Manager records or edits a Job. Zone comes from the postal code and the duration from the Standard Duration; a customer cancellation deletes the Job and notifies the Crew.',
+notes:['Postal code → 2-digit sector → Zone, read-only; an unknown sector is refused (FR-01, DEC-77).','Duration pre-fills from Job Type × units (Servicing 1 h, Installation 3 h per unit) and can be adjusted (FR-02).','Planned Hours = duration + 0.5 h Travel Allowance (DEC-31).','Preferred date is a working day (no Sundays) plus a Slot.','Delete names the Crew to be notified (FR-04, DEC-76).'],
+render(){
+  const body = `
+  <div class="ph"><span class="muted">Jobs ›</span><h3>J-1035 · Edit Job</h3><span class="chip dark">Assigned · Van 2 (East) · Mon 16 Nov 09:00</span>
+    <div class="r"><button class="btn danger" id="w4-del">Delete (customer cancelled)</button><button class="btn ghost">Cancel</button><button class="btn pri">Save Job</button></div></div>
+  <div class="grid" style="grid-template-columns:1fr 1fr 360px">
+    <div class="card"><div class="hd">Customer</div><div class="bd grid" style="gap:12px">
+      <div class="field"><label>Customer name *</label><div class="inp">Mdm Wong</div></div>
+      <div class="field"><label>Customer phone *</label><div class="inp">9123 4567</div></div>
+      <div class="field"><label>Address *</label><div class="inp">Blk 201 Tampines St 21</div></div>
+      <div class="row"><div class="field" style="flex:1"><label>Unit number</label><div class="inp">#08-114</div></div>
+        <div class="field ann" style="flex:1"><label>Postal code * ${P(1)}</label><input class="inp" id="w4-pc" value="520201" maxlength="6"></div></div>
+      <div class="field"><label>Zone</label><div class="inp ro" id="w4-zone"></div><span class="hint">Set from the postal code. Not editable.</span></div>
+    </div></div>
+    <div class="card"><div class="hd">Job</div><div class="bd grid" style="gap:12px">
+      <div class="field"><label>Brand *</label><div class="seg" id="w4-brand"><button class="on">M Electric</button><button>Dicon</button></div></div>
+      <div class="field"><label>Job Type *</label><div class="seg" id="w4-type"><button>Servicing</button><button class="on">Installation</button></div></div>
+      <div class="row"><div class="field" style="flex:1"><label>Number of units *</label><input class="inp" id="w4-u" type="number" min="1" value="2"></div>
+        <div class="field" style="flex:1"><label>Aircon model</label><div class="inp">MSY-GN24</div></div></div>
+      <div class="row ann"><div class="field" style="flex:1"><label>Duration (h) ${P(2)}</label><input class="inp" id="w4-d" value="6"></div>
+        <div class="field" style="flex:1"><label>Planned Hours ${P(3)}</label><div class="inp ro" id="w4-ph"></div></div></div>
+      <span class="hint" id="w4-std"></span>
+      <div class="field"><label>Notes</label><div class="inp" style="min-height:52px">Old unit to be removed. Lift access from carpark B.</div></div>
+    </div></div>
+    <div class="card"><div class="hd">Preferred time</div><div class="bd grid" style="gap:12px">
+      <div class="field ann"><label>Preferred date * ${P(4)}</label><div class="inp">Mon 16 Nov 2026</div><span class="hint">Mon–Sat only.</span></div>
+      <div class="field"><label>Preferred Slot *</label>
+        <label class="radio"><input type="radio" name="w4s" checked> Morning · 09:00–13:00</label>
+        <label class="radio"><input type="radio" name="w4s"> Afternoon · 14:00–18:00</label></div>
+      <div class="banner grey small"><span class="ico">i</span><div>Allocation and start time are set on Job Allocation (W-06).</div></div>
+    </div></div>
+  </div>`;
+  return mgr('manager/jobs/J-1035','Jobs',body);
+},
+init(root){
+  const sector = {52:'East',51:'East',46:'East',47:'East',48:'East',49:'East',50:'East',81:'East',
+    72:'North',73:'North',75:'North',76:'North',77:'North',78:'North',79:'North',80:'North',53:'North',54:'North',55:'North',56:'North',57:'North',
+    60:'West',61:'West',62:'West',63:'West',64:'West',65:'West',66:'West',67:'West',68:'West',69:'West',70:'West',71:'West',
+    '01':'South','02':'South','03':'South','04':'South','05':'South','06':'South','07':'South','08':'South','09':'South','10':'South','11':'South',
+    12:'Central',13:'Central',14:'Central',15:'Central',16:'Central',17:'Central',18:'Central',19:'Central',20:'Central',21:'Central',22:'Central',23:'Central',24:'Central',25:'Central',26:'Central',27:'Central',28:'Central',29:'Central',30:'Central',31:'Central',32:'Central',33:'Central',34:'Central',35:'Central',36:'Central',37:'Central',38:'Central',39:'Central',40:'Central',41:'Central',58:'Central',59:'Central'};
+  const zone=()=>{const v=$('#w4-pc',root).value;const s=v.slice(0,2);const z=v.length===6&&sector[s]||sector[+s];
+    $('#w4-zone',root).innerHTML = v.length<6?'<span class="muted">Enter 6 digits</span>': z?`<b>${z}</b> <span class="muted">(sector ${s})</span>`:'<span style="color:var(--block)">Unknown postal sector. Check the code.</span>';};
+  const std=()=>{const inst=$('#w4-type .on',root).textContent==='Installation';const u=Math.max(1,+$('#w4-u',root).value||1);
+    const d=(inst?3:1)*u; $('#w4-d',root).value=d; $('#w4-std',root).textContent=`Standard Duration: ${inst?'3':'1'} h × ${u} unit${u>1?'s':''} = ${d} h. You can adjust it.`; ph();};
+  const ph=()=>{$('#w4-ph',root).textContent=((+$('#w4-d',root).value||0)+0.5).toFixed(1)+' h (incl. 0.5 h Travel Allowance)';};
+  $('#w4-pc',root).oninput=zone; $('#w4-u',root).oninput=std; $('#w4-d',root).oninput=ph;
+  $$('.seg',root).forEach(g=>$$('button',g).forEach(b=>b.onclick=()=>{$$('button',g).forEach(x=>x.classList.toggle('on',x===b)); if(g.id==='w4-type')std();}));
+  zone(); std();
+  $('#w4-del',root).onclick=()=>{const m=modal(root,`<div class="modal"><div class="hd">Delete J-1035?</div><div class="bd">
+     <p style="margin:0">Use this when the customer cancels. The Job is removed, not kept as cancelled.</p>
+     <div class="banner warn"><span class="ico">!</span><div>Van 2 Crew on Mon 16 Nov will be notified: <b>D02 Mani, T04 Daniel, T09 Irfan</b> (Landing Page, email, SMS).</div></div>
+     </div><div class="ft"><button class="btn ghost" data-x>Keep Job</button><button class="btn danger" data-ok>Delete and notify</button></div></div>`);
+    $('[data-x]',m).onclick=()=>closeModal(root); $('[data-ok]',m).onclick=()=>{closeModal(root);toast(root,'J-1035 deleted. 3 Staff notified.');};};
+}});
+
+/* ---------- W-05 CSV upload ---------- */
+S.push({id:'W-05', name:'CSV upload', role:'Manager', cls:'CsvUploadPage', uc:'UC-16', fr:'FR-52, FR-53, FR-54', group:'Manager',
+purpose:'The Manager imports leave from the HR system and Van counts from the van vendor. The whole file is checked before anything is saved.',
+notes:['Choose the file type; the expected columns are shown before upload (FR-52, FR-53).','Any bad row rejects the whole file and lists every row error; nothing is saved (FR-54).','Exact duplicate rows are saved once.','Every upload is recorded with who, when, type and outcome (Audit Log).'],
+render(){
+  const body = `
+  <div class="ph"><h3>CSV upload</h3><span class="muted">Upload before planning starts on Thursday</span>
+    <div class="r small muted">Preview state: <div class="seg" id="w5-state"><button class="on" data-s="ok">Accepted</button><button data-s="bad">Rejected</button></div></div></div>
+  <div class="grid" style="grid-template-columns:420px 1fr">
+    <div class="card"><div class="hd">1 · Choose file type ${P(1)}</div><div class="bd grid ann" style="gap:10px">
+      <label class="radio"><input type="radio" name="w5t" value="hr" checked> <div><b>HR leave CSV</b><div class="small muted">Who is on Leave, Emergency Leave or MC</div></div></label>
+      <label class="radio"><input type="radio" name="w5t" value="van"> <div><b>Van availability CSV</b><div class="small muted">Vans available per date</div></div></label>
+      <div class="field"><label>Expected columns</label><div class="inp ro mono" id="w5-cols"></div><span class="hint" id="w5-hint"></span></div>
+      <div class="drop" style="padding:22px">Drop a .csv file here or <button class="link">browse</button></div>
+      <div class="row"><span class="small mono">hr_leave_2026-11-04.csv · 2 KB</span><span class="spacer"></span><button class="btn pri" id="w5-up">Upload and check</button></div>
+    </div></div>
+    <div class="grid" style="align-content:start">
+      <div class="card"><div class="hd">2 · Result</div><div class="bd" id="w5-res"></div></div>
+      <div class="card"><div class="hd">Recent uploads ${P(4)}</div><div class="bd" style="padding:0">
+        <table class="t"><tr><th>When</th><th>Type</th><th>By</th><th>File</th><th>Outcome</th></tr>
+        <tr><td>Wed 4 Nov 17:20</td><td>HR leave</td><td>Sarah Tan</td><td class="mono">hr_leave_2026-11-04.csv</td><td><span class="chip ok">Committed · 6 rows</span></td></tr>
+        <tr><td>Wed 4 Nov 17:12</td><td>HR leave</td><td>Sarah Tan</td><td class="mono">hr_leave_2026-11-04.csv</td><td><span class="chip block">Rejected · 2 errors</span></td></tr>
+        <tr><td>Tue 3 Nov 10:05</td><td>Van availability</td><td>Sarah Tan</td><td class="mono">vans_nov.csv</td><td><span class="chip ok">Committed · 17 rows</span></td></tr>
+        </table></div></div>
+    </div>
+  </div>`;
+  return mgr('manager/csv-upload','CSV upload',body);
+},
+init(root){
+  const cols=()=>{const v=$('input[name=w5t]:checked',root).value;
+    $('#w5-cols',root).textContent = v==='hr'?'staff_id, date, type':'date, vans_available';
+    $('#w5-hint',root).textContent = v==='hr'?'type is Leave, Emergency Leave or MC. Dates are Mon–Sat. A newer file replaces records for the same dates.':'vans_available is a whole number, 0 or more. Caps the Crews on that date.';};
+  $$('input[name=w5t]',root).forEach(r=>r.onchange=cols); cols();
+  const res=s=>{$('#w5-res',root).innerHTML = s==='ok'
+    ? `<div class="banner ok"><span class="ico">✓</span><div><b>File accepted. 6 Leave Records saved.</b><br>Dates 9–20 Nov · 1 exact duplicate row saved once.</div></div>
+       <table class="t" style="margin-top:10px"><tr><th>Staff</th><th>Date</th><th>Type</th></tr>
+       <tr><td>T07 Gopal</td><td>Mon 16 Nov</td><td>Leave</td></tr><tr><td>T10 Jason</td><td>Wed 18 Nov</td><td>MC</td></tr>
+       <tr><td>T03 Chen</td><td>Fri 20 Nov</td><td>Leave</td></tr><tr><td>T08 Hui Min</td><td>Fri 20 Nov</td><td>Leave</td></tr>
+       <tr><td colspan="3" class="muted small">+ 2 more · <button class="link">View all</button></td></tr></table>
+       <p class="hint">Clash check: T08 Hui Min asked for Dicon Standby on Fri 20 Nov; the Leave Record takes precedence and the request cannot be Confirmed.</p>`
+    : `<div class="banner block ann"><span class="ico">!</span><div><b>File rejected. Nothing was saved. ${P(2)}</b><br>Fix these rows and upload the whole file again.</div></div>
+       <table class="t" style="margin-top:10px"><tr><th>Row</th><th>Problem</th><th>Value</th></tr>
+       <tr><td>4</td><td>Unknown staff ID</td><td class="mono">T99</td></tr>
+       <tr><td>9</td><td>Date is a Sunday</td><td class="mono">2026-11-22</td></tr>
+       <tr><td>12</td><td>Unknown type (use Leave, Emergency Leave or MC)</td><td class="mono">Annual</td></tr></table>`;};
+  res('ok');
+  $$('#w5-state button',root).forEach(b=>b.onclick=()=>{$$('#w5-state button',root).forEach(x=>x.classList.toggle('on',x===b));res(b.dataset.s);});
+  $('#w5-up',root).onclick=()=>toast(root,'Checking the whole file before saving…');
+}});
+
+/* ---------- W-06 Job Allocation ---------- */
+const W6 = {day:0, overrides:{}, published:false, jobsByCrew:null, zones:null, dropped:{}};
+S.push({id:'W-06', name:'Job Allocation: Suggested Roster', role:'Manager', cls:'JobAllocationPage', uc:'UC-07', fr:'FR-07, FR-08, FR-09, FR-11, FR-26, FR-27, FR-30, FR-32, FR-33, FR-34, FR-55', group:'Manager',
+purpose:'The Manager reviews the Suggested Roster for the Planning Week: resolved Standby Preferences, Crews with their coverage Zones, Standby cover and direct duties. Unassigned Jobs are dragged onto Crews with a start time, warnings are reviewed and the week is published.',
+notes:['"Suggest roster" works on locked inputs only. It is refused when Jobs or manual Crew/Standby edits already exist, so nothing is silently discarded (DEC-98).','Each provisional Standby request is resolved after the Availability Deadline and the HR/Van CSV checks: Confirmed or NotConfirmed, with a reason (DEC-98).','Three checks per day: at least 3 valid Crews, Full Standby cover (both Brands) and Van capacity from the van CSV (FR-26, DEC-97).','Drag an Unassigned Job onto a Crew and set its start time; a Crew without a valid Certification for the Brand is blocked (FR-27, FR-32). Each Job lists the Staff on that Job.','Standby tags: Preference, Algorithm, Leftover, Manager. A Confirmed pick has no remove or override control (DEC-98).','Warnings need a reason to override and are logged (FR-33). Publish is blocked below 3 Crews or on a hard violation, and notifies Staff (FR-09).','Direct duties: one Technician, paid transport, no Van. Listed apart and not counted in the 3 initial Crews (DEC-97).','A Crew covers a set of Zones chosen by the Manager, not one Zone. A Job outside them is a warning (DEC-77, DEC-97).'],
+render(){
+  const body = `
+  <div class="ph"><h3>Job Allocation</h3><span class="chip">Planning Week · Mon 16 – Sat 21 Nov</span><span class="status-chip" id="w6-status">Draft</span>
+    <div class="r ann"><span class="small muted">Suggested Thu 5 Nov 09:02</span>${P(1)}<button class="btn" id="w6-suggest">Suggest roster</button><button class="btn ghost" data-go="W-07">Compare Staff</button><button class="btn pri" id="w6-pub">Publish week</button></div></div>
+  <details class="card ann" style="margin-bottom:12px" open><summary class="hd" style="cursor:pointer">Standby Preferences resolved ${P(2)}<span class="r">7 Confirmed · 1 NotConfirmed · inputs locked Wed 4 Nov 18:00, HR and Van CSV received</span></summary>
+    <div class="bd" style="padding:0"><table class="t"><tr><th>#</th><th>Technician</th><th>Day · slot</th><th>Result</th><th>Reason</th></tr>
+    ${PREFS.map(p=>`<tr><td class="mono">${p.n}</td><td>${nm(p.t)}</td><td>${p.day} · ${brand(p.b)}</td><td><span class="chip ${p.st==='Confirmed'?'ok':'block'}">${p.st==='Confirmed'?'Confirmed':'NotConfirmed'}</span></td><td class="small">${p.st==='Confirmed'?(p.note||'Eligible, and 3+ valid Crews and Full Standby cover still hold. Reserved as initial Standby.'):p.why}</td></tr>`).join('')}
+    </table><p class="hint" style="padding:0 14px 10px;margin:0">Processed by submission order (staff ID breaks ties). The Manager cannot favour a request or move it to another day.</p></div></details>
+  <div class="days ann" id="w6-days"></div>
+  <div class="alloc">
+    <div>
+      <div class="row small" style="margin-bottom:10px" id="w6-dayinfo"></div>
+      <div class="crews" id="w6-crews"></div>
+      <div class="card" style="margin-top:12px"><div class="hd">Standby ${P(5)}<span class="r" id="w6-cover"></span></div><div class="bd" id="w6-sb"></div></div>
+      <div class="card ann" style="margin-top:12px"><div class="hd">Direct duties · no Van ${P(7)}<span class="r">not counted in the 3 initial Crews</span></div><div class="bd" id="w6-direct"></div></div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="card ann"><div class="hd">Unassigned Jobs <span class="chip dark" id="w6-ucount"></span>${P(4)}</div><div class="bd grid" style="gap:6px" id="w6-un"></div></div>
+      <div class="card ann"><div class="hd">Warnings ${P(6)}<span class="r" id="w6-wcount"></span></div><div class="bd" id="w6-warn"></div></div>
+      <div class="banner ok small" id="w6-blk"></div>
+    </div>
+  </div>`;
+  return mgr('manager/allocation?week=2026-11-16','Job Allocation',body);
+},
+init(root){
+  if(!W6.jobsByCrew) W6.jobsByCrew = DAYS.map(d=>d.crews.map(c=>c.jobs.slice()));
+  W6.zones = W6.zones || DAYS.map(d=>d.crews.map(c=>c.zones.slice()));
+  const effCrews = di => DAYS[di].crews.length - (W6.dropped[di]?1:0);
+  const blocks = () => { const b=[]; DAYS.forEach((d,di)=>{ if(d.vans===null) b.push(`<b>${d.k}</b>: no Van Availability, 0 Crews`); else if(effCrews(di)<3) b.push(`<b>${d.k}</b>: only ${effCrews(di)} valid Crew${effCrews(di)===1?'':'s'} (minimum 3)`); }); return b; };
+  const members = c => [DRV[c.d],...c.t.map(x=>TECH[x].n)].join(', ');
+  const warnings=()=>{
+    const w=[];
+    DAYS.forEach((d,di)=>{
+      if(d.vans===null) w.push({k:`van-${di}`,t:`<b>${d.k} Nov</b> · no Van Availability uploaded. Crews can't be suggested.`,fr:'FR-33'});
+      W6.jobsByCrew[di]?.forEach((jobs,ci)=>jobs.forEach(j=>{ if(!W6.zones[di][ci].includes(j.zone)) w.push({k:`z-${di}-${j.id}`,t:`<b>${d.k}</b> · Van ${ci+1} (covers ${W6.zones[di][ci].join(', ')}): ${j.id} is in ${j.zone}`,fr:'FR-33 zone'});
+        const h=+j.at.slice(0,2); if(j.slot && ((j.slot==='Morning'&&h>=13)||(j.slot==='Afternoon'&&h<14))) w.push({k:`s-${di}-${j.id}`,t:`<b>${d.k}</b> · ${j.id} starts ${j.at}, outside the preferred ${j.slot} Slot`,fr:'FR-33 Slot'}); }));
+    });
+    Object.keys(TECH).filter(t=>PW_HRS[t]>40).forEach(t=>w.push({k:'ot-'+t,t:`<b>${nm(t)}</b> · projected ${PW_HRS[t].toFixed(1)} h Total Credited this week (over 40 h)`,fr:'FR-33 40 h'}));
+    w.push({k:'cover-wed',t:'<b>Wed 18 Nov</b> · exactly 3 Crews; no spare Crew if another Technician is absent',fr:'FR-33 minimum'});
+    return w;
+  };
+  const draw=()=>{
+    const di=W6.day, d=DAYS[di];
+    $('#w6-days',root).innerHTML = DAYS.map((x,i)=>`<button class="${i===di?'on':''}" data-d="${i}">${x.k.split(' ')[0]} ${x.k.split(' ')[1]} Nov<small>${x.vans===null?'no van CSV':effCrews(i)+' Crews · '+x.vans+' Vans'}</small></button>`).join('') + `<span style="align-self:center;margin-left:8px">${P(3)}</span>`;
+    $$('#w6-days button',root).forEach(b=>b.onclick=()=>{W6.day=+b.dataset.d;draw();});
+    if(d.vans===null){
+      $('#w6-dayinfo',root).innerHTML='';
+      $('#w6-crews',root).innerHTML = `<div class="banner warn" style="grid-column:1/-1"><span class="ico">!</span><div><b>No van CSV for ${d.k} Nov.</b> Upload Van Availability on CSV upload, then run Suggest roster again. <button class="link" data-go="W-05">Go to CSV upload</button></div></div>`;
+      $('#w6-sb',root).innerHTML='<span class="muted small">No Crews or Standby until Van Availability is uploaded.</span>'; $('#w6-cover',root).textContent=''; $('#w6-direct',root).innerHTML='';
+    } else {
+      const n=effCrews(di), hasME=d.sb.some(([t])=>TECH[t].b.includes('ME')), hasDC=d.sb.some(([t])=>TECH[t].b.includes('DC'));
+      $('#w6-dayinfo',root).innerHTML =
+        `<span class="chip ${n>=3?'ok':'block'}">${n>=3?'✓':'✗'} ${n} valid Crews (min 3)</span><span class="chip ${hasME&&hasDC?'ok':'warn'}">${hasME&&hasDC?'✓ Full Standby cover':'! Standby cover missing'}</span><span class="chip ${n<=d.vans?'ok':'block'}">${n}/${d.vans} Vans used (van CSV)</span>
+         <span class="muted">·</span><span>Leave Records: ${d.leave.length?d.leave.map(x=>`<span class="chip">${x}</span>`).join(' '):'none'}</span><span class="spacer"></span>
+         <button class="btn sm ghost" id="w6-drop">${W6.dropped[di]?'Restore dropped Crew':'Preview: drop a Crew'}</button>`;
+      $('#w6-drop',root).onclick=()=>{W6.dropped[di]=!W6.dropped[di];draw();};
+      $('#w6-crews',root).innerHTML = d.crews.map((c,ci)=>{
+        if(W6.dropped[di] && ci===d.crews.length-1) return `<div class="crew" style="opacity:.4"><div class="ch"><b>Van ${ci+1}</b><span class="small muted">dropped in preview</span></div></div>`;
+        const jobs=W6.jobsByCrew[di][ci], zs=W6.zones[di][ci];
+        return `<div class="crew" data-ci="${ci}"><div class="ch"><b>Van ${ci+1}</b>
+          <span class="spacer"></span><span class="small muted">${jobs.reduce((s,j)=>s+dur(j)+0.5,0).toFixed(1)} h planned</span><button class="btn sm ghost" data-nb>Change member</button></div>
+          <div class="mem" style="border-bottom:1px solid var(--line2)"><div class="small muted">Covers Zones ${ci===0?P(8):''} <span class="hint">(tap to add or remove)</span></div>
+            <div class="row wrap" style="gap:4px">${ZONES.map(z=>`<button class="chip ${zs.includes(z)?'dark':''}" data-zone="${ci}:${z}" style="cursor:pointer">${z}</button>`).join('')}</div></div>
+          <div class="mem"><div class="small muted">Initial Crew</div><div class="person"><span class="role">Driver</span>${nm(c.d)}<span class="hrs">${PW_HRS[c.d].toFixed(1)} h credited</span></div>
+          ${c.t.map(t=>`<div class="person"><span class="role">Technician</span>${nm(t)} ${brands(t)}<span class="hrs ${PW_HRS[t]>40?'ot':''}">${PW_HRS[t].toFixed(1)} h credited${PW_HRS[t]>40?' ▲':''}</span></div>`).join('')}</div>
+          <div class="jobs">${jobs.map(j=>`<div class="job ${zs.includes(j.zone)?'':'warnj'}" style="flex-wrap:wrap"><input class="t" value="${j.at}" data-at="${j.id}"><b>${j.id}</b>${brand(j.b)}<span>${j.type} · ${j.u}u · ${dur(j)} h</span><span class="spacer"></span><span class="chip">${j.zone}</span>
+            <div class="small muted" style="flex-basis:100%">Staff on this Job: ${members(c)}</div></div>`).join('')}
+          <div class="drop">Drop a Job here</div></div></div>`;}).join('');
+      $$('[data-zone]',root).forEach(b=>b.onclick=()=>{const [ci,z]=b.dataset.zone.split(':'); const a=W6.zones[di][+ci]; const i=a.indexOf(z); if(i>=0){ if(a.length>1)a.splice(i,1); else toast(root,'A Crew covers at least one Zone.','block'); } else a.push(z); draw();});
+      $$('[data-at]',root).forEach(inp=>inp.onchange=()=>{const j=W6.jobsByCrew[di].flat().find(x=>x.id===inp.dataset.at); j.at=inp.value; draw();});
+      $('#w6-cover',root).innerHTML = hasME&&hasDC?'<span class="chip ok">Full Standby cover</span>':'<span class="chip warn">Missing Standby cover</span>';
+      $('#w6-sb',root).innerHTML = d.sb.map(([t,k,s])=>{
+          const conf = k==='pref' && PREFS.some(p=>p.t===t && p.st==='Confirmed');
+          return `<div class="sb"><span>${nm(t)}</span>${brands(t)}<span class="src ${k==='pref'?'pick':''}">${s}</span>${conf?'<span class="chip ok">Confirmed · locked</span>':''}<span class="spacer"></span><span class="small muted">Home Zone ${TECH[t].z}</span><span class="mono small">${PW_HRS[t].toFixed(1)} h credited</span>
+          ${conf?`<button class="btn sm ghost" data-locked>Move to Crew</button>`:`<button class="btn sm ghost" data-rm>Remove</button>`}</div>`;}).join('')
+        + `<div class="row" style="margin-top:8px"><button class="btn sm ghost" data-nb>+ Add Standby (source Manager)</button><span class="hint">Unused Standby day: 0 Active / 4 Credited hours.</span></div>`;
+      $$('[data-locked]',root).forEach(b=>b.onclick=()=>toast(root,'Blocked: a Confirmed pick cannot be removed or moved into an initial Crew, even with an override reason. Activation under Update Roster is still allowed (DEC-98).','block'));
+      $$('[data-rm]',root).forEach(b=>b.onclick=()=>toast(root,'Standby removed from the Draft. Cover re-checked.'));
+      $('#w6-direct',root).innerHTML = d.direct.length ? d.direct.map(x=>`<div class="job"><span class="mono">${x.at}</span><b>${x.id}</b>${brand(x.b)}<span>${x.type} · ${x.u}u</span><span class="spacer"></span><span>${nm(x.t)}</span><span class="chip acc">paid transport · no Van</span><span class="mono small">${x.planned.toFixed(1)} Active / 4.0 Credited</span></div>`).join('') + `<p class="hint" style="margin:6px 0 0">One Technician, no Driver. Added in Update Roster or planned here for a Standby; transport is arranged outside the system.</p>` : '<span class="muted small">No direct duties planned for this day.</span>';
+      // drag and drop
+      $$('.crew[data-ci]',root).forEach(card=>{
+        card.ondragover=e=>{e.preventDefault();card.classList.add('over');};
+        card.ondragleave=()=>card.classList.remove('over');
+        card.ondrop=e=>{e.preventDefault();card.classList.remove('over');
+          const id=e.dataTransfer.getData('text'); const j=UNASSIGNED.find(x=>x.id===id); if(!j)return;
+          const ci=+card.dataset.ci, crew=d.crews[ci];
+          const ok=crew.t.some(t=>TECH[t].b.includes(j.b));
+          if(!ok){toast(root,`Blocked: Van ${ci+1} has no valid ${BR[j.b]} Certification (FR-27).`,'block');return;}
+          UNASSIGNED=UNASSIGNED.filter(x=>x!==j);
+          W6.jobsByCrew[di][ci].push({...j, at:j.slot==='Morning'?'09:00':'14:00'});
+          toast(root,`${j.id} allocated to Van ${ci+1}. Set its start time.`); draw();};
+      });
+    }
+    $('#w6-ucount',root).textContent=UNASSIGNED.length;
+    $('#w6-un',root).innerHTML = UNASSIGNED.map(j=>`<div class="job uj" draggable="true" data-j="${j.id}" style="align-items:flex-start"><span class="grip" style="margin-top:3px"></span><div style="flex:1;min-width:0"><div class="row" style="gap:6px"><b style="white-space:nowrap">${j.id}</b>${brand(j.b)}<span class="spacer"></span><span class="chip">${j.zone}</span></div><div class="small muted">${j.type} · ${j.u}u · ${dur(j)} h · ${j.day} ${j.slot}</div></div></div>`).join('') || '<span class="muted small">All Jobs allocated.</span>';
+    $$('.uj',root).forEach(el=>el.ondragstart=e=>e.dataTransfer.setData('text',el.dataset.j));
+    const W=warnings(); const open=W.filter(w=>!W6.overrides[w.k]);
+    $('#w6-wcount',root).textContent=`${open.length} open · ${W.length-open.length} overridden`;
+    $('#w6-warn',root).innerHTML = W.map(w=>{const o=W6.overrides[w.k];return `<div class="warnrow ${o?'done':''}"><div class="row" style="align-items:flex-start"><span class="chip warn">!</span><span>${w.t}</span></div>
+      ${o?`<div class="small muted" style="margin-top:4px">Overridden · “${o}” · logged</div>`:`<div class="why"><input class="inp" placeholder="Reason to override" data-r="${w.k}" style="min-height:28px;padding:4px 8px;font-size:12px"><button class="btn sm" data-o="${w.k}">Override</button></div>`}</div>`;}).join('');
+    $$('[data-o]',root).forEach(b=>b.onclick=()=>{const r=$(`[data-r="${b.dataset.o}"]`,root).value.trim(); if(!r){toast(root,'A reason is required to override.','block');return;} W6.overrides[b.dataset.o]=r; draw();});
+    const B=blocks(), blk=$('#w6-blk',root);
+    blk.className='banner small '+(B.length?'block':'ok');
+    blk.innerHTML = B.length ? `<span class="ico">!</span><div><b>Publish blocked.</b> ${B.join('; ')}. Warnings can be overridden; this cannot. No further Standby picks can be confirmed to fix it; Confirmed picks stay.</div>` : '<span class="ico">✓</span><div>Every day has at least 3 valid Crews and no hard violation. Publishing is allowed.</div>';
+    $('#w6-status',root).className='status-chip'+(W6.published?' pub':''); $('#w6-status',root).textContent=W6.published?'Published':'Draft';
+    bindGo(root);
+  };
+  draw();
+  $('#w6-suggest',root).onclick=()=>{
+    const jobs=W6.jobsByCrew.flat(2).length, m=modal(root,`<div class="modal"><div class="hd">Regeneration refused</div><div class="bd">
+      <div class="banner block"><span class="ico">!</span><div>This Draft already has <b>${jobs} allocated Jobs</b> and manual Crew or Standby edits. Suggest roster would discard them, so it will not run.</div></div>
+      <p class="small" style="margin:0">Confirmed Standby picks are kept and are never revoked or re-notified by a regeneration (DEC-98). To start again, unallocate the Jobs and clear the manual edits first, or edit the Draft directly.</p>
+      </div><div class="ft"><button class="btn dark" data-x>Back to the roster</button></div></div>`);
+    $('[data-x]',m).onclick=()=>closeModal(root);};
+  $('#w6-pub',root).onclick=()=>{
+    const B=blocks();
+    if(B.length){toast(root,'Publish blocked: '+B.join('; ').replace(/<\/?b>/g,'')+'.','block');return;}
+    const open=warnings().filter(w=>!W6.overrides[w.k]);
+    const m=modal(root,`<div class="modal"><div class="hd">Publish 16–21 Nov?</div><div class="bd">
+      ${open.length?`<div class="banner warn"><span class="ico">!</span><div>${open.length} warning${open.length>1?'s':''} still open. Give a reason for each to publish anyway. Each override is logged.</div></div>
+      ${open.map(w=>`<div class="field"><label style="font-weight:400">${w.t}</label><input class="inp" data-pr="${w.k}" placeholder="Reason"></div>`).join('')}`:'<div class="banner ok"><span class="ico">✓</span><div>No open warnings.</div></div>'}
+      <p class="small" style="margin:0">Confirmed and NotConfirmed Standby results are shown to Staff with their reasons. 17 Staff with Assignments or Standby days will be notified on their Landing Page, by email and by SMS. Publication revalidates the whole week.</p>
+      </div><div class="ft"><button class="btn ghost" data-x>Back</button><button class="btn pri" data-ok>Publish and notify</button></div></div>`);
+    $('[data-x]',m).onclick=()=>closeModal(root);
+    $('[data-ok]',m).onclick=()=>{const ins=$$('[data-pr]',m); if(ins.some(i=>!i.value.trim())){toast(root,'Every open warning needs a reason.','block');return;}
+      ins.forEach(i=>W6.overrides[i.dataset.pr]=i.value.trim()); W6.published=true; closeModal(root); draw(); toast(root,'Published. 17 Staff notified. Later changes notify the affected Staff.');};
+  };
+}});
+
+/* ---------- W-07 Compare ---------- */
+S.push({id:'W-07', name:'Compare Staff panel', role:'Manager', cls:'JobAllocationPage', uc:'UC-08', fr:'FR-31', group:'Manager',
+purpose:'Opened from Job Allocation to compare up to three Staff side by side for a date and its Planning Week before changing a Crew or choosing a Standby.',
+notes:['Pick up to three Staff; a 4th selection is disabled (FR-31).','Seven rows per person: Availability, Active Hours, Total Credited Workload, Certifications, preference status with reason, current duty or coverage (home Zone if none), and distinct activated days.','Active Hours are the Planned Hours of Jobs attributed to the person; Total Credited adds the 4 h Standby minimum (DEC-96).','Preference status is Confirmed, NotConfirmed or Provisional, with the reason; it is shown for information and cannot be overridden here (DEC-98).','Activated days are distinct dates in the last 12 months, counted once per day (DEC-96).'],
+render(){
+  const body = `
+  <div class="ph"><span class="muted">Job Allocation ›</span><h3>Compare Staff</h3><span class="chip">Date: Mon 16 Nov · Planning Week 16–21 Nov</span><div class="r"><button class="btn ghost" data-go="W-06">Back to roster</button></div></div>
+  <div class="grid" style="grid-template-columns:250px 1fr">
+    <div class="card ann"><div class="hd">Select up to 3 ${P(1)}<span class="r" id="w7-n"></span></div><div class="bd" id="w7-pick" style="display:flex;flex-direction:column;gap:4px"></div></div>
+    <div><div class="cmp" id="w7-cmp"></div><p class="hint">Day strip: ■ Available · ▨ Leave / Emergency Leave / MC · □ Unavailable or Not submitted. Outlined = selected date.</p></div>
+  </div>`;
+  return mgr('manager/allocation/compare','Job Allocation',body);
+},
+init(root){
+  const info = {
+    T03:{av:'aaaala',cert:['ME','25 Jun 2027'],pref:['Confirmed','Wed 18 · M Electric'],loc:'Crew Van 1 · covers North',act:1},
+    T04:{av:'aaaaau',cert:['ME','14 Feb 2027'],pref:['Confirmed','Tue 17 · M Electric'],loc:'Crew Van 2 · covers East',act:3},
+    T07:{av:'laaaaa',cert:['ME','9 Sep 2027'],pref:['Confirmed','Fri 20 · M Electric'],loc:'Home Zone Central (on Leave)',act:0},
+    T05:{av:'aaaaau',cert:['ME','28 Nov 2026'],pref:['None','No request this week'],loc:'Crew Van 3 · covers West',act:2},
+    T01:{av:'aaaaaa',cert:['ME','3 Mar 2027','DC','3 Mar 2027'],pref:['None','No request this week'],loc:'Standby (Algorithm) · home Zone Central',act:1},
+    T08:{av:'aaaala',cert:['DC','11 Jan 2027'],pref:['NotConfirmed','Fri 20 · Dicon: on Leave (HR CSV), Leave takes precedence'],loc:'Crew Van 1 · covers North',act:0},
+  };
+  let sel=['T03','T04','T07'];
+  const draw=()=>{
+    $('#w7-n',root).textContent=`${sel.length}/3`;
+    $('#w7-pick',root).innerHTML = Object.keys(TECH).map(t=>{const on=sel.includes(t), dis=!on&&sel.length>=3;
+      return `<label class="row small" style="opacity:${dis?.45:1}" title="${dis?'Up to 3 Staff can be compared':''}"><input type="checkbox" data-t="${t}" ${on?'checked':''} ${dis?'disabled':''}> ${nm(t)} ${brands(t)}</label>`;}).join('')
+      + `<p class="hint">Drivers can be compared the same way.</p>`;
+    $$('#w7-pick input',root).forEach(i=>i.onchange=()=>{const t=i.dataset.t; sel=i.checked?[...sel,t]:sel.filter(x=>x!==t); draw();});
+    const cols=[0,1,2].map(i=>sel[i]);
+    const cell=(t,f)=>t?(info[t]?f(info[t],t):'<span class="muted">sample n/a</span>'):'<span class="muted">Select a Technician</span>';
+    const dots=a=>`<div class="daydots">${['M','T','W','T','F','S'].map((d,i)=>`<span class="${a[i]==='a'?'a':a[i]==='l'?'l':''} ${i===0?'today':''}">${d}</span>`).join('')}</div>`;
+    const rows=[
+      ['', t=>t?`${nm(t)} ${brands(t)}`:'—','h'],
+      ['Availability<br><span class="small muted" style="font-weight:400">Mon 16 · week</span>', t=>cell(t,i=>`<b>${i.av[0]==='a'?'Available':i.av[0]==='l'?'Leave':'Unavailable'}</b>${dots(i.av)}`)],
+      ['Active Hours<br><span class="small muted" style="font-weight:400">Planned Hours of Jobs</span>', t=>cell(t,(i,id)=>`This week ${PW_ACT[id].toFixed(1)} h<br><span class="small muted">Last week ${CW_ACT[id].toFixed(1)} h</span>`)],
+      ['Total Credited Workload<br><span class="small muted" style="font-weight:400">incl. 4 h Standby minimum</span>', t=>cell(t,(i,id)=>`<span class="${PW_HRS[id]>40?'chip warn':''}">This week ${PW_HRS[id].toFixed(1)} h${PW_HRS[id]>40?' ▲':''}</span><br><span class="small muted">Last week ${CW_HRS[id].toFixed(1)} h</span>`)],
+      ['Certifications', t=>cell(t,i=>{let s='';for(let k=0;k<i.cert.length;k+=2)s+=`${brand(i.cert[k])} <span class="small">exp ${i.cert[k+1]}</span>${i.cert[k+1].includes('2026')?' <span class="chip warn">expiring</span>':''}<br>`;return s;})],
+      ['Standby preference<br><span class="small muted" style="font-weight:400">status and reason</span>', t=>cell(t,i=>i.pref[0]==='None'?`<span class="muted">${i.pref[1]}</span>`:`<span class="chip ${i.pref[0]==='Confirmed'?'ok':'block'}">${i.pref[0]}</span><br><span class="small">${i.pref[1]}</span>`)],
+      ['Current duty / coverage<br><span class="small muted" style="font-weight:400">Mon 16</span>', t=>cell(t,i=>i.loc)],
+      ['Activated days<br><span class="small muted" style="font-weight:400">distinct, last 12 months</span>', t=>cell(t,(i,id)=>`<b class="mono">${ACTD[id]}</b>`)],
+    ];
+    $('#w7-cmp',root).innerHTML = rows.map(([k,f,h])=>`<div class="k ${h?'h':''}">${k}</div>`+cols.map(t=>`<div class="${h?'h':''}">${f(t)}</div>`).join('')).join('');
+  };
+  draw();
+}});
+
+/* ---------- W-08 Availability grid ---------- */
+S.push({id:'W-08', name:'Availability grid', role:'Manager', cls:'LandingPage', uc:'UC-10', fr:'FR-14', group:'Manager',
+purpose:'Manpower Availability up to 1 month ahead: who is Available, who is on Leave from the HR CSV, who has not submitted, and where each Standby preference stands.',
+notes:['Staff down the side, working days across, up to 1 month ahead (FR-14, DEC-83).','A Leave Record overrides an Available entry (FR-52).','No entry counts as unavailable (DEC-03); weeks still before their Availability Deadline show many blanks.','Preference markers are distinct: ○ Provisional (before the deadline), ★ Confirmed, ✕ NotConfirmed. Hover a marker for the reason (DEC-98).','⊘ means a Confirmed pick was later overridden by a Leave Record; Leave takes precedence and the history is kept (DEC-98).'],
+render(){
+  const body = `
+  <div class="ph"><h3>Availability</h3><span class="chip">Thu 5 Nov – Sat 5 Dec 2026</span>
+    <div class="r"><div class="seg"><button class="on">All Staff</button><button>Technicians</button><button>Drivers</button></div></div></div>
+  <div class="legend ann" style="margin-bottom:12px">${P(1)}
+    <span><i style="background:var(--fill)"></i>Available</span>
+    <span><i style="background:repeating-linear-gradient(135deg,#8f8a7e 0 2px,#fff 2px 5px)"></i>L Leave · E Emergency Leave · M MC (HR CSV)</span>
+    <span><i style="border:1px dashed var(--fill2)"></i>Unavailable / Not submitted</span>
+    <span>${P(4)}<b style="color:var(--accent)">○</b> Provisional</span><span><b style="color:var(--accent)">★</b> Confirmed</span><span><b style="color:var(--block)">✕</b> NotConfirmed</span><span><b style="color:var(--warn)">⊘</b> Overridden by Leave</span>
+    <span class="spacer"></span><span class="muted">Deadlines: 16–21 Nov locked · 23–28 Nov locks Wed 11 Nov 18:00 · 30 Nov–5 Dec locks Wed 18 Nov 18:00</span></div>
+  <div class="card"><div class="bd" style="overflow:auto"><table class="ag" id="w8"></table></div></div>`;
+  return mgr('manager/availability','Availability',body);
+},
+init(root){
+  const days=[]; const start=new Date(2026,10,5);
+  for(let d=new Date(start); d<=new Date(2026,11,5); d.setDate(d.getDate()+1)) if(d.getDay()!==0) days.push(new Date(d));
+  const fmt=d=>`${['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()]}<br>${d.getDate()}`;
+  const key=d=>`${d.getMonth()+1}-${d.getDate()}`;
+  const leave={'T07':{'11-16':'L'},'T10':{'11-18':'M'},'T03':{'11-20':'L','11-27':'L'},'T08':{'11-20':'L'},'D05':{'11-9':'L','11-10':'L','11-11':'L'},'T02':{'11-26':'E'}};
+  // marker per person/date: C confirmed, P provisional, N not confirmed (+reason)
+  const marks={
+    'T06':{'11-16':['C']},'T11':{'11-16':['C']},'T04':{'11-17':['C']},'T09':{'11-17':['C'],'12-1':['P']},'T03':{'11-18':['C'],'11-25':['P']},
+    'T10':{'11-18':['C']},'T08':{'11-20':['N','On Leave Fri 20 Nov (HR CSV). Leave takes precedence, so the request cannot be Confirmed.'],'11-24':['P']},
+    'T07':{'11-20':['C']},'T05':{'11-23':['P']}};
+  const unav={'T03':['11-26','11-7'],'T04':['11-21','11-28'],'T05':['11-21'],'D06':['11-6','11-7','11-13','11-14'],'T11':['11-28'],'D03':['11-28']};
+  const ids=[...Object.keys(DRV),...Object.keys(TECH)];
+  let h=`<tr><th class="nm"></th>${days.map((d,i)=>`<th class="${d.getDay()===1&&i?'wk':''}">${fmt(d)}</th>`).join('')}</tr>`;
+  ids.forEach((id,r)=>{
+    h+=`<tr><th class="nm">${nm(id)}</th>`+days.map((d,i)=>{const k=key(d); let c='A', txt='';
+      if(leave[id]?.[k]){c='L';txt=`<span>${leave[id][k]}</span>`;}
+      else if(unav[id]?.includes(k)) c='U';
+      else if(d>=new Date(2026,10,30) && (r*7+i)%3!==0) c='U';
+      else if(d>=new Date(2026,10,23) && (r*5+i)%9===0) c='U';
+      const m=marks[id]?.[k]; let st='';
+      if(m){
+        if(c==='L' && m[0]==='C') st=`<span class="st" style="color:var(--warn)" title="Confirmed pick overridden by a later Leave Record. Leave takes precedence; history kept.">⊘</span>`;
+        else if(m[0]==='C') st=`<span class="st" title="Confirmed Standby pick: initial Standby, still callable">★</span>`;
+        else if(m[0]==='P') st=`<span class="st" title="Provisional: not guaranteed until confirmed after the deadline">○</span>`;
+        else st=`<span class="st" style="color:var(--block)" title="NotConfirmed: ${m[1]}">✕</span>`;
+      }
+      return `<td class="${c} ${d.getDay()===1&&i?'wk':''}" title="${nm(id)} · ${d.toDateString()}">${txt}${st}</td>`;}).join('')+'</tr>';
+    if(id==='D06') h+=`<tr><td colspan="${days.length+1}" style="height:6px"></td></tr>`;
+  });
+  $('#w8',root).innerHTML=h;
+}});
+
+/* ---------- W-09 Update Roster ---------- */
+const W9 = {mode:'rep', directs:[], rep:null, edits:{}, reasons:{}, hist:[['08:10','T06 Farid · Wed 4 Nov · Active 8.5 → 7.0 h','Sarah Tan','Last Job finished early']]};
+S.push({id:'W-09', name:'Update Roster and Hours', role:'Manager', cls:'UpdateRosterPage', uc:'UC-17', fr:'FR-10, FR-57', group:'Manager',
+purpose:'After phoning a Standby outside the system, the Manager records either a Crew replacement or a direct extra Job, with each person\'s Active and Total Credited Hours. Also used to correct Active Hours afterwards.',
+notes:['Choose "Crew replacement" or "Direct extra Job" first (DEC-97).','Replacement: outgoing Technician, an eligible incoming Technician from the Standby list (W-10), the first unstarted Job it applies from, and a reason. Earlier Jobs keep their original Staff, shown read-only (FR-57, DEC-97).','Direct extra Job: the Job, start time and one Technician. Paid transport is arranged outside the system; there is no Driver and no Van (DEC-97).','Hours table: Active Hours (Planned Hours of attributed Jobs) and Total Credited = max(4, Active) for a Standby, applied once per day. Try J-1052 at 15:00 (2 Active / 4 Credited), then J-1053 at 17:30 (5 / 5). A start of 17:10 is rejected: duties need a 0.5 h gap (FR-08, DEC-96).','Only Active Hours can be edited, 0–24 h, with a reason. Every edit is kept in the history and the Audit Log (DEC-97).','The activated-day count rises by one on a person\'s first activation that day and not again that day (DEC-96).'],
+render(){
+  const body = `
+  <div class="ph"><h3>Update Roster and Hours</h3>
+    <div class="r ann">${P(1)}<div class="seg" id="w9-mode"><button class="on" data-m="rep">Crew replacement</button><button data-m="direct">Direct extra Job</button></div>
+    <div class="field" style="flex-direction:row;align-items:center"><label>Date</label><div class="inp" style="width:150px">Thu 5 Nov 2026</div></div>
+    <div class="field" style="flex-direction:row;align-items:center"><label>Crew</label><select class="inp" style="width:200px"><option>Van 2 · East</option><option>Van 1 · North</option><option>Van 3 · West</option><option>Van 4 · Central</option></select></div></div></div>
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="grid" style="align-content:start">
+      <div class="card"><div class="hd">Van 2 · East · Thu 5 Nov<span class="r">Published</span></div><div class="bd" id="w9-van"></div></div>
+      <div class="card ann" id="w9-form"></div>
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="card ann"><div class="hd">Hours for Thu 5 Nov ${P(4)}<span class="r">Edit Active Hours only</span></div><div class="bd" style="padding:0" id="w9-hours"></div></div>
+      <div class="card ann"><div class="hd">Changes and Hours Edits today ${P(5)}</div><div class="bd" style="padding:0" id="w9-hist"></div></div>
+    </div>
+  </div>`;
+  return mgr('manager/update-roster','Update Roster',body);
+},
+init(root){
+  if(window.W10pick && !W9.rep) W9.pickHint = window.W10pick;
+  const jobs=[{id:'J-1032',at:'09:00',b:'ME',t:'Servicing · 3u · 3 h',h:3.5,started:true},{id:'J-1049',at:'14:00',b:'ME',t:'Installation · 1u · 3 h',h:3.5,started:false}];
+  const names=()=>{ const inn=W9.rep?W9.rep.t:null;
+    return {j32:'D02 Mani, T04 Daniel, T09 Irfan', j49: inn?`D02 Mani, ${nm(inn)} <span class="chip acc">replaced T04 Daniel from this Job</span>, T09 Irfan`:'D02 Mani, T04 Daniel, T09 Irfan'}; };
+  const van=()=>{ const n=names();
+    $('#w9-van',root).innerHTML = `<div class="small muted">Initial Crew (unchanged): D02 Mani · T04 Daniel · T09 Irfan</div><div class="sep"></div>
+      ${jobs.map(j=>`<div class="job" style="flex-wrap:wrap;margin-top:5px"><span class="mono">${j.at}</span><b>${j.id}</b>${brand(j.b)}<span>${j.t}</span><span class="spacer"></span><span class="chip">${j.started?'started':'not started'}</span>
+        <div class="small muted" style="flex-basis:100%">Staff on this Job${j.started?' (read-only)':''}: ${j.id==='J-1032'?n.j32:n.j49}</div></div>`).join('')}
+      ${W9.directs.length?`<div class="sep"></div><div class="small muted">Direct duties today</div>`+W9.directs.map(x=>`<div class="job" style="margin-top:5px"><span class="mono">${x.at}</span><b>${x.id}</b><span>${x.t} · ${x.h.toFixed(1)} h</span><span class="spacer"></span><span>${nm(x.who)}</span><span class="chip acc">paid transport · no Van</span></div>`).join(''):''}`; };
+  const form=()=>{
+    if(W9.mode==='rep'){
+      $('#w9-form',root).innerHTML = `<div class="hd">Record replacement ${P(2)}</div><div class="bd grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Outgoing Technician</label><select class="inp"><option>T04 Daniel</option><option>T09 Irfan</option></select></div>
+        <div class="field"><label>Incoming Technician (eligible)</label><div class="row"><div class="inp" id="w9-in" style="flex:1">${window.W10pick?`<b>${nm(window.W10pick)}</b>`:'<span class="muted">Not chosen</span>'}</div><button class="btn sm" data-go="W-10">Standby list</button></div></div>
+        <div class="field"><label>Applies from (first unstarted Job)</label><select class="inp"><option>J-1049 · 14:00 · Installation</option></select><span class="hint">J-1032 has started, so it keeps its original Staff.</span></div>
+        <div class="field"><label>Reason *</label><input class="inp" value="Daniel unwell at 12:30, went home"></div>
+        <div style="grid-column:1/-1" class="banner grey small"><span class="ico">i</span><div>Earlier attribution kept read-only: <b>J-1032</b> → D02 Mani, T04 Daniel, T09 Irfan. The initial Crew roster does not change; only affected unstarted Jobs do.</div></div>
+        <div style="grid-column:1/-1" class="row"><span class="hint">Eligibility is rechecked when you save. First activation today adds 1 to the activated-day count.</span><span class="spacer"></span><button class="btn pri" id="w9-save">Record replacement</button></div></div>`;
+      $('#w9-save',root).onclick=()=>{
+        if(!window.W10pick){toast(root,'Choose the incoming Technician from the Standby list first.','block');return;}
+        if(W9.rep){toast(root,'A replacement is already recorded for this Crew today.','block');return;}
+        W9.rep={t:window.W10pick}; W9.hist.push(['12:48',`Van 2: T04 Daniel → ${nm(window.W10pick)} from J-1049 · eligibility rechecked, saved with activation`,'Sarah Tan','Daniel unwell at 12:30, went home']);
+        all(); toast(root,`Replacement recorded. ${TECH[window.W10pick].n}, Daniel and the affected Staff notified.`); };
+    } else {
+      $('#w9-form',root).innerHTML = `<div class="hd">Record direct extra Job ${P(3)}</div><div class="bd grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Job</label><select class="inp" id="w9-dj"><option value="2">J-1052 · Servicing · Central · planned 2.0 h</option><option value="3">J-1053 · Servicing · East · planned 3.0 h</option><option value="4">J-1055 · Installation · West · planned 4.0 h</option><option value="5">J-1056 · Installation · North · planned 5.0 h</option></select></div>
+        <div class="field"><label>Start time</label><input class="inp" id="w9-dt" value="15:00"></div>
+        <div class="field"><label>Technician (eligible Standby)</label><select class="inp" id="w9-dw"><option value="T07">T07 Gopal · M Electric</option><option value="T01">T01 Ahmad · M Electric, Dicon</option></select></div>
+        <div class="field"><label>Transport</label><div class="inp ro">Company-paid, arranged outside the system</div></div>
+        <div style="grid-column:1/-1" class="banner grey small"><span class="ico">i</span><div>No Driver and no Van. A Technician already on a direct duty can take another that does not overlap. One committed to a replacement Crew is not offered here.</div></div>
+        <div style="grid-column:1/-1" class="row"><span class="hint">Availability, Certifications, time and travel conflicts are rechecked on save.</span><span class="spacer"></span><button class="btn pri" id="w9-dsave">Record direct duty</button></div></div>`;
+      $('#w9-dsave',root).onclick=()=>{ const h=+$('#w9-dj',root).value, who=$('#w9-dw',root).value, at=$('#w9-dt',root).value;
+        const idv=$('#w9-dj',root).selectedOptions[0].text.slice(0,6), t=$('#w9-dj',root).selectedOptions[0].text.split('·')[1].trim();
+        if(W9.directs.some(x=>x.id===idv)){toast(root,idv+' is already recorded.','block');return;}
+        const m=/^([01]?\d|2[0-3]):([0-5]\d)$/.exec(at.trim()); if(!m){toast(root,'Enter the start time as HH:MM, e.g. 15:00.','block');return;}
+        const s2=+m[1]+m[2]/60, e2=s2+h, busy=W9.directs.filter(x=>x.who===who).map(x=>{const q=x.at.split(':');return {n:x.id,s:+q[0]+q[1]/60,e:+q[0]+q[1]/60+x.h};});
+        if(W9.rep&&W9.rep.t===who) busy.push({n:'J-1049 (replacement)',s:14,e:17.5});
+        const fmt=v=>String(Math.floor(v)).padStart(2,'0')+':'+String(Math.round((v%1)*60)).padStart(2,'0');
+        const clash=busy.find(b=>!(s2>=b.e+0.5-1e-9||b.s>=e2+0.5-1e-9));
+        if(clash){toast(root,`${nm(who)} has ${clash.n} until ${fmt(clash.e)}. Duties must not overlap and need a 0.5 h travel gap, so the earliest start is ${fmt(clash.e+0.5)}.`,'block');return;}
+        W9.directs.push({id:idv,t,h,who,at}); W9.hist.push([at,`Direct duty ${idv} → ${nm(who)} · ${h.toFixed(1)} h · paid transport, no Van`,'Sarah Tan','Extra Job, Crews full']);
+        all(); toast(root,`${TECH[who].n} assigned ${idv}. Standby activated and notified.`); };
+    }
+    bindGo(root);
+  };
+  const hours=()=>{
+    const standby={}; if(W9.rep) standby[W9.rep.t]=(standby[W9.rep.t]||0)+3.5;
+    W9.directs.forEach(x=>standby[x.who]=(standby[x.who]||0)+x.h);
+    if(!Object.keys(standby).length) standby.T07=0;
+    const act=(id,v)=>W9.edits[id]!==undefined?W9.edits[id]:v;
+    const row=(id,a,cr,extra,standbyRow)=>`<tr><td>${nm(id)} ${extra||''}</td><td class="mono">${a.toFixed(1)}</td><td class="mono">${cr.toFixed(1)}</td><td><input class="inp" data-h="${id}" style="width:70px" value="${act(id,a).toFixed(1)}"></td><td><input class="inp" data-hr="${id}" placeholder="Only if changed" value="${(W9.reasons[id]||'')}"></td></tr>`;
+    const t4=W9.rep?3.5:7.0; let r = row('D02',7.0,7.0)+row('T04',t4,t4,W9.rep?'<span class="src">left 12:30</span>':'')+row('T09',7.0,7.0);
+    Object.keys(standby).forEach(id=>{ const a=standby[id]; const cr=Math.max(4,a); const activated=a>0;
+      r+=row(id,a,cr,`<span class="src ${activated?'pick':''}">${activated?'Activated':'Standby, unused'}</span>`); });
+    const t=Object.keys(standby)[0];
+    $('#w9-hours',root).innerHTML=`<table class="t"><tr><th>Staff</th><th>Active</th><th>Total Credited</th><th>Edit Active (0–24)</th><th>Reason *</th></tr>${r}</table>
+      <div class="banner info small" style="margin:0 14px 8px"><span class="ico">i</span><div>${P(6)} ${Object.keys(standby).map(id=>`<b>${TECH[id].n}</b>: ${standby[id].toFixed(1)} Active / ${Math.max(4,standby[id]).toFixed(1)} Credited · activated days ${ACTD[id]} → ${standby[id]>0?ACTD[id]+1:ACTD[id]}${standby[id]>0?' (counts once today)':''}`).join('<br>')}</div></div>
+      <div class="row" style="padding:2px 14px 12px"><span class="hint">Credited = Active on a Crew day; max(4, Active) on a rostered Standby date, once per date. 0–24 h, reason required.</span><span class="spacer"></span><button class="btn dark" id="w9-hsave">Save hours</button></div>`;
+    $('#w9-hsave',root).onclick=()=>{ const ins=$$('[data-h]',root); let n=0;
+      ins.forEach(i=>{ const id=i.dataset.h, v=+i.value; const base0=(id==='D02'||id==='T09')?7.0:id==='T04'?(W9.rep?3.5:7.0):(standby[id]||0), base=W9.edits[id]!==undefined?W9.edits[id]:base0;
+        if(isNaN(v)||v<0||v>24){n=-99;return;} if(Math.abs(v-base)>0.01){ const why=$(`[data-hr="${id}"]`,root).value.trim(); if(!why){n=-1;return;} W9.edits[id]=v; W9.reasons[id]=why; W9.hist.push(['12:50',`Hours Edit · ${nm(id)} Active ${base.toFixed(1)} → ${v.toFixed(1)} h`,'Sarah Tan',why]); n++; } });
+      if(n===-99){toast(root,'Hours must be between 0 and 24.','block');return;}
+      if(n===-1){toast(root,'A reason is required for every changed figure.','block');return;}
+      all(); toast(root,n?'Active Hours saved, logged and Staff notified.':'No changes to save.'); };
+  };
+  const hist=()=>{ $('#w9-hist',root).innerHTML=`<table class="t"><tr><th>Time</th><th>What</th><th>By</th><th>Reason</th></tr>${W9.hist.map(h=>`<tr><td>${h[0]}</td><td>${h[1]}</td><td>${h[2]}</td><td>${h[3]}</td></tr>`).join('')}</table>`; };
+  const all=()=>{ van(); form(); hours(); hist(); };
+  $$('#w9-mode button',root).forEach(b=>b.onclick=()=>{W9.mode=b.dataset.m; $$('#w9-mode button',root).forEach(x=>x.classList.toggle('on',x===b)); form();});
+  $$('#w9-mode button',root).forEach(x=>x.classList.toggle('on',x.dataset.m===W9.mode));
+  all();
+}});
+
+/* ---------- W-10 Standby list ---------- */
+S.push({id:'W-10', name:'Standby list', role:'Manager', cls:'StandbyListView', uc:'UC-17', fr:'FR-56', group:'Manager',
+purpose:'For the Job the Crew member dropped out of, today\'s eligible Standby Staff in the order the Manager should phone them. Anyone who could not cover every affected remaining Job is filtered out before ranking.',
+notes:['Eligibility is checked first, for every remaining replacement Job (or the selected direct Job): availability and Leave, valid Certification for each Brand, and time or travel conflicts (DEC-97).','Then ranked by distinct activated days in 12 months, home Zone distance to the Job, then staff ID (FR-56, DEC-96, DEC-97).','Zone used is always the home Zone: Algorithm-source Standby no longer count as Central (DEC-97). Distance: 0 same Zone; 1 with Central or adjacent; 2 opposite (DEC-77).','The system does not call anyone: phone outside the system, then select. Eligibility is rechecked when you save (M2-Brief §2, DEC-97).','A low activated-day count only means the person is next in the fair rotation. It is not a performance label (DEC-96).','If nobody is eligible the page says why, so the Manager can decide what to do next.'],
+render(){
+  const job={id:'J-1049',zone:'East',b:'ME'};
+  const cand=[
+    {t:'T07',s:'Leftover',dates:[],commit:'None'},
+    {t:'T11',s:'Preference · Dicon',dates:[],commit:'None'},
+    {t:'T01',s:'Algorithm',dates:['14 Aug 2026'],commit:'None'},
+    {t:'T06',s:'Preference · M Electric',dates:['9 Jun 2026','2 Sep 2026'],commit:'None'}];
+  const elig=cand.filter(c=>TECH[c.t].b.includes(job.b));
+  const sorted=elig.map(c=>({...c,a:c.dates.length,d:zdist(TECH[c.t].z,job.zone)})).sort((x,y)=>x.a-y.a||x.d-y.d||x.t.localeCompare(y.t));
+  const phoneNo={T07:'9xxx 1107',T11:'9xxx 1111',T01:'9xxx 1101',T06:'9xxx 1106'};
+  const out=cand.filter(c=>!TECH[c.t].b.includes(job.b));
+  const body = `
+  <div class="ph"><span class="muted">Update Roster ›</span><h3>Standby list</h3>
+    <span class="chip dark">For J-1049 · East · ${BR.ME} Installation · Thu 5 Nov 14:00 · Van 2</span><span class="chip">Checked against all remaining Jobs: J-1049</span>
+    <div class="r"><div class="seg" id="w10-state"><button class="on" data-s="ok">Eligible candidates</button><button data-s="none">No eligible candidate</button></div><button class="btn ghost" data-go="W-09">Back</button></div></div>
+  <div class="banner info ann" style="margin-bottom:12px"><span class="ico">i</span><div><b>Phone the person outside the system, then select them.</b> ${P(4)} Start from the highlighted recommendation. If they can't come, try the next one. Eligibility is rechecked when you save.</div></div>
+  <div id="w10-ok">
+  <div class="card"><div class="bd" style="padding:0"><table class="t ann">
+    <tr><th>#</th><th>Standby</th><th>Valid Brands ${P(1)}</th><th>Activated days (12 mo) ${P(2)}</th><th>Home Zone · distance to East ${P(3)}</th><th>Today Active / Credited</th><th>Commitments</th><th>Phone</th><th></th></tr>
+    ${sorted.map((r,i)=>`<tr style="${i===0?'background:var(--accent-bg)':''}">
+      <td class="mono"><b>${i+1}</b></td><td><b>${nm(r.t)}</b>${i===0?' <span class="chip acc">Recommended</span>':''}<br><span class="src ${r.s.startsWith('Pref')?'pick':''}">${r.s}</span></td>
+      <td>${brands(r.t)}<div class="small muted">Covers ${BR[job.b]}</div></td>
+      <td class="mono"><b>${r.a}</b><div class="small muted" style="font-family:system-ui">${r.dates.length?r.dates.join(', '):'none'}</div></td>
+      <td>${TECH[r.t].z} <span class="mono">· ${r.d}</span></td>
+      <td class="mono">0.0 / 4.0</td><td class="small">${r.commit}</td><td class="mono">${phoneNo[r.t]}</td>
+      <td><button class="btn sm ${i===0?'pri':''}" data-sel="${r.t}">Select</button></td></tr>`).join('')}
+  </table></div></div>
+  <details style="margin-top:10px"><summary class="small" style="cursor:pointer">Not shown (${out.length}): why they were filtered out</summary>
+    <div class="card" style="margin-top:6px"><div class="bd small">${out.map(c=>`<div>${nm(c.t)} · ${c.s} · <span style="color:var(--block)">no valid ${BR[job.b]} Certification for J-1049</span></div>`).join('')}</div></div></details>
+  </div>
+  <div id="w10-none" style="display:none">
+    <div class="banner warn ann"><span class="ico">!</span><div><b>No eligible Standby for J-1049.</b> ${P(6)}<br>Every Standby today is filtered out: one has no ${BR.ME} Certification, one has a time or travel conflict with J-1049, and the rest are already committed to another Crew today. Nobody is offered who could not cover every remaining Job.</div></div>
+    <div class="card" style="margin-top:12px"><div class="bd small">What you can do: leave the Job to become Unassigned and re-plan it in Job Allocation, ask the customer for another date, or adjust the roster yourself and record it on W-09. Low activated-day counts are never a reason to skip an eligible person.</div></div>
+  </div>
+  <p class="hint ann">Already activated today: none. Staff in a Crew are not listed. ${P(5)}</p>`;
+  return mgr('manager/update-roster/standby?job=J-1049','Update Roster',body);
+},
+init(root){
+  $$('[data-sel]',root).forEach(b=>b.onclick=()=>{window.W10pick=b.dataset.sel; go('W-09');});
+  $$('#w10-state button',root).forEach(b=>b.onclick=()=>{ $$('#w10-state button',root).forEach(x=>x.classList.toggle('on',x===b));
+    $('#w10-ok',root).style.display=b.dataset.s==='ok'?'':'none'; $('#w10-none',root).style.display=b.dataset.s==='none'?'':'none'; });
+}});
+
+/* ---------- W-16 Request review ---------- */
+S.push({id:'W-16', name:'Request review', role:'Manager', cls:'RequestReviewPage', uc:'UC-09', fr:'FR-38', group:'Manager',
+purpose:'The Manager approves or refuses each Job Rejection Request, whether it comes from a Crew member or from a Technician on a direct duty. Approval moves the Job back to Unassigned; refusal keeps the Assignment.',
+notes:['Each request shows the Job, date, the Crew or the direct Technician, the requester and the reason (FR-37, DEC-97).','Approve: the Job becomes Unassigned and leaves the Crew or the direct duty; the Staff attributed to that Job are notified (FR-38, DEC-97).','Refuse: optional reason; the requester is notified.','Still pending when the Job starts: Lapsed, and the requester is notified.'],
+render(){
+  const body = `
+  <div class="ph"><h3>Job Rejection Requests</h3><span class="chip dark" id="w16-pc">3 pending</span><div class="r"><span class="small">Unassigned Jobs: <b class="mono" id="w16-uc">5</b></span></div></div>
+  <div class="card ann"><div class="hd">Pending ${P(1)}</div><div class="bd" style="padding:0">
+    <table class="t" id="w16"><tr><th>Job</th><th>When</th><th>Crew or direct duty</th><th>Requested by</th><th>Reason</th><th style="width:330px">Decision</th></tr>
+    ${[['J-1036','Dicon Servicing · 2u','Fri 6 Nov 09:00','Van 1 · North<br><span class="small muted">D01 Lim, T03 Chen, T08 Hui Min</span>','T08 Hui Min','Missing equipment or parts','“Need the long ladder for high-wall units; it is at the workshop.”','Thu 5 Nov 08:12'],
+       ['J-1050','M Electric Installation · 1u','Sat 7 Nov 14:00','Van 3 · West<br><span class="small muted">D03 Nizam, T05 Eugene, T10 Jason</span>','D03 Nizam','Personal emergency','','Thu 5 Nov 07:40'],
+       ['J-1054','Dicon Servicing · 1u','Fri 6 Nov 15:00','Direct duty · no Van<br><span class="small muted">T11 Kumar only, paid transport</span>','T11 Kumar','Other','“Transport could not be arranged in time.”','Thu 5 Nov 09:30']]
+      .map(([j,t,w,c,r,re,cm,at],i)=>`<tr data-row="${i}"><td><b>${j}</b><br><span class="small">${t}</span></td><td>${w}<br><span class="small muted">Lapses at start time</span></td><td>${c}</td><td>${r}<br><span class="small muted">${at}</span></td><td>${re}${cm?`<br><span class="small">${cm}</span>`:''}</td>
+      <td class="dec"><div class="row"><button class="btn pri sm" data-ap="${j}">Approve ${i===0?P(2):''}</button><button class="btn sm" data-rf>Refuse ${i===0?P(3):''}</button></div>
+      <div class="row rf" style="display:none;margin-top:6px"><input class="inp" placeholder="Reason (optional)" style="min-height:28px;padding:4px 8px;font-size:12px"><button class="btn sm dark" data-rfok>Confirm refuse</button></div></td></tr>`).join('')}
+    </table></div></div>
+  <div class="card" style="margin-top:14px"><div class="hd">Decided recently ${P(4)}</div><div class="bd" style="padding:0"><table class="t">
+    <tr><td><b>J-1027</b> · Tue 3 Nov 14:00</td><td>T06 Farid · Other: “Customer asked to postpone”</td><td><span class="chip ok">Approved</span> · J-1027 moved to Unassigned</td></tr>
+    <tr><td><b>J-1022</b> · Mon 2 Nov 09:00</td><td>T09 Irfan · Personal emergency</td><td><span class="chip">Lapsed</span> · pending at start time</td></tr>
+  </table></div></div>`;
+  return mgr('manager/requests','Requests',body);
+},
+init(root){
+  let pending=3, unc=5;
+  const done=(tr,html)=>{$('.dec',tr).innerHTML=html; pending--; $('#w16-pc',root).textContent=`${pending} pending`;};
+  const who=tr=>tr.children[2].textContent.includes('Direct duty')?'T11 Kumar':'The attributed Crew members';
+  $$('[data-ap]',root).forEach(b=>b.onclick=()=>{const tr=b.closest('tr'); unc++; $('#w16-uc',root).textContent=unc;
+    done(tr,`<span class="chip ok">Approved</span><div class="small" style="margin-top:4px">${b.dataset.ap} is now <b>Unassigned</b>. ${who(tr)} notified.</div>`); toast(root,`${b.dataset.ap} moved to Unassigned Jobs.`);});
+  $$('[data-rf]',root).forEach(b=>b.onclick=()=>{$('.rf',b.closest('td')).style.display='flex';});
+  $$('[data-rfok]',root).forEach(b=>b.onclick=()=>{const tr=b.closest('tr'); const r=$('input',tr).value.trim();
+    done(tr,`<span class="chip">Refused</span><div class="small" style="margin-top:4px">Assignment stands. Requester notified${r?`: “${r}”`:''}.</div>`);});
+}});
+
+/* ---------- W-11 Staff Landing ---------- */
+S.push({id:'W-11', name:'Staff Landing Page', role:'Driver, Technician', cls:'LandingPage', uc:'UC-13, UC-15', fr:'FR-35, FR-36, FR-39, FR-41, FR-42, NFR-05', group:'Staff',
+purpose:'A Driver or Technician sees this week\'s Crew and direct Assignments, original Standby days, their Total Credited Workload against 40 h with Active Hours shown separately, their Standby preference result and Notifications. Tapping an Assignment shows its full details.',
+notes:['Week strip: Crew and Van per day, the original Standby day, an "activated" indicator when called in, and direct duties labelled paid transport, no Van (FR-41, DEC-97).','Today\'s Assignments show the Staff on each Job. After a replacement, earlier Jobs keep their original Staff and later Jobs show the new person (DEC-97).','Weekly Total Credited Workload against 40 h, with Active Hours separate, and the monthly total (FR-35, FR-36, DEC-96).','Standby preference result with its reason, visible even before the week is published: Confirmed or NotConfirmed (DEC-98).','Notifications list with handled state; also sent by email and SMS (FR-39).','Assignment detail sheet with every FR-42 field and a Reject button (W-15).','Offline: today\'s Assignments stay viewable; actions are disabled (NFR-05).'],
+render(){
+  const week=[['Mon',2,'Van 1','North · 2 Jobs'],['Tue',3,'Standby','Activated · direct duty','sbd'],['Wed',4,'Van 3','West · 3 Jobs'],['Thu',5,'Van 1','North · 2 Jobs','today'],['Fri',6,'Van 1','North · 2 Jobs'],['Sat',7,'—','Unavailable']];
+  const content = (off)=>`
+    <div class="row"><div><div class="small muted">Thu 5 Nov</div><b style="font-size:17px">Hi, Chen</b> <span class="small muted">Technician · T03</span></div></div>
+    <div class="week ann">${week.map(([d,n,v,s,c])=>`<div class="${c||''}"><span>${d}</span><b>${n}</b><span class="tag">${v}</span><span class="tag">${s}</span></div>`).join('')}${off?'':P(1)}</div>
+    ${off?'':'<div class="hint">Tue 3 Nov: your Standby day (Preference). You were called in for a direct duty: paid transport, no Van.</div>'}
+    <div><div class="row small"><b>Today · Van 1 · North</b>${off?'':P(2)}<span class="spacer"></span><span class="muted">with Lim</span></div>
+      <div class="grid" style="gap:6px;margin-top:6px">
+        <div class="assign" data-sheet><span class="tm">09:00</span><div><b>J-1030</b> ${brand('ME')}<div class="x">Servicing · 2 units · Yishun</div><div class="x muted">Staff: Lim, Chen, Hui Min</div></div></div>
+        <div class="assign" data-sheet><span class="tm">14:00</span><div><b>J-1033</b> ${brand('DC')}<div class="x">Installation · 1 unit · Ang Mo Kio</div><div class="x muted">Staff: Lim, Chen, Bala <span class="chip acc">replaced Hui Min</span></div></div></div>
+      </div></div>
+    ${off?'<div class="banner grey small"><span class="ico">i</span><div>Workload and Notifications need a connection.</div></div>':`
+    <div class="card ann"><div class="bd"><div class="row small"><b>Total Credited this week</b>${P(3)}<span class="spacer"></span><span class="mono"><b>40.0</b> / 40 h</span></div>
+      <div class="meter" style="margin:8px 0 4px"><i style="width:100%"></i><span class="forty"></span></div>
+      <div class="row small muted"><span>Active Hours <b class="mono">38.0 h</b> · Tue Standby day credited 4 h (2 h active)</span></div>
+      <div class="row small muted"><span>November: <b class="mono">77.5 h</b> credited · <b class="mono">75.5 h</b> active</span></div></div></div>
+    <div class="card ann"><div class="bd"><div class="small muted">My Standby pick · week 16–21 Nov ${P(4)}</div>
+      <div class="row" style="margin-top:4px"><b>Wed 18 · M Electric</b><span class="spacer"></span><span class="chip ok">Confirmed</span></div>
+      <div class="small muted" style="margin-top:4px">You start that day as Standby and can still be called in. Shown before the week is published.</div></div></div>
+    <div class="card ann"><div class="hd" style="font-size:13.5px">Notifications ${P(5)}<span class="r">3 new</span></div><div class="bd" style="padding:4px 12px">
+      <div class="notif"><span class="dot"></span><div><b>Standby pick confirmed</b><br>Wed 18 Nov · M Electric. Initial Standby; you can still be called in.</div></div>
+      <div class="notif"><span class="dot"></span><div><b>Week 9–14 Nov published</b><br>5 Assignments, 1 Standby day. <button class="link">View</button></div></div>
+      <div class="notif"><span class="dot"></span><div><b>Direct duty recorded</b><br>Tue 3 Nov, J-1058: 2.0 h Active, 4.0 h Credited.</div></div>
+      <div class="notif"><span class="dot read"></span><div>Active Hours updated for Tue 3 Nov: 7.5 → 6.0 h. Reason: “Last Job finished early”.</div></div>
+    </div></div>`}`;
+  const sheet = `<div class="sheet ann" id="w11-sheet"><div class="grab"></div>
+    <div class="row"><b style="font-size:16px">J-1030</b>${brand('ME')}<span class="chip">Assigned</span>${P(6)}<span class="spacer"></span><button class="link small" data-close>Close</button></div>
+    <p class="small muted" style="margin:4px 0 10px">Thu 5 Nov · 09:00 · Van 1</p>
+    <dl class="kv">
+      <dt>Customer</dt><dd>Mr Lee · <span class="mono">9xxx 2201</span></dd>
+      <dt>Address</dt><dd>Blk 812 Yishun Ring Rd, #05-12</dd>
+      <dt>Postal · Zone</dt><dd>760812 · North</dd>
+      <dt>Job</dt><dd>Servicing · 2 units · ${BR.ME}</dd>
+      <dt>Model</dt><dd>MSY-GN10</dd>
+      <dt>Notes</dt><dd>Gate code 2580. Dog in the house.</dd>
+      <dt>Staff on this Job</dt><dd>D01 Lim · <span class="mono">9xxx 0101</span><br>T03 Chen (you)<br>T08 Hui Min · <span class="mono">9xxx 1108</span></dd>
+    </dl>
+    <div class="row" style="margin-top:14px"><button class="btn ghost" style="flex:1" data-nb>Open in maps</button><button class="btn danger" style="flex:1" data-go="W-15">Reject Job</button></div></div>`;
+  return `<div class="phone-row">${phone('', content(false), 'Home', {overlay:sheet, cap:'Online · tap an Assignment for details (FR-42)'})}${phone('', content(true), 'Home', {offline:true, cap:'Offline: today only, actions disabled (NFR-05) <i class="pin">7</i>'})}</div>`;
+},
+init(root){ const sh=$('#w11-sheet',root); $$('[data-sheet]',root).forEach(a=>a.onclick=()=>{ if(a.closest('.phone').querySelector('#w11-sheet')) sh.classList.add('on');}); $('[data-close]',root).onclick=()=>sh.classList.remove('on');
+}
+});
+
+/* ---------- W-12 Set Availability ---------- */
+S.push({id:'W-12', name:'Set Availability', role:'Driver, Technician', cls:'AvailabilityPage', uc:'UC-11', fr:'FR-12, FR-13, FR-15', group:'Staff',
+purpose:'Staff set each working day Available or Unavailable up to 1 month ahead. A week locks at its Availability Deadline.',
+notes:['Week picker within 1 month; each week shows its deadline (FR-15).','Mon–Sat only; Available / Unavailable / clear. A blank day is Not submitted and counts as unavailable (FR-12).','A Leave Record from the HR CSV is read-only and wins (FR-52).','Locked week: "contact your Manager" (DEC-79).'],
+render(){
+  const weeks=[['9–14 Nov','Published','lock'],['16–21 Nov','Locked Wed 4 Nov','lock'],['23–28 Nov','Locks Wed 11 Nov 18:00','open'],['30 Nov–5 Dec','Locks Wed 18 Nov 18:00','open']];
+  const body=`
+    <div class="wkchips ann" id="w12-w">${weeks.map((w,i)=>`<button data-i="${i}" class="${i===2?'on':''}"><b>${w[0]}</b><br><span class="muted">${w[1]}</span></button>`).join('')}</div>
+    <div id="w12-body"></div>`;
+  return `<div class="phone-row">${phone('Set Availability', body, 'Availability', {cap:'Tap a week. 16–21 Nov shows the locked state. '+'<i class="pin">1</i>'})}</div>`;
+},
+init(root){
+  const st={0:['A','A','A','U','L','N']};
+  const draw=i=>{
+    $$('#w12-w button',root).forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+    const locked=i<2;
+    const days=[['Mon','23 Nov'],['Tue','24 Nov'],['Wed','25 Nov'],['Thu','26 Nov'],['Fri','27 Nov'],['Sat','28 Nov']];
+    const ds = i===3?[['Mon','30 Nov'],['Tue','1 Dec'],['Wed','2 Dec'],['Thu','3 Dec'],['Fri','4 Dec'],['Sat','5 Dec']]:i===1?[['Mon','16 Nov'],['Tue','17 Nov'],['Wed','18 Nov'],['Thu','19 Nov'],['Fri','20 Nov'],['Sat','21 Nov']]:i===0?[['Mon','9 Nov'],['Tue','10 Nov'],['Wed','11 Nov'],['Thu','12 Nov'],['Fri','13 Nov'],['Sat','14 Nov']]:days;
+    const vals = i===2?['A','A','A','U','L','N']: i===3?['A','N','N','N','N','N']: ['A','A','A','A','L','U'];
+    $('#w12-body',root).innerHTML = (locked?`<div class="banner grey ann"><span class="ico">🔒</span><div><b>This week is locked.</b> ${P(4)}<br>To change it, contact your Manager.</div></div>`
+      :`<div class="banner info small"><span class="ico">i</span><div>Deadline <b>${i===2?'Wed 11 Nov, 18:00':'Wed 18 Nov, 18:00'}</b>. Blank days count as unavailable.</div></div>`)
+      + `<div class="ann">${P(2)}</div>` + ds.map((d,k)=>{const v=vals[k];
+        if(v==='L') return `<div class="avrow"><span class="d">${d[0]}<small>${d[1]}</small></span><span class="chip">Leave · from HR</span><span class="spacer"></span><span class="small muted">read-only ${P(3)}</span></div>`;
+        return `<div class="avrow"><span class="d">${d[0]}<small>${d[1]}</small></span><div class="seg" data-k="${k}">${['Available','Unavailable'].map(o=>`<button ${locked?'disabled':''} class="${(v==='A'&&o==='Available')||(v==='U'&&o==='Unavailable')?'on':''}">${o}</button>`).join('')}</div>
+          <span class="spacer"></span>${locked?'':`<button class="link small" data-clear>Clear</button>`}${v==='N'?'<span class="small muted">Not submitted</span>':''}</div>`;}).join('')
+      + (locked?'':`<button class="btn pri full">Save</button><p class="hint" style="margin:0;text-align:center">Last saved Wed 4 Nov 21:14</p>`);
+    $$('.seg',root).forEach(g=>$$('button',g).forEach(b=>b.onclick=()=>{$$('button',g).forEach(x=>x.classList.toggle('on',x===b));const n=g.parentNode.querySelector('.small.muted');if(n&&n.textContent==='Not submitted')n.remove();}));
+    $$('[data-clear]',root).forEach(b=>b.onclick=()=>{$$('button',b.parentNode.querySelector('.seg')).forEach(x=>x.classList.remove('on'));});
+  };
+  $$('#w12-w button',root).forEach(b=>b.onclick=()=>draw(+b.dataset.i)); draw(2);
+}});
+
+/* ---------- W-14 Standby Preference ---------- */
+const W14={pick:'Wed', view:'prov', stamp:'Wed 4 Nov 20:03', order:2};
+S.push({id:'W-14', name:'Standby Preference', role:'Technician', cls:'StandbyPreferencePage', uc:'UC-18', fr:'FR-15, FR-51', group:'Staff',
+purpose:'A Technician makes one provisional Standby request per week: one day and one Brand slot. It is held but not guaranteed. After the Availability Deadline and the staffing checks it becomes Confirmed or NotConfirmed, with a reason.',
+notes:['Each day has one M Electric slot and one Dicon slot, first come first served; a provisional slot is held against competing requests (FR-51, DEC-98).','Slots the Technician can\'t take are greyed: taken, no valid Certification, Unavailable or on Leave.','Your request with its submission order. Change or Withdraw until the deadline; changing the day or Brand resets the submission time (DEC-98).','Provisional means not guaranteed. Confirmation follows the locked inputs and the HR/Van CSV staffing checks (DEC-98).','After the deadline the result shows Confirmed or NotConfirmed with the reason. Confirmed means initial Standby and you can still be called in. No new picks after the deadline (FR-15, DEC-98).'],
+render(){
+  return `<div class="phone-row">${phone('Standby day', '<div id="w14"></div>', 'Standby', {cap:'T03 Chen holds M Electric only, so Dicon slots are greyed. Use the preview switch to see the result states after the deadline.'})}</div>`;
+},
+init(root){
+  const days=[['Mon','23 Nov',{ME:'T05',DC:null}],['Tue','24 Nov',{ME:null,DC:'T08'}],['Wed','25 Nov',{ME:'you',DC:null}],['Thu','26 Nov','unav'],['Fri','27 Nov','leave'],['Sat','28 Nov',{ME:null,DC:null}]];
+  const draw=()=>{
+    const pick=W14.pick, v=W14.view, locked=v!=='prov'&&v!=='csv';
+    const status = !pick ? `<div class="small">No request this week. Tap a free slot.</div>`
+      : v==='prov' ? `<div><div class="small muted">Your request ${P(3)}</div><b>${pick} · ${BR.ME}</b> <span class="chip warn">Provisional</span><div class="small muted" style="margin-top:2px">Submitted ${W14.stamp} · #${W14.order} for this slot</div></div><span class="spacer"></span><button class="btn sm danger" id="w14-wd">Withdraw</button>`
+      : v==='csv' ? `<div><div class="small muted">Your request ${P(4)}</div><b>${pick} · ${BR.ME}</b> <span class="chip warn">Provisional</span><div class="small" style="margin-top:4px">The deadline has passed but the HR or van CSV is not uploaded yet. Your request stays Provisional until the checks can run.</div></div>`
+      : v==='conf' ? `<div><div class="small muted">Your request ${P(5)}</div><b>${pick} · ${BR.ME}</b> <span class="chip ok">Confirmed</span><div class="small" style="margin-top:4px">You start ${pick} 25 Nov as Standby. You can still be called in.</div></div>`
+      : `<div><div class="small muted">Your request ${P(5)}</div><b>${pick} · ${BR.ME}</b> <span class="chip block">NotConfirmed</span><div class="small" style="margin-top:4px"><b>Reason:</b> Keeping it with earlier Confirmed picks would leave fewer than 3 valid Crews on Wed 25 Nov. No other day can be substituted after the deadline.</div></div>`;
+    $('#w14',root).innerHTML = `
+      <div class="seg" id="w14-view" style="align-self:flex-start"><button data-v="prov" class="${v==='prov'?'on':''}">Before deadline</button><button data-v="csv" class="${v==='csv'?'on':''}">Awaiting CSV</button><button data-v="conf" class="${v==='conf'?'on':''}">Confirmed</button><button data-v="not" class="${v==='not'?'on':''}">NotConfirmed</button></div>
+      <div class="row small"><b>Week 23–28 Nov</b><span class="spacer"></span><span class="chip acc">${v==='prov'?'Locks Wed 11 Nov 18:00':'Deadline passed Wed 11 Nov'}</span></div>
+      <div class="card ann"><div class="bd row">${status}</div></div>
+      ${v==='prov'?`<div class="banner warn small ann"><span class="ico">!</span><div><b>Provisional, not guaranteed.</b> ${P(4)} After the deadline, once HR and van CSVs are in, we check there are still at least 3 Crews and Standby cover before confirming.</div></div>`:''}
+      <div class="grid ann" style="gap:6px">${P(1)}${days.map(([d,dt,s])=>{
+        if(s==='unav'||s==='leave') return `<div class="sday grey"><b>${d}</b> <span class="small">${dt}</span> · <span class="small">${s==='unav'?'You are Unavailable':'Leave (HR)'}</span> ${d==='Thu'?P(2):''}</div>`;
+        const me = d===pick?'you':(s.ME&&s.ME!=='you'?'taken':'free');
+        const slot=(b,state)=>{
+          if(b==='DC') return `<button class="slot off" disabled>Dicon<small>${state==='taken'?'Taken':'Not certified'}</small></button>`;
+          if(state==='you') return `<button class="slot you">M Electric<small>${locked?(v==='conf'?'Confirmed':'NotConfirmed'):'Held for you (provisional)'}</small></button>`;
+          if(state==='taken') return `<button class="slot off" disabled>M Electric<small>Taken</small></button>`;
+          return `<button class="slot ${locked?'off':''}" ${locked?'disabled':`data-p="${d}"`}>M Electric<small>${locked?'Closed':'Free · tap to request'}</small></button>`;};
+        const allOff = me==='taken';
+        return `<div class="sday ${allOff?'grey':''}"><div class="row"><b>${d}</b><span class="small muted">${dt}</span>${allOff?'<span class="spacer"></span><span class="small">No slot you can take</span>':''}</div>
+          <div class="sl">${slot('ME',me)}${slot('DC',s.DC?'taken':'free')}</div></div>`;}).join('')}</div>
+      <p class="hint" style="margin:0">On a Confirmed Standby day you are not placed in a Crew, but you can still be called in. An unused Standby day counts 4 h.</p>`;
+    $$('[data-p]',root).forEach(b=>b.onclick=()=>{ const same=W14.pick===b.dataset.p; W14.pick=b.dataset.p; if(!same){W14.stamp='just now'; W14.order=1;} draw();toast2(`Request changed to ${b.dataset.p}. Submission time reset.`);});
+    const wd=$('#w14-wd',root); if(wd) wd.onclick=()=>{W14.pick=null;draw();};
+    $$('#w14-view button',root).forEach(b=>b.onclick=()=>{W14.view=b.dataset.v; if(!W14.pick && W14.view!=='prov') W14.pick='Wed'; draw();});
+  };
+  const toast2=m=>{const p=$('.phone',root);let t=$('.toast',p);if(!t){t=document.createElement('div');t.className='toast';p.appendChild(t);}t.textContent=m;t.className='toast on';setTimeout(()=>t.className='toast',2400);};
+  draw();
+}});
+
+/* ---------- W-15 Job rejection ---------- */
+S.push({id:'W-15', name:'Job rejection', role:'Driver, Technician', cls:'RequestPage', uc:'UC-12', fr:'FR-37', group:'Staff',
+purpose:'A Crew member asks to take a Job off their Crew. A warning comes first; the Manager decides on W-16.',
+notes:['"Reject Job" on an Assignment in a Published week, before the Job starts (FR-37).','Warning: "Please discuss this with your Manager first." Cancel saves nothing.','Reason: Personal emergency / Missing equipment or parts / Other (comment required).','Submitted → status Pending; one pending request per Assignment; the Manager is notified.'],
+render(){
+  const base=`<div class="assign"><span class="tm">14:00</span><div><b>J-1048</b> ${brand('ME')}<div class="x">Installation · 1 unit · Fri 6 Nov · Van 1</div></div></div>
+    <dl class="kv"><dt>Address</dt><dd>Blk 455 Ang Mo Kio Ave 10</dd><dt>Zone</dt><dd>North</dd><dt>Crew</dt><dd>Lim, Hui Min</dd></dl>`;
+  const a=phone('Assignment', `${base}<div class="spacer"></div><button class="btn danger full ann">Reject Job ${P(1)}</button>`, 'Home', {back:true, cap:'1 · From the Assignment detail'});
+  const b=phone('Assignment', `${base}<div class="spacer"></div><button class="btn danger full">Reject Job</button>`, 'Home', {back:true, cap:'2 · Warning first; Cancel saves nothing',
+    overlay:`<div class="dlg"><div class="box"><b style="font-size:16px">Before you reject</b> ${P(2)}<p class="small" style="margin:8px 0 14px">Please discuss this with your Manager first. If you continue, your Manager decides. Until then the Job stays with your Crew.</p><div class="row"><button class="btn ghost" style="flex:1">Cancel</button><button class="btn dark" style="flex:1">Continue</button></div></div></div>`});
+  const c=phone('Reject J-1048', `
+    <p class="small muted" style="margin:0">Fri 6 Nov 14:00 · Installation · Van 1</p>
+    <div class="field ann"><label>Reason * ${P(3)}</label>
+      <label class="radio"><input type="radio" name="w15r"> Personal emergency</label>
+      <label class="radio"><input type="radio" name="w15r" checked> Missing equipment or parts</label>
+      <label class="radio"><input type="radio" name="w15r"> Other</label></div>
+    <div class="field"><label>Comment <span class="muted" style="font-weight:400">(required for Other)</span></label><div class="inp" style="min-height:64px">Bracket kit for wall unit not delivered yet.</div></div>
+    <div class="spacer"></div><button class="btn pri full">Submit request</button>`, 'Home', {back:true, cap:'3 · Pick a reason'});
+  const d=phone('Request sent', `
+    <div class="banner ok ann"><span class="ico">✓</span><div><b>Sent to your Manager</b> ${P(4)}<br>Status: <span class="chip">Pending</span></div></div>
+    <dl class="kv"><dt>Job</dt><dd>J-1048 · Fri 6 Nov 14:00</dd><dt>Reason</dt><dd>Missing equipment or parts</dd><dt>Sent</dt><dd>Thu 5 Nov 10:21</dd></dl>
+    <p class="small muted">The Job stays with your Crew until your Manager decides. If it isn't decided by 14:00 Fri 6 Nov, the request lapses. You'll be notified either way.</p>
+    <button class="btn ghost full" data-go="W-11">Back to Home</button>`, 'Home', {cap:'4 · Pending until the Manager decides (W-16)'});
+  return `<div class="phone-row">${a}${b}${c}${d}</div>`;
+}});
+
+/* ---------- W-13 Account administration ---------- */
+S.push({id:'W-13', name:'Account administration', role:'IT Administrator', cls:'AccountAdminPage, AuditLogPage', uc:'UC-03, UC-04', fr:'FR-22, FR-44, FR-45, FR-46, FR-48, FR-49', group:'IT Administrator',
+purpose:'The IT Administrator creates accounts (with home zone and Certifications for a Technician), manages roles and locks, and searches the Audit Log.',
+notes:['Create account: role decides the extra fields; a Technician needs a home zone and 1–2 Certifications with expiry (FR-44, FR-22).','Account list: change role (from next login), unlock, deactivate, edit profile (FR-45, FR-46, FR-48).','Changing a Staff member to Manager removes their future Crew places; the Jobs become Unassigned (FR-45).','Audit Log: search by who, action and date; kept 12 months (FR-49, DEC-89).'],
+render(){
+  const body = `
+  <div class="ph"><h3 id="w13-title">Accounts</h3><div class="r"><div class="seg" id="w13-tab"><button class="on" data-t="acc">Accounts</button><button data-t="log">Audit Log</button></div></div></div>
+  <div id="w13-acc" class="grid" style="grid-template-columns:1fr 420px">
+    <div class="card ann"><div class="hd">All accounts ${P(2)}<span class="r"><input class="inp" style="width:220px;min-height:28px;padding:3px 8px" placeholder="Search name, email, ID"></span></div><div class="bd" style="padding:0">
+      <table class="t"><tr><th>ID</th><th>Name</th><th>Role</th><th>Home Zone · Certifications</th><th>Status</th><th>Actions</th></tr>
+      ${[['M01','Sarah Tan','Manager','—','Active'],['T03','Chen','Technician','North · '+brand('ME')+' 25 Jun 2027','Active'],['T05','Eugene','Technician','West · '+brand('ME')+' <span class="chip warn">28 Nov 2026</span>','Active'],
+         ['T01','Ahmad','Technician','Central · '+brand('ME')+' '+brand('DC')+' 3 Mar 2027','Active'],['T10','Jason','Technician','West · '+brand('DC')+' 1 Aug 2027','Locked'],['D02','Mani','Driver','—','Active'],['D06','Rajesh','Driver','—','Active'],['T12','Wong','Technician','East · '+brand('DC')+' 2 Jan 2027','Deactivated']]
+        .map(([i,n,r,c,s])=>`<tr><td class="mono">${i}</td><td>${n}</td><td><select class="inp" style="min-height:26px;padding:2px 6px;width:120px" ${s==='Deactivated'?'disabled':''}><option>${r}</option>${['Manager','Driver','Technician','IT Administrator'].filter(x=>x!==r).map(x=>`<option>${x}</option>`).join('')}</select></td>
+          <td class="small">${c}</td><td><span class="chip ${s==='Locked'?'block':s==='Deactivated'?'':'ok'}">${s}</span></td>
+          <td class="row" style="gap:6px">${s==='Locked'?'<button class="btn sm pri">Unlock</button>':''}<button class="btn sm ghost">Edit profile</button>${s==='Deactivated'?'<button class="btn sm ghost">Reactivate</button>':'<button class="btn sm danger">Deactivate</button>'}</td></tr>`).join('')}
+      </table><p class="hint" style="padding:0 14px">Showing 8 of 20 · Role changes apply from the user's next login. ${P(3)}</p></div></div>
+    <div class="card ann"><div class="hd">Create account ${P(1)}</div><div class="bd grid" style="gap:10px">
+      <div class="field"><label>Full name *</label><div class="inp">Lee Wei Jie</div></div>
+      <div class="row"><div class="field" style="flex:1"><label>Company email *</label><div class="inp">weijie@company.com.sg</div></div><div class="field" style="width:130px"><label>Contact number *</label><div class="inp">9xxx 3344</div></div></div>
+      <div class="field"><label>Role *</label><div class="seg" id="w13-role"><button>Manager</button><button>Driver</button><button class="on">Technician</button><button>IT Administrator</button></div></div>
+      <div id="w13-tech" class="grid" style="gap:10px">
+        <div class="field"><label>Home Zone *</label><select class="inp">${ZONES.map(z=>`<option ${z==='East'?'selected':''}>${z}</option>`).join('')}</select></div>
+        <div class="field"><label>Certifications * <span class="muted" style="font-weight:400">(Brand and expiry only)</span></label>
+          <div class="row"><select class="inp" style="flex:1"><option>M Electric</option></select><div class="inp" style="width:140px">30 Sep 2027</div><button class="btn sm ghost">✕</button></div>
+          <button class="link small" style="align-self:flex-start">+ Add Dicon Certification</button></div>
+      </div>
+      <div class="sep"></div>
+      <div class="row"><span class="hint">Login details are emailed to the new user.</span><span class="spacer"></span><button class="btn pri">Create account</button></div>
+    </div></div>
+  </div>
+  <div id="w13-log" style="display:none">
+    <div class="card ann"><div class="hd">Audit Log ${P(4)}<span class="r">Kept for 12 months, then purged</span></div><div class="bd">
+      <div class="row wrap" style="margin-bottom:10px"><input class="inp" style="width:240px" placeholder="Who (name or ID)"><select class="inp" style="width:200px"><option>All actions</option><option>Account change</option><option>CSV upload</option><option>Roster override</option><option>Hours Edit</option></select>
+        <div class="inp" style="width:220px">1 Nov 2026 – 5 Nov 2026</div><button class="btn dark">Search</button></div>
+      <table class="t"><tr><th>When</th><th>Who</th><th>Action</th><th>Target</th><th>Change</th><th>Why</th></tr>
+      <tr><td>5 Nov 12:50</td><td>Sarah Tan</td><td>Hours Edit</td><td>T04 Daniel · 5 Nov</td><td class="mono">7.0 → 3.5 h</td><td>Left at 12:30</td></tr>
+      <tr><td>5 Nov 12:48</td><td>Sarah Tan</td><td>Roster override</td><td>Van 2 · 5 Nov</td><td>T04 Daniel → T07 Gopal (activation)</td><td>Daniel unwell, went home</td></tr>
+      <tr><td>5 Nov 09:15</td><td>Sarah Tan</td><td>Roster override</td><td>Van 3 · 16 Nov</td><td>J-1046 Central on West Crew</td><td>Customer near the boundary</td></tr>
+      <tr><td>4 Nov 17:20</td><td>Sarah Tan</td><td>CSV upload</td><td>HR leave</td><td>Committed · 6 rows</td><td>—</td></tr>
+      <tr><td>3 Nov 09:12</td><td>Alex Ng (IT)</td><td>Account change</td><td>T10 Jason</td><td>Unlocked</td><td>Verified by phone</td></tr>
+      <tr><td>2 Nov 14:30</td><td>Alex Ng (IT)</td><td>Account change</td><td>T12 Wong</td><td>Deactivated</td><td>Left the company</td></tr>
+      </table></div></div>
+  </div>`;
+  return desk('workload.local/admin/accounts',['Accounts','Audit Log'],'Accounts','Alex Ng · IT Administrator',body);
+},
+init(root){
+  $$('#w13-tab button',root).forEach(b=>b.onclick=()=>{$$('#w13-tab button',root).forEach(x=>x.classList.toggle('on',x===b));
+    const acc=b.dataset.t==='acc'; $('#w13-acc',root).style.display=acc?'':'none'; $('#w13-log',root).style.display=acc?'none':''; $('#w13-title',root).textContent=acc?'Accounts':'Audit Log';
+    $$('.appbar .tab',root).forEach(t=>t.classList.toggle('on',t.textContent===(acc?'Accounts':'Audit Log')));});
+  $$('#w13-role button',root).forEach(b=>b.onclick=()=>{$$('#w13-role button',root).forEach(x=>x.classList.toggle('on',x===b)); $('#w13-tech',root).style.display=b.textContent==='Technician'?'':'none';});
+}});
+
+/* =====================================================================
+   NAV / RENDER
+   ===================================================================== */
+const ORDER=['W-01','W-02','W-03','W-04','W-05','W-06','W-07','W-08','W-09','W-10','W-16','W-11','W-12','W-14','W-15','W-13'];
+const FLOW=['W-05','W-06','W-11','W-15','W-16','W-09','W-10','W-03'];
+const byId=Object.fromEntries(S.map(s=>[s.id,s]));
+let mode='one', flow=false;
+
+function nav(cur){
+  const groups=['All roles','Manager','Staff','IT Administrator'];
+  const list = flow ? `<h2>Demo flow</h2>`+FLOW.map((id,i)=>`<a href="#${id}" data-nav="${id}" class="${id===cur?'on':''}"><span class="id">${i+1}. ${id}</span>${byId[id].name}</a>`).join('')
+    : groups.map(g=>`<h2>${g}</h2>`+ORDER.filter(id=>byId[id].group===g).map(id=>`<a href="#${id}" data-nav="${id}" class="${id===cur?'on':''}"><span class="id">${id}</span>${byId[id].name}</a>`).join('')).join('');
+  $('#navlist').innerHTML=list+`<h2>Coverage</h2><div class="small muted" style="padding:0 8px">UC-01–05, 07–13, 15–18 · every active use case has a screen (m2/wireframes.md).</div>`;
+}
+function block(s){
+  return `<section class="scr" id="sec-${s.id}">
+    <div class="scr-head"><span class="wid">${s.id}</span><h2>${s.name}</h2></div>
+    <div class="meta"><span><b>Role</b> ${s.role}</span><span><b>Boundary</b> <span class="mono">${s.cls}</span></span><span><b>Use case</b> ${s.uc}</span><span><b>Requirements</b> ${s.fr}</span></div>
+    <p class="purpose">${s.purpose}</p>
+    <div class="frame" data-id="${s.id}">${s.render()}</div>
+    <div class="notes">${s.notes.map((n,i)=>`<div><i class="pin n">${i+1}</i><span>${n}</span></div>`).join('')}</div>
+    ${flow&&mode==='one'?flowNav(s.id):''}
+  </section>`;
+}
+function flowNav(id){const i=FLOW.indexOf(id); if(i<0)return '';
+  return `<div class="row" style="margin-top:18px">${i>0?`<button class="btn" data-go="${FLOW[i-1]}">← ${FLOW[i-1]}</button>`:''}<span class="spacer"></span>${i<FLOW.length-1?`<button class="btn dark" data-go="${FLOW[i+1]}">Next: ${FLOW[i+1]} ${byId[FLOW[i+1]].name} →</button>`:''}</div>`;}
+
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-nb]'); if(!b)return; e.preventDefault(); let r=b.parentElement; while(r&&!r.querySelector('.toast')) r=r.parentElement; if(!r){ const ph=b.closest('.phone'); if(ph){ const t=document.createElement('div'); t.className='toast'; ph.appendChild(t); r=ph; } } if(r) toast(r,'Not built in this wireframe. It behaves as described in the notes.'); });
+function bindGo(root){ $$('[data-go]',root).forEach(b=>{ if(b._go)return; b._go=1; b.addEventListener('click',e=>{e.preventDefault();go(b.dataset.go);}); }); }
+let CUR = (location.hash||'').slice(1);
+function go(id){
+  if(!byId[id]) return;
+  CUR=id; try{ history.replaceState(null,'','#'+id); }catch(e){}
+  if(mode==='all'){ nav(null); const el=$('#sec-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+  render();
+}
+$('#navlist').addEventListener('click',e=>{const a=e.target.closest('[data-nav]'); if(!a)return; e.preventDefault(); go(a.dataset.nav);});
+
+const ro = new ResizeObserver(fit);
+function fit(){ $$('.scaler').forEach(sc=>{const d=$('.desk',sc); const k=Math.min(1, sc.clientWidth/1366); d.style.transform=`scale(${k})`; sc.style.height=(d.offsetHeight*k)+'px';}); }
+
+function render(){
+  const cur = byId[CUR] ? CUR : 'W-01';
+  const ids = mode==='all' ? ORDER : [cur];
+  $('#main').innerHTML = ids.map(id=>block(byId[id])).join('');
+  ids.forEach(id=>{ const root=$(`.frame[data-id="${id}"]`); byId[id].init?.(root); bindGo(root); });
+  bindGo($('#main'));
+  nav(mode==='all'?null:ids[0]);
+  ro.disconnect(); $$('.desk').forEach(d=>ro.observe(d)); $$('.scaler').forEach(s=>ro.observe(s)); fit();
+  if(mode==='one') window.scrollTo(0,0);
+}
+$('#m-one').onclick=()=>{mode='one';$('#m-one').classList.add('on');$('#m-all').classList.remove('on');render();};
+$('#m-all').onclick=()=>{mode='all';$('#m-all').classList.add('on');$('#m-one').classList.remove('on');render();};
+$('#m-pins').onclick=()=>{document.body.classList.toggle('pins');$('#m-pins').classList.toggle('on');$('#m-pins').textContent=document.body.classList.contains('pins')?'Pins on':'Pins off';};
+$('#m-flow').onclick=()=>{flow=!flow;$('#m-flow').classList.toggle('on',flow); if(flow&&mode==='one'&&!FLOW.includes(CUR)) go(FLOW[0]); else render();};
+render();
+</script>
+</body>
+</html>
