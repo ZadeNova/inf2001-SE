@@ -1,6 +1,6 @@
 # UC-12: Submit Job Rejection Request
 
-> **Status: M2 v1.0 (2026-11-06).** Renamed from "Manage Requests". Leave and late-change submissions are removed, and Short notice is retired (DEC-73, DEC-83, DEC-90, DEC-91). File name kept for link stability.
+> **Status: M2 v1.1 (2026-11-07).** Renamed from "Manage Requests". Leave and late-change submissions are removed, and Short notice is retired (DEC-73, DEC-83, DEC-90, DEC-91). File name kept for link stability.
 
 | Field | Value |
 |---|---|
@@ -8,8 +8,8 @@
 | **Name** | Submit Job Rejection Request |
 | **Primary actor** | Staff |
 | **Secondary actors** | Email Service, SMS Gateway «system» through UC-15 (Manager alert) |
-| **Description** | A Crew member asks for a Job to be taken off their Crew, after a warning to discuss it with the Manager first. |
-| **Trigger** | A Crew member cannot do an assigned Job, or knows ahead of time that it can't be done. |
+| **Description** | An attributed Staff member asks for a Crew or direct Job to be unassigned, after a warning to discuss it with the Manager first. |
+| **Trigger** | An attributed Staff member cannot do an assigned Job, or knows ahead of time that it can't be done. |
 | **Linked requirements** | FR-41, FR-37, NFR-12 |
 | **Source** | Brief R10, §Intro ¶3; INT-MGR [Conflicts Q3]; INT-DRV [Q17]; DEC-42; DEC-66 |
 | **Classes** | RequestPage, RequestController, JobRejectionRequest, Assignment, NotificationService |
@@ -42,7 +42,7 @@
 
 ### E3: Job is not eligible (step 1 or 3)
 
-1. Refuse a Job outside the Staff member's Crew or Published week, no longer Assigned, or already started (FR-37).
+1. Refuse a Job not attributed to this Staff member, outside the Published week, no longer Assigned, or already started (FR-37).
 
 ### E4: Another request is already Pending for this Assignment (step 3)
 
@@ -56,3 +56,5 @@
 
 - **Success:** A Pending request exists for UC-09.
 - **Failure:** Nothing changes.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

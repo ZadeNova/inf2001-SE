@@ -1,6 +1,6 @@
 # UC-05: Manage Job
 
-> **Status: M2 v1.0 (2026-11-06).** The zone comes from the postal code. A customer cancellation deletes the Job. Linked Jobs and Completed status are removed (DEC-76, DEC-77, DEC-90).
+> **Status: M2 v1.1 (2026-11-07).** The zone comes from the postal code. A customer cancellation deletes the Job. Linked Jobs and Completed status are removed (DEC-76, DEC-77, DEC-90).
 
 | Field | Value |
 |---|---|
@@ -32,12 +32,12 @@
 ### A1: Edit (branches at step 1)
 
 1. The Manager changes a future Job. `Job.changeDetails()` runs and, if the Job is Assigned, `RuleValidator.checkBlocking()`.
-2. If the edit breaks a rule, `Job.markUnassigned(reason)` runs and the Manager is told why. If the Job is still Assigned, the Crew is notified (UC-15).
+2. If the edit breaks a rule, `Job.markUnassigned(reason)` runs and the Manager is told why. If the Job is still Assigned, the attributed Staff is notified (UC-15).
 
 ### A2: Customer cancels (branches at step 1)
 
 1. The Manager chooses Delete and confirms.
-2. If the Job is Assigned, its Crew is notified through UC-15 first. `JobController.deleteJob()` then removes the Job and its Assignment and logs it (FR-04).
+2. If the Job is Assigned, its attributed Staff is notified through UC-15 first. `JobController.deleteJob()` then removes the Job and its Assignment and logs it (FR-04).
 
 ## Exception flows
 
@@ -57,3 +57,5 @@
 
 - **Success:** The Job is saved, changed or deleted, and the change is logged.
 - **Failure:** The Job is unchanged.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

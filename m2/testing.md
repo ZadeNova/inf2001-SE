@@ -1,6 +1,6 @@
 # M2 Test Design (report §4)
 
-> **Status: Draft v1.0 (2026-11-06).** Built from SRS v4.0 and CD-final (DEC-94). The black-box and white-box sections use **different methods**, as the template requires.
+> **Status: Draft v1.1 (2026-11-07).** Built from SRS v4.1 and CD-final (DEC-94). The black-box and white-box sections use **different methods**, as the template requires.
 > Example dates: Planning Week Monday 19 to Saturday 24; Availability Deadline Wednesday 7, 18:00.
 
 ---
@@ -9,7 +9,7 @@
 
 ### 1.1 Method and expected behaviour
 
-`submitPick(technician, week, day, brand)` saves a Technician's one Standby day for a Planning Week (FR-51, UC-18). It calls `RuleValidator.checkStandbyPick()`, which checks the conditions **in the order below and reports the first that fails**. If every check passes, it saves the pick, replacing any earlier pick the Technician had that week and freeing that slot.
+`submitPick(technician, week, day, brand)` saves a Technician's one **provisional** Standby-day request for a Planning Week (FR-51, UC-18). It calls `RuleValidator.checkStandbyPick()`, which checks the conditions **in the order below and reports the first that fails**. If every check passes, it saves a Provisional pick with submittedAt, replacing any earlier pick the Technician had that week and freeing that slot.
 
 ### 1.2 Causes (conditions) and effects
 
@@ -27,15 +27,15 @@
 | E2 | Refuse: "You are not available that day" |
 | E3 | Refuse: "You are not certified for this Brand on that day" |
 | E4 | Refuse: "This slot has just been taken" |
-| E5 | Save the new pick |
-| E6 | Replace the existing pick: free the old slot and save the new one |
+| E5 | Save the new provisional pick |
+| E6 | Replace the existing provisional pick: free the old slot and save the new one |
 
 ### 1.3 Complete decision table (2⁵ = 32 combinations)
 
 | # | C1 | C2 | C3 | C4 | C5 | Effect | Reduced rule |
 |---|---|---|---|---|---|---|---|
-| 1 | T | T | T | T | T | E6 Replace existing pick (free old slot) | R6 |
-| 2 | T | T | T | T | F | E5 Save new pick | R5 |
+| 1 | T | T | T | T | T | E6 Replace provisional pick (free old slot) | R6 |
+| 2 | T | T | T | T | F | E5 Save provisional pick | R5 |
 | 3 | T | T | T | F | T | E4 Refuse: slot already taken | R4 |
 | 4 | T | T | T | F | F | E4 Refuse: slot already taken | R4 |
 | 5 | T | T | F | T | T | E3 Refuse: not certified for this Brand | R3 |
@@ -77,8 +77,8 @@ Rules with the same effect are merged where the remaining conditions do not chan
 | R2 | T | F | – | – | – | E2 Refuse: not available | 8 (#9–16) |
 | R3 | T | T | F | – | – | E3 Refuse: not certified | 4 (#5–8) |
 | R4 | T | T | T | F | – | E4 Refuse: slot taken | 2 (#3–4) |
-| R5 | T | T | T | T | F | E5 Save new pick | 1 (#2) |
-| R6 | T | T | T | T | T | E6 Replace existing pick | 1 (#1) |
+| R5 | T | T | T | T | F | E5 Save provisional pick | 1 (#2) |
+| R6 | T | T | T | T | T | E6 Replace provisional pick | 1 (#1) |
 
 Check: 16 + 8 + 4 + 2 + 1 + 1 = 32.
 
@@ -92,8 +92,8 @@ Setup: Technician **T07** (M Electric only, Certification expiry 30 Jun). Planni
 | BB-02 | R2 | Now Mon 5, 10:00; Thu 22 where T07 has a Leave Record (MC); M Electric | Refused: "You are not available that day" |
 | BB-03 | R3 | Now Mon 5, 10:00; Tue 20; **Dicon**; T07 Available | Refused: "You are not certified for this Brand on that day" |
 | BB-04 | R4 | Now Mon 5, 10:00; Wed 21; M Electric; **T09 already holds Wed 21 / M Electric** | Refused: "This slot has just been taken" |
-| BB-05 | R5 | Now Mon 5, 10:00; Tue 20; M Electric; T07 has no pick this week | Saved: T07 → Tue 20 / M Electric. Tue 20's M Electric slot shows as taken |
-| BB-06 | R6 | Now Mon 5, 10:00; Fri 23; M Electric; T07 already holds Tue 20 / M Electric | Saved: T07 → Fri 23 / M Electric. Tue 20's M Electric slot is free again |
+| BB-05 | R5 | Now Mon 5, 10:00; Tue 20; M Electric; T07 has no pick this week | Provisional (not yet guaranteed): T07 → Tue 20 / M Electric. Tue 20's M Electric slot shows as taken |
+| BB-06 | R6 | Now Mon 5, 10:00; Fri 23; M Electric; T07 already holds Tue 20 / M Electric | Provisional (not yet guaranteed): T07 → Fri 23 / M Electric. Tue 20's M Electric slot is free again |
 
 Extra boundary checks (equivalence partitions and boundary values, not required by the template): C1 at 17:59 → passes and at 18:00 → fails. C3 with expiry equal to the day → passes and the day before → fails. A Dual-Certified Technician on a day where only the Dicon slot is free → can take Dicon (R5).
 
@@ -103,7 +103,7 @@ Extra boundary checks (equivalence partitions and boundary values, not required 
 
 ### 2.1 Method
 
-`classifyTechnicians(day)` carries out FR-55 steps 1–4 for one working day. It drops Technicians who are not working, puts Standby picks and Dual-Certified Technicians with 20 h or more last week on Standby, and splits everyone else into an under-40 h group and a 40 h-or-more group. Each group is then ordered by `WorkloadRanking` (the Strategy, report §3.2).
+`classifyTechnicians(day)` carries out FR-55 steps 1–4 for one working day. It drops Technicians who are not working, puts confirmed Standby picks and Dual-Certified Technicians with 20 Active Hours or more last week on Standby, and splits everyone else into an under-40 h group and a 40 projected-Credited-hours-or-more group. Each group is then ordered by `WorkloadRanking` (the Strategy, report §3.2).
 
 ### 2.2 Pseudocode
 
@@ -113,16 +113,16 @@ classifyTechnicians(day):
  2  for each t in activeTechnicians():
  3      if not t.isWorkingOn(day) then          // Unavailable, Not submitted or Leave Record
  4          continue
- 5      if hasStandbyPick(t, day) then
+ 5      if hasConfirmedStandbyPick(t, day) then
  6          standby.add(t, Preference)
- 7      else if t.isDual(day) and t.lastWeekHours(week) >= 20 then
- 8          standby.add(t, Algorithm)           // treated as based in Central
- 9      else if t.projectedWeekHours(day) >= 40 then
+ 7      else if t.isDual(day) and t.lastWeekActiveHours(week) >= 20 then
+ 8          standby.add(t, Algorithm)           // use home Zone
+ 9      else if t.projectedCreditedHours(day) >= 40 then
 10          bottom.add(t)
 11      else
 12          ranked.add(t)
 13  end for
-14  ranked ← ranking.order(ranked, day)        // last week, projected hours, staff ID
+14  ranked ← ranking.order(ranked, day)        // last week's Active, projected Active, staff ID
 15  bottom ← ranking.order(bottom, day)
 16  return (ranked + bottom, standby)
 ```
@@ -187,9 +187,51 @@ Day = Wed 21 of the Planning Week. Each case has one active Technician, so the l
 | WB-01 | B1 | T03, M Electric only, Available, no pick, projected 16 h | ranked = [T03]; standby = [] |
 | WB-02 | B2 | No active Technicians | ranked = []; standby = [] |
 | WB-03 | B3 | T04 with a Leave Record (Leave) on Wed 21 | ranked = []; standby = [] (T04 excluded) |
-| WB-04 | B4 | T05, Available, Standby pick Wed 21 / Dicon | standby = [T05 (Preference)]; ranked = [] |
-| WB-05 | B5 | T01, Dual-Certified, Available, no pick, last week **19.5 h**, projected 16 h | ranked = [T01]; standby = [] |
-| WB-06 | B6 | T02, Dual-Certified, Available, no pick, last week **20 h** | standby = [T02 (Algorithm, Central)]; ranked = [] |
-| WB-07 | B7 | T06, Dicon only, Available, no pick, projected **40 h** | ranked = [T06] (from the 40 h-or-more group, so placed after any under-40 h Technician); standby = [] |
+| WB-04 | B4 | T05, Available, confirmed Standby pick Wed 21 / Dicon | standby = [T05 (Preference)]; ranked = [] |
+| WB-05 | B5 | T01, Dual-Certified, Available, no pick, last week's Active Hours **19.5 h**, projected 16 h | ranked = [T01]; standby = [] |
+| WB-06 | B6 | T02, Dual-Certified, Available, no pick, last week's Active Hours **20 h** | standby = [T02 (Algorithm, home Zone)]; ranked = [] |
+| WB-07 | B7 | T06, Dicon only, Available, no pick, projected Credited **40 h** | ranked = [T06] (from the 40 h-or-more group, so placed after any under-40 h Technician); standby = [] |
 
-WB-05/WB-06 test the 20 h boundary (19.5 vs 20) and WB-07 tests the 40 h ranking boundary (DEC-86). A further integration case with all of T01–T06 checks the final order: under-40 h first by last week's hours, then the 40 h-or-more group.
+WB-05/WB-06 test the 20 h boundary (19.5 vs 20) and WB-07 tests the 40 h ranking boundary (DEC-86). A further integration case with all of T01–T06 checks the final order: under-40 h first by last week's Active Hours, then the 40 h-or-more group.
+
+## 3. Cross-rule scenarios for the clarified design (DEC-96–98)
+
+These extend the required decision-table/CFG evidence; they do not replace it. The repo contains design/pseudocode, not an executable scheduling application. All hour inputs below include the agreed Travel Allowance.
+
+| Scenario | Setup / action | Expected |
+|---|---|---|
+| SC-01 | Rostered Standby, no duties | Active 0, Credited 4, activated dates +0 |
+| SC-02 | First direct duty 2 h | Active 2, Credited 4, count +1 |
+| SC-03 | First duty exactly 4 h; separately test 5 h | 4/4 or 5/5; each date counts once |
+| SC-04 | Separate duties 2 h then 3 h on one date | First 2/4, then 5/5; count remains +1. Replaying the save is idempotent |
+| SC-05 | Alex attributed to Job 1 (2 h); Ben replaces from Job 2 (6 h remaining) | Job 1 retains Alex; later Jobs name Ben. Alex 2/2; Ben 6/6; no 4+6 credit |
+| SC-06 | Provisional pick before deadline; missing HR/Van CSV after deadline | Remains Provisional; no confirmation, no false guarantee |
+| SC-07 | 3 ME + 3 DI, no dual; request one ME Standby | Three Crews possible without Standby but not with full cover; pick NotConfirmed with staffing reason. Minimum Crews take priority |
+| SC-08 | 4 ME + 4 DI, no dual; one ME and one DI request | Both can confirm, leaving 3 mixed Crews and both-Brand Standby cover |
+| SC-09 | 2 ME + 2 DI + 2 duals; dual A requests first, dual B second | A confirms: B + two pairs form 3 Crews, A covers Standby. B cannot also confirm; NotConfirmed. Submission order is preserved |
+| SC-10 | Dual has last week Active 0 / Credited 24 from six unused Standby days | Included in ranking, not the >=20 Active Hours Standby branch |
+| SC-11 | 2 ME + 2 DI + 2 duals; greedy pairing consumes all six in three pairs | Feasible fallback uses two single-dual Crews + one opposite-Brand pair, leaving full cover; minimum/cover cannot be lost by greedy ordering |
+| SC-12 | Two Crews, enough Vans, no eligible way to form a third | Show shortage, confirm no new picks and block publication; do not count direct duties as a Van Crew |
+| SC-13 | Missing Dicon member; ME-only Standby count 0, valid dual count 2 | Filter ME-only candidate before ranking; dual recommended if available for all remaining Jobs |
+| SC-14 | Technician has a direct duty until 15:00; another starts 15:10 or 15:30 | Reject 15:10; allow 15:30 if all other rules pass. Replacement-Crew commitment prevents a second Crew assignment |
+| SC-15 | Manager tries to move a confirmed pick into the initial Crew; later genuinely activates that person | Initial override blocked; activation allowed with proper eligibility, attribution and audit. Reconfirmation/regeneration does not duplicate notices |
+
+### 3.1 Confirmation/coverage check
+
+Use current available/certified Technicians, available Drivers and Van count. Reserved confirmed picks stay outside initial Crews. A small search enumerates valid both-Brand groups (one dual, or two opposite-Brand Technicians), chooses three disjoint groups and checks that all remaining Technicians, including reserved picks, provide both-Brand Standby cover. Return that arrangement or no solution. Confirmation requires the solution; the same arrangement is available to the roster as a fallback. There are only 11 Technicians, so this needs no optimiser. Ordinary shortage handling still distinguishes three Crews without cover from fewer than three.
+
+Resolve provisional requests in submittedAt/staff-ID order, saving each day's results atomically. Previously confirmed decisions are immutable/idempotent. Recheck eligibility and capacity at publication; later Leave overrides placement without erasing preference history.
+
+### 3.2 Hours and activation invariants
+
+- Active(date) = latest corrected Active Hours, otherwise sum of attributed Planned Hours on that date.
+- Credited(date) = max(4, Active(date)) when rostered Standby; otherwise Active(date). Full-day Leave without duties has no floor.
+- ActivationCount(asOf) = distinct activated Standby dates in the rolling 12 months ending asOf. Ignore later dates; a date at the retained cutoff follows the same calendar-month boundary as retention.
+- Only the first activation changes the date flag. A failed phone call does not activate. No count/credit is added per Job.
+- Initial Crew members and earlier Assignment snapshots remain unchanged by replacement. Later Jobs use Crew.membersFor(job), applying replacements by effectiveFrom.
+
+### 3.3 Verification scope
+
+Check the 32 unique black-box combinations/reduced-rule outcomes; the CFG's 19 edges and seven basis paths; class/method/FR/UC links; scenario arithmetic and minimum-coverage examples; and locally render the six current M2 diagram sources. These verify the design and examples, not production scheduling code or completed wireframe screens.
+
+**Verification performed (2026-11-07):** checked all 32 unique submission combinations and their 16/8/4/2/1/1 reduced-rule counts; checked CFG/source edge equality, seven valid paths and full edge coverage (V=7); independently calculated minimum-coverage examples SC-07–12 and the hours/attribution examples; checked SRS method references against CD-final. All six current M2 sources rendered locally to SVG/PNG with PlantUML 1.2026.8 and were visually inspected; CFG node labels were enclosed to avoid crossing edges. Full class/component views are large and should be used as zoomable SVGs or laid out for the report by their owners. This does not claim application execution or completed wireframes.

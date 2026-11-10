@@ -1,6 +1,6 @@
 # UC-08: Compare Staff
 
-> **Status: M2 v1.0 (2026-11-06).** Keeps «extend» to UC-07: comparison is optional during allocation (DEC-91). Shows the Standby pick, zone and activation count.
+> **Status: M2 v1.1 (2026-11-07).** Keeps «extend» to UC-07: comparison is optional during allocation (DEC-91). Shows the Standby pick, zone and activated-day count.
 
 | Field | Value |
 |---|---|
@@ -22,7 +22,7 @@
 | Step | Actor | System |
 |---|---|---|
 | 1 | Selects up to three Staff and a date. | `RosterController.compare(selection, date)`. |
-| 2 | — | Shows for each: Availability that day and week, Workload this week and last week, Certifications with expiry, their Standby pick, their location that day (Crew zone or home zone) and their activation count (FR-31). |
+| 2 | — | Shows for each: Availability that day and week, Active Hours and Total Credited Workload this week and last week, Certifications with expiry, their provisional/confirmed/not-confirmed Standby pick, their location that day (current duty/Crew coverage zones or home Zone) and their activated-day count (FR-31). |
 | 3 | Closes the panel. | Returns to UC-07. |
 
 ## Exception flows
@@ -30,3 +30,5 @@
 ### E1: A fourth selection
 
 1. The system refuses it (FR-31).
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

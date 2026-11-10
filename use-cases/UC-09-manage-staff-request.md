@@ -1,6 +1,6 @@
 # UC-09: Decide Job Rejection Request
 
-> **Status: M2 v1.0 (2026-11-06).** Renamed from "Manage Staff Request". Leave and Late Availability decisions are removed (DEC-73, DEC-83, DEC-91). File name kept for link stability.
+> **Status: M2 v1.1 (2026-11-07).** Renamed from "Manage Staff Request". Leave and Late Availability decisions are removed (DEC-73, DEC-83, DEC-91). File name kept for link stability.
 
 | Field | Value |
 |---|---|
@@ -8,7 +8,7 @@
 | **Name** | Decide Job Rejection Request |
 | **Primary actor** | Manager |
 | **Secondary actors** | Email Service, SMS Gateway «system» through UC-15; Clock (lapse at Job start) |
-| **Description** | The Manager approves or refuses a Crew member's Job Rejection Request. |
+| **Description** | The Manager approves or refuses an attributed Staff member's Job Rejection Request. |
 | **Trigger** | A pending request appears on the Manager's Landing Page, or the Job's start time arrives while it is pending. |
 | **Linked requirements** | FR-05, FR-34, FR-40, FR-38, FR-39, FR-49 |
 | **Source** | Brief R10; INT-MGR [Conflicts Q3]; DEC-42; DEC-59; DEC-66; DEC-91 |
@@ -24,10 +24,10 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens pending requests. | Lists Pending Job Rejection Requests with the Job, date, Crew, reason and comment (FR-40). |
+| 1 | Opens pending requests. | Lists Pending Job Rejection Requests with the Job, date, Crew or direct Technician, reason and comment (FR-40). |
 | 2 | Chooses Approve or Refuse, optionally with a reason. | `RequestController.decideJobRejection()`. |
-| 3 | — | **Approve:** `JobRejectionRequest.approve()` and `Job.markUnassigned()`; the Job leaves the Crew and the Unassigned count rises (FR-34). **Refuse:** `refuse(reason)`; the Assignment stands. |
-| 4 | — | Logs the decision and notifies the requester and Crew through UC-15 (FR-39, FR-49). |
+| 3 | — | **Approve:** `JobRejectionRequest.approve()` and `Job.markUnassigned()`; the Job leaves its Crew or direct allocation and the Unassigned count rises (FR-34). **Refuse:** `refuse(reason)`; the Assignment stands. |
+| 4 | — | Logs the decision and notifies the requester and affected attributed Staff through UC-15 (FR-39, FR-49). |
 
 ## Alternative flows
 
@@ -52,3 +52,5 @@
 ## Postconditions
 
 - **Success:** The request is Approved, Refused or Lapsed, logged, and notified.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

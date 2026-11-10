@@ -18,10 +18,10 @@ skinparam ranksep 45
 hide circle
 hide empty members
 title CD-final: Final Class Diagram (M2)
-' Traces: SRS v4.0 FR-01, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58, NFR-13, NFR-14; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
-' Sources: DEC-73 to DEC-93; M2-Brief §5. Packages match the components in CMP-system.
+' Traces: SRS v4.1 FR-01, FR-02, FR-04, FR-05, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-22, FR-26, FR-27, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58; NFR-13, NFR-14; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
+' Sources: DEC-73 to DEC-98; M2-Brief §5. Packages match the components in CMP-system.
 ' ECB stereotypes: <<boundary>> = View, <<control>> = Controller/service, <<entity>> = Model (DEC-93).
-' Derived values (hours, activation count, Central base) are methods, not attributes (DEC-87).
+' Derived values (Active/Credited hours and activated-day count) are methods, not attributes (DEC-87).
 ' Design pattern (report §3.2): Strategy = TechnicianRanking + WorkloadRanking/ActivationRanking (DEC-93).
 
 ' ======================= Web UI (boundary) =======================
@@ -63,7 +63,7 @@ package "Web UI (Presentation layer)" {
   +openPlanningWeek(week)
   +suggestRoster()
   +editCrew(crew, members)
-  +setCrewZone(crew, zone)
+  +setCrewZones(crew, zones)
   +editStandby(technician, date)
   +allocateJob(job, crew, startTime)
   +compareStaff(selection, date)
@@ -72,8 +72,9 @@ package "Web UI (Presentation layer)" {
  }
  class UpdateRosterPage <<boundary>> {
   +openDay(date)
+  +activateForJob(standby, job, startTime, reason)
   +recordReplacement(crew, outStaff, inStandby, fromJob, reason)
-  +editHours(staff, date, hours, reason)
+  +editHours(staff, date, activeHours, reason)
  }
  class StandbyListView <<boundary>> {
   +show(job, date)
@@ -131,6 +132,7 @@ package "Staff Inputs" {
   +loadWeek(technician, week)
   +submitPick(technician, week, day, brand: Brand)
   +withdrawPick(technician, week)
+  +confirmWeek(week)
  }
  class RequestController <<control>> {
   +submitRejection(staff, assignment, reason, comment)
@@ -169,7 +171,7 @@ package "Scheduling Engine" {
   +assignDrivers(day)
  }
  class StandbyActivationService <<control>> {
-  +listStandbysForJob(job, date): List<Standby>
+  +listStandbysForJob(job, date, crew, outStaff): List<Standby>
  }
  interface TechnicianRanking <<interface>> {
   +order(candidates: List<Technician>, context): List<Technician>
@@ -188,16 +190,20 @@ package "Scheduling Engine" {
   +checkBlocking(proposal): List<String>
   +checkWarnings(context): List<String>
   +checkStandbyCover(day): Boolean
+  +eligibleForDuty(standby, jobs, crew, outStaff): Boolean
+  +findMinimumCoverage(day, reservedPicks)
+  +checkPreferenceConfirmation(pick): List<String>
  }
 }
 package "Roster & Hours" {
  class RosterController <<control>> {
   +loadWeek(week)
+  +prepareSuggestion(week)
   +allocateJob(job, crew, startTime)
   +moveJob(assignment, crew, startTime)
   +unassignJob(assignment)
   +changeCrew(crew, members)
-  +setCrewZone(crew, zone: Zone)
+  +setCrewZones(crew, zones: Set<Zone>)
   +nameStandby(technician, date)
   +removeStandby(standby)
   +compare(selection, date)
@@ -207,8 +213,9 @@ package "Roster & Hours" {
   +removeFromFutureRoster(staff)
  }
  class HoursController <<control>> {
+  +activateForJob(standby, job, startTime, reason)
   +recordReplacement(crew, outStaff, inStandby, fromJob, reason)
-  +editHours(staff, date, newHours, reason)
+  +editHours(staff, date, newActiveHours, reason)
  }
  class DashboardController <<control>> {
   +loadDashboard(week)
@@ -274,6 +281,8 @@ package "Domain Model (Data layer)" {
  abstract class Staff <<entity>> {
   +availabilityOn(date): AvailabilityState
   +isWorkingOn(date): Boolean
+  +activeHoursOn(date): Decimal
+  +activeHours(week): Decimal
   +hoursOn(date): Decimal
   +workload(week): Decimal
   +monthlyWorkload(month): Decimal
@@ -286,10 +295,11 @@ package "Domain Model (Data layer)" {
   +certifications(): List<Certification>
   +isDual(date): Boolean
   +holdsValid(brand: Brand, date): Boolean
-  +lastWeekHours(week): Decimal
-  +projectedWeekHours(day): Decimal
+  +lastWeekActiveHours(week): Decimal
+  +projectedActiveHours(day): Decimal
+  +projectedCreditedHours(day): Decimal
   +activationCount(asOf): Integer
-  +locationOn(date): Zone
+  +locationOn(date): Set<Zone>
  }
  class Certification <<entity>> {
   -brand: Brand
@@ -307,7 +317,13 @@ package "Domain Model (Data layer)" {
   -weekStart: Date
   -chosenDay: Date
   -brandSlot: Brand
+  -submittedAt: DateTime
+  -status: PreferenceStatus
+  -decidedAt: DateTime [0..1]
+  -decisionReason: String [0..1]
   +change(day, brand: Brand)
+  +confirm()
+  +decline(reason)
  }
  class JobRejectionRequest <<entity>> {
   -reason: String
@@ -366,16 +382,26 @@ package "Domain Model (Data layer)" {
  class Crew <<entity>> {
   -date: Date
   -vanNumber: Integer
-  -zone: Zone
+  -zones: Set<Zone>
   +changeMembers(members)
-  +setZone(zone: Zone)
+  +setZones(zones: Set<Zone>)
+  +membersFor(job): Set<Staff>
   +coversBrands(brands, date): Boolean
  }
  class Assignment <<entity>> {
+  -dutyDate: Date
   -startTime: Time
+  +attributeTo(staff: Set<Staff>)
+  +isDirect(): Boolean
   +endTime(): Time
   +date(): Date
   +getDetails()
+ }
+ class Replacement <<entity>> {
+  -fromJobId: String
+  -effectiveFrom: DateTime
+  -reason: String
+  -recordedAt: DateTime
  }
  class Standby <<entity>> {
   -date: Date
@@ -383,12 +409,13 @@ package "Domain Model (Data layer)" {
   -activated: Boolean
   +activate()
   +effectiveZone(): Zone
+  +eligibleFor(jobs): Boolean
   +hours(): Decimal
  }
  class HoursEdit <<entity>> {
   -date: Date
-  -oldHours: Decimal
-  -newHours: Decimal
+  -oldActiveHours: Decimal
+  -newActiveHours: Decimal
   -reason: String
   -editedAt: DateTime
  }
@@ -445,6 +472,11 @@ package "Domain Model (Data layer)" {
   Available
   Unavailable
  }
+ enum PreferenceStatus {
+  Provisional
+  Confirmed
+  NotConfirmed
+ }
  enum StandbySource {
   Preference
   Algorithm
@@ -494,9 +526,15 @@ Technician "1" -- "0..*" StandbyPreference
 Technician "1" -- "0..*" Standby
 WeeklyRoster "1" *-- "0..*" Crew
 WeeklyRoster "1" *-- "0..*" Standby
-Crew "0..*" -- "1" Driver : driven by
-Crew "0..*" -- "1..2" Technician : staffed by
-Crew "1" *-- "0..*" Assignment
+Crew "0..*" -- "1" Driver : initial Driver
+Crew "0..*" -- "1..2" Technician : initial Technicians
+WeeklyRoster "1" *-- "0..*" Assignment
+Crew "0..1" -- "0..*" Assignment : optional Crew
+Assignment "0..*" -- "1..3" Staff : attributed Staff
+Crew "1" -- "0..*" Replacement
+Replacement "0..*" -- "1" Technician : outgoing
+Replacement "0..*" -- "1" Technician : incoming
+Replacement "0..*" -- "1" Manager : recorded by
 Job "1" -- "0..1" Assignment
 Assignment "1" -- "0..*" JobRejectionRequest
 Staff "1" -- "0..*" JobRejectionRequest : requester
@@ -541,6 +579,7 @@ AvailabilityController ..> Availability
 AvailabilityController ..> RuleValidator
 StandbyPreferenceController ..> StandbyPreference
 StandbyPreferenceController ..> RuleValidator
+StandbyPreferenceController ..> NotificationService
 RequestController ..> JobRejectionRequest
 RequestController ..> NotificationService
 CsvImportController ..> CsvImport
@@ -556,11 +595,17 @@ CrewFormingService ..> LeaveRecord
 CrewFormingService ..> VanAvailability
 CrewFormingService ..> StandbyPreference
 StandbyActivationService ..> Standby
+StandbyActivationService ..> RuleValidator
 RosterController ..> RuleValidator
+RosterController ..> StandbyPreferenceController
+RosterController ..> CrewFormingService
 RosterController ..> WeeklyRoster
 RosterController ..> NotificationService
 HoursController ..> HoursEdit
 HoursController ..> Standby
+HoursController ..> Assignment
+HoursController ..> Replacement
+HoursController ..> RuleValidator
 HoursController ..> NotificationService
 DashboardController ..> Staff
 NotificationService "1" o-- "1..*" NotificationChannel : sends through
@@ -569,22 +614,28 @@ RetentionJob ..> AuditLog
 
 note bottom of TechnicianRanking
  Strategy (report §3.2, DEC-93).
- WorkloadRanking: last week's Workload, projected hours,
- staff ID; classifyTechnicians() puts the 40 h-or-more group last (FR-55).
- ActivationRanking: fewest activations (12 months),
+ WorkloadRanking: last week's Active Hours, projected Active Hours,
+ staff ID; classifyTechnicians() puts projected Credited >=40 h last (FR-55).
+ ActivationRanking: eligible candidates only; fewest activated dates (12 months),
  then zone distance, then staff ID (FR-56).
 end note
 
 note bottom of Standby
- hours(): 4 h unless an HoursEdit exists (FR-35).
- effectiveZone(): Central if source = Algorithm,
- else the Technician's homeZone (DEC-81, DEC-87).
+ hours(): max(4, Staff.activeHoursOn(date)); once per date (DEC-96).
+ Full-day Leave without duties has no minimum credit.
+ activate(): idempotent; keep record and count this date once.
+ effectiveZone(): Technician.homeZone for every source (DEC-97).
 end note
 
 legend bottom
 One Crew per Van number per date; Crews per date <= VanAvailability.vansAvailable (FR-26, FR-32).
 One StandbyPreference per Technician per week, and per day and Brand (FR-51).
-A person is in at most one Crew or one Standby per date (FR-32). Leave Records are read-only (FR-52).
+At most one initial Crew/Standby placement. Activated Standby history remains with duties (FR-32).
+Assignment: Crew present => 1 Driver + 1-2 Technicians; no Crew => exactly 1 certified Technician.
+Assigned Staff are per-Job snapshots; Replacement changes only unstarted Jobs, preserving earlier Staff.
+Crew.membersFor(job) applies replacements by effectiveFrom; fromJobId survives later unassignment.
+Confirmed preferences cannot be overridden; capacity checked after locked inputs/CSVs (DEC-98).
+Leave Records are read-only (FR-52).
 Every control class that changes data calls AuditLog.record() (FR-49); RetentionJob purges rows older than 12 months (FR-58).
 Drivers: assumed always enough; outside ranking and Standby (A1, DEC-82).
 endlegend

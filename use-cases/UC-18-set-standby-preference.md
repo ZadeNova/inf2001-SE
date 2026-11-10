@@ -1,58 +1,54 @@
 # UC-18: Set Standby Preference
 
-> **Status: M2 v1.0 (2026-11-06).** New in M2. It replaces the M1 Job Preference part of UC-11 and meets Brief R9 (DEC-79, DEC-91).
+> **Status: M2 v1.1 (2026-11-07).** Provisional requests become binding only after the post-deadline capacity check (DEC-98).
 
 | Field | Value |
 |---|---|
 | **ID** | UC-18 |
 | **Name** | Set Standby Preference |
 | **Primary actor** | Technician |
-| **Secondary actors** | None |
-| **Description** | A Technician picks one Standby day per Planning Week in a free Brand slot. Each accepted pick is guaranteed. |
-| **Trigger** | The Technician wants a Standby day in an open week. |
-| **Linked requirements** | FR-15, FR-51, NFR-12 |
-| **Source** | Brief R9; M2-Brief §1, §3.4; DEC-79 |
-| **Classes** | StandbyPreferencePage, StandbyPreferenceController, RuleValidator, StandbyPreference, Technician, Certification, Availability, LeaveRecord |
-| **Wireframe** | W-14 Standby Preference |
+| **Secondary actors** | Confirmation is triggered by Manager preparation in UC-07; notification through UC-15 |
+| **Description** | Request one provisional day/Brand slot per Planning Week and view its capacity-checked outcome. A confirmed pick guarantees initial Standby placement. |
+| **Trigger** | A Technician opens an unlocked week. |
+| **Linked requirements** | FR-15, FR-51, FR-55, NFR-12 |
+| **Source** | Brief R9; DEC-79, DEC-98 (including member-reported professor feedback on work-life balance) |
+| **Classes** | StandbyPreferencePage, StandbyPreferenceController, StandbyPreference, RuleValidator, Technician, Certification, Availability, LeaveRecord, VanAvailability, NotificationService |
+| **Wireframe** | W-14; confirmation status also W-06/W-08/W-11 |
 | **Status** | Agreed |
 
 ## Preconditions
+The Technician is logged in; requests/changes are before the Availability Deadline.
 
-1. The Technician is logged in. The week is before its Availability Deadline.
-
-## Main flow (basic path)
+## Main flow: provisional submission
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens Standby Preference for a week. | `StandbyPreferenceController.loadWeek()` shows Monday–Saturday with the M Electric and Dicon slot of each day. A day is greyed out when no slot the Technician could take is free, or when they are not Available or have a Leave Record that day. |
-| 2 | Picks a day and Brand slot. | — |
-| 3 | Confirms. | `submitPick()` calls `RuleValidator.checkStandbyPick()` (deadline, Available, valid Certification for the Brand on that day, slot free), then saves the `StandbyPreference` (FR-51). |
+| 1 | Opens a week. | Show day/Brand slots and their provisional/confirmed status. Explain that confirmation follows locked Availability, HR/Van CSVs and minimum staffing checks. |
+| 2 | Selects a day and Brand. | One M Electric and one Dicon request slot per day; a dual may take either. |
+| 3 | Submits. | submitPick() checks deadline, availability/no Leave, valid Certification and free slot in that order. Save Provisional with submittedAt; one pick per Technician/week and one request per day/Brand. |
+| 4 | — | Show "Provisional — awaiting staffing check", never "Guaranteed" at this stage. |
 
-## Alternative flows
+## Later confirmation (UC-07, FR-51)
+1. After the deadline and receipt of HR/Van CSVs, confirmWeek() processes each day's Provisional picks by submittedAt, then staff ID.
+2. Recheck eligibility. findMinimumCoverage() tests whether reserving this pick and earlier Confirmed picks permits at least three valid Crews **and Full Standby cover**. Use all eligible non-confirmed-pick Technicians, including Algorithm/Leftover Standby; do not mistake rotation preference for unavailability.
+3. Save Confirmed or NotConfirmed with decidedAt and reason. Resolve a day's decisions atomically; unchanged decisions are idempotent on retry.
+4. Notify the Technician via UC-15 even while the roster is Draft; expose only the preference decision, not unpublished Assignments.
+5. Crew formation must honour Confirmed picks. Managers cannot revoke/move them into an initial Crew; genuine direct/replacement activation is permitted. Leave overrides initial placement and is shown without erasing confirmation history.
 
-### A1: Change the pick (branches at step 2)
+## Alternatives
 
-1. The Technician picks a different day or slot. The old slot is freed and the new one is checked as in step 3.
+- Change day/Brand before the deadline: check the new slot atomically, free the old slot and reset submittedAt. A no-op resubmission preserves its time.
+- Withdraw before the deadline: remove the provisional pick and free the slot; audit.
+- NotConfirmed: show the staffing/eligibility reason. Do not silently select a different day or permit late edits.
+- Later Leave or staffing loss: flag for Manager repair; do not silently revoke someone else's confirmed preference.
 
-### A2: Withdraw (branches at step 2)
+## Exceptions
 
-1. `withdrawPick()` deletes the pick and frees the slot.
-
-## Exception flows
-
-### E1: The slot was taken a moment earlier (step 3)
-
-1. The save is refused (first come first served), and the page refreshes the free slots.
-
-### E2: After the deadline (step 3)
-
-1. Refused (FR-15).
+- Slot taken concurrently: refuse and refresh; no double booking.
+- Deadline reached: refuse request/change/withdrawal.
+- Missing CSV/input prerequisites: defer confirmation, keep Provisional and explain why.
+- Save failure: preserve the previous state and send no outcome notification.
 
 ## Postconditions
 
-- **Success:** The pick is saved, and FR-55 puts the Technician on Standby that day.
-
-## Business rules / notes
-
-- Drivers do not pick (DEC-82).
-- The Manager sees picks in UC-08 and on the Availability grid. Moving a pick into a Crew needs a logged override (FR-33).
+A provisional request or explicit decision is visible. Confirmed means initial Standby, not a guaranteed day without work. Drivers do not request Standby (DEC-82). Submission decision-table tests remain separate from confirmation feasibility scenarios.

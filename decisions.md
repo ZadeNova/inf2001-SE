@@ -2219,3 +2219,61 @@ The 18 IDs give 16 active use cases.
    - a use-case summary that maps each use case to its wireframe screen.
 
 **Decided by:** Delegated to Claude Code by JunKeatLim · **Decision date:** 2026-11-06 · **Decision source:** brief/report-template-m2.md; brief/rubric-m2.md B.1.1.
+
+---
+
+### DEC-96: Active Hours, minimum Standby credit and activated days
+
+| Category | Team clarification | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and decision date:** Requesting team member, M2 review conversation, 2026-11-07. The member stated "the 4hrs credit is not the same as the 'Active Hours'", specified 2 active / 4 total and 5 active / 5 total hours, and accepted "Once per activated day for simplicity". The member authorised updating all relevant repository artefacts.
+
+**Decision:**
+1. **Active Hours** are the Planned Hours of Jobs attributed to the Staff member, including direct Standby duties and replacement Jobs. Keep planned duration plus the existing Travel Allowance; do not add actual start/end tracking. A reasoned Hours Edit corrects Active Hours.
+2. **Total Credited Hours** per date are Active Hours on a normal Crew day; for a Technician rostered on Standby that day they are `max(4, Active Hours)`, activated or not. Apply the minimum once per date, not per Job/call. Keep the Standby record after activation. Full-day Leave without duties gives 0 h; a mid-day departure preserves earlier Job attribution.
+3. Examples (Active / Total Credited): unused Standby 0/4; 2 h duty 2/4; 4 h duty 4/4; 5 h duty 5/5. Two duties of 2 h and 3 h give 5/5.
+4. **Workload** is Total Credited Hours over the week/month. Use it for the 40 h weekly target, lowest-Workload dashboard and strictly-above-40 h highlight. The target does not create hours if work/availability is insufficient.
+5. Crew rotation and the Dual-Certified >=20 h rule use last week's **Active Hours**. Keep projected-credited-hours >=40 h demotion, then order by last week's Active Hours, projected Active Hours and staff ID. Before Jobs are allocated estimate 8 Active/8 Credited per Crew day and 0 Active/4 Credited per Standby day. Actual Assignment-based totals replace estimates after allocation.
+6. Activation count is distinct activated Standby dates in the rolling 12 months: first activation on a date adds one; later duties that date add no further count. Low count gives eligible Staff priority, not a misconduct label. Unsuccessful calls/non-attendance remain a Manager matter; the existing Audit Log can record the outcome without awarding an activation.
+
+**Supersedes:** DEC-78's replacement-of-4-h formula and the hours/count definitions in DEC-80/81. Historical entries remain unchanged.
+
+---
+
+### DEC-97: Direct Standby duties and replacements with per-Job history
+
+| Category | Team clarification | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and decision date:** Requesting team member, M2 review conversation, 2026-11-07: Standby Staff "go to the job directly using paid transport for extra jobs then go back if there aren't anymore", or travel "to join the existing crew" when someone leaves early. The member accepted filtering eligible replacements before activation-count/distance ranking, and described Alex doing Job 1 before Ben takes the remaining Jobs.
+
+**Decision:**
+1. Three valid active Crews are the minimum, not a fixed limit or one Crew per geographical Zone. The Manager assigns each Crew a set of the existing North/East/South/West/Central Zones, considering Standby home locations. Respect Van count; preserve Full Standby cover when adding Crews beyond the minimum.
+2. Activation can assign a direct Job to one suitably certified Standby Technician without a Driver/Van, or replace a Technician in a Crew from a specified unstarted Job. Company-paid transport is arranged outside the system. Direct duties do not count towards the three initial Van Crews.
+3. Filter availability/Leave, valid Certifications, person-level time/travel conflicts and Brand coverage for **all affected remaining Jobs** before ranking and again before saving. Rank by activated-day count, home-Zone distance, then staff ID. Algorithm-source Standby also uses home Zone; remove the forced Central base. A Technician already activated for a direct duty can take another non-overlapping duty; one committed to a replacement Crew is not offered elsewhere that day.
+4. Retain one Standby record per Technician/date; activated changes false -> true only once. It records the original Standby duty and credit entitlement; it is not a simultaneous reserve commitment while the person is working.
+5. Each Assignment stores its date and attributed Staff. Crew Assignments copy the effective members; direct Assignments have no Crew and exactly one Technician. A **Replacement** stores Crew, outgoing Staff, incoming Technician, starting Assignment, Manager, reason and time. Change attribution only on affected unstarted Jobs; keep earlier Job members and the initial Crew roster. Jobs subsequently added to the Crew use effective members after replacements.
+6. UC-17 records replacement boundaries and Active Hours corrections without a Completed status or timesheet. Save activation, attribution, Hours Edits and audit entries atomically; notify after success.
+
+**Supersedes:** whole-day-only attribution, replacement-only activation, forced Central Standby and single-Zone Crew coverage in DEC-10/39/77/80/81/84. Initial Crew composition still follows FR-26.
+
+---
+
+### DEC-98: Provisional preferences and binding confirmation after capacity checks
+
+| Category | Team clarification | Ask whom | Team | Status | **Decided** |
+|---|---|---|---|---|---|
+
+**Source and decision date:** Requesting team member, M2 review conversation, 2026-11-07: "Managers can no longer override preferences"; "The minimum active rosters must be formed first before any standby can be confirmed". The member agreed to confirmation after the deadline and CSV checks: "Yes, they should be provisional as there still has to be a minimum no. of people being able to be in both the active roster and standby." The member reports professor feedback requiring preferences for work-life balance; this is member-reported feedback, not an invented lecturer transcript.
+
+**Decision:**
+1. Keep one requested day per Technician/week, one M Electric and one Dicon slot per date, first come first served. Before Wednesday's deadline Staff submit/change/withdraw a **Provisional** pick. Changing day/Brand resets submission time. A provisional slot is held against competing requests but is explicitly not guaranteed.
+2. After the Availability Deadline and receipt of the week's HR/Van CSVs, process each day's provisional picks by submission time (staff ID breaks ties). Confirm only if eligibility remains valid and reserving the pick alongside earlier confirmed picks still permits at least three valid Crews **and Full Standby cover**. Algorithm/Leftover Technicians can be used to meet that minimum; the 20 h rotation preference must not cause a false shortage.
+3. Set **Confirmed** or **NotConfirmed**, with decision time/reason, and notify through UC-15. Managers cannot favour a request or substitute another day. No new picks after the existing deadline. Only confirmed picks are reserved by crew formation.
+4. Confirmation guarantees initial Standby placement, not a duty-free day. Manual removal or movement into an initial Crew is blocked even with an override reason. Genuine activation under UC-17 remains allowed. Leave takes precedence; retain the confirmed-request history.
+5. Regeneration does not revoke confirmed picks or repeat notifications. Later imports/account changes causing shortages require Manager repair; never silently revoke another person's pick. Fewer than three valid initial Crews blocks publication. If three Crews can form but Full Standby cover cannot, confirm no further picks and retain the existing missing-cover warning because minimum Crews take priority.
+6. A small feasibility search over the 11 Technicians is sufficient; no optimisation framework is needed. Return a valid arrangement as well as a Boolean result. The suggested roster uses that arrangement if its greedy ranking would otherwise strand a Brand or lose feasible minimum cover. This checks feasibility without promising the most Crews or optimal routing.
+7. Technical safeguards: resolve/save each day's confirmations atomically; revalidate before publication. Refuse regeneration when Jobs or manual Crew/Standby edits exist instead of silently discarding them.
+
+**Supersedes:** immediate guaranteed acceptance and Manager overrides in DEC-79, related DEC-80/89 rules and the fewer-than-three publication warning. Existing FR/UC IDs are retained.

@@ -1,6 +1,6 @@
 # UC-11: Set Availability
 
-> **Status: M2 v1.0 (2026-11-06).** Renamed from "Set Availability + Preferences". The preference part moved to UC-18. Availability is per working day; late changes happen outside the system (DEC-79, DEC-83, DEC-91). File name kept for link stability.
+> **Status: M2 v1.1 (2026-11-07).** Renamed from "Set Availability + Preferences". The preference part moved to UC-18. Availability is per working day; late changes happen outside the system (DEC-79, DEC-83, DEC-91). File name kept for link stability.
 
 | Field | Value |
 |---|---|
@@ -42,3 +42,5 @@
 
 - **Success:** Availability is saved for the open week.
 - **Failure:** Earlier entries are unchanged.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.

@@ -75,14 +75,14 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | **Van Availability** | The number of Vans available on a date, imported from the van vendor CSV (DEC-74, DEC-85) | fleet |
 | **Leave Record** | A read-only record that a Staff member is on Leave, Emergency Leave or MC on a date, imported from the HR CSV (DEC-74) | leave request |
 | **CSV Import** | One Manager upload of an HR CSV or a van CSV, validated as a whole before saving (DEC-74) | sync |
-| **Zone** | `North`, `East`, `South`, `West` or `Central`. A Job's zone comes from its postal code; the Manager sets each Crew's zone (DEC-77) | area, region |
+| **Zone** | North, East, South, West or Central. Job zone comes from postal code; the Manager assigns one or more coverage Zones per Crew (DEC-77, DEC-97) | area, region |
 | **Home Zone** | A Technician's base Zone, used to order Standby Staff (DEC-77) | base |
-| **Crew** | The Driver plus 1–2 Technicians on one Van for one whole working day; its Technicians cover the Brands of its Jobs (DEC-09, DEC-84) | team, van team |
+| **Crew** | Initial Driver plus 1–2 Technicians on one Van/date. Coverage may span Zones; per-Job Staff attribution preserves operational replacements (DEC-97) | team, van team |
 | **Job** | One Installation or Servicing task for one Brand at one address, created by the Manager. Status `Unassigned` or `Assigned`; a cancelled Job is deleted (DEC-11, DEC-76) | task, order, ticket |
 | **Job Type** | `Installation` or `Servicing` (FR-01) | — |
 | **Standard Duration** | The default length of a Job: 1 h per unit for Servicing and 3 h per unit for Installation. The Manager can adjust it (FR-02) | — |
 | **Van-day** | One Van number on one date, together with its Crew and Jobs (FR-26, DEC-85) | — |
-| **Assignment** | A Job placed on a Crew on a date; every Crew member of that Van-day holds the Assignment (DEC-10, DEC-39) | allocation (noun), booking |
+| **Assignment** | A timed Job/date with attributed Staff: effective Crew members, or exactly one certified Standby Technician on a direct duty without a Van (DEC-97) | allocation (noun), booking |
 | **Unassigned Job** | A Job with status Unassigned (FR-05, FR-34) | open job, pending job |
 | **Job Allocation** | The Manager's weekly activity or page for reviewing the Suggested Roster and creating Assignments (R3, R4) | scheduling, planning page |
 | **Suggested Roster** | The Draft Crews and Standby Staff the crew-forming algorithm proposes for a Planning Week; the Manager edits and publishes it (DEC-80) | auto-roster |
@@ -91,22 +91,30 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | **Slot** | Half-day unit used only for a Job's preferred time: `Morning` 09:00–13:00 or `Afternoon` 14:00–18:00 (DEC-12, DEC-83) | shift, timeslot |
 | **Availability** | Per-working-day `Available`/`Unavailable` set by Staff, up to **1 month in advance** (DEC-01, DEC-30, DEC-83); no entry = Not submitted = unavailable (DEC-03) | schedule, free time |
 | **Availability Deadline** | 18:00 on the Wednesday 12 days before a Planning Week; that week's Availability and Standby Preferences then lock (DEC-02, DEC-79) | cut-off, lock |
-| **Standby Preference** | A Technician's one weekly pick of a Standby day and Brand slot; at most one M Electric and one Dicon pick per day, first come first served, always followed (DEC-79) | job preference |
-| **Standby** | A Technician not in any Crew on a working day, held in reserve; source Preference, Algorithm, Leftover or Manager. Counts 4 h unless activated (DEC-78, DEC-81) | backup, reserve |
-| **Standby Activation** | A Standby called in to replace a Crew member, recorded by the Manager in Update Roster (DEC-81) | call-up |
-| **Hours Edit** | A Manager's recorded change to a Staff member's hours for one date, with a reason; replaces the computed hours (DEC-78) | timesheet |
-| **Workload** | Hours credited to a Staff member in a Planning Week or calendar month: Planned Hours of Assigned Jobs, 4 h per unused Standby day, replaced by any Hours Edit (DEC-04, DEC-78) | load, utilisation |
+| **Standby Preference** | One provisional requested day/Brand slot per Technician/week. Confirm after locked inputs and CSV checks permit >=3 Crews plus Full Standby cover; confirmed initial placement is binding, but activation/Leave still apply (DEC-98) | job preference |
+| **Standby** | An initially reserved Technician, retained as one record per date after direct/replacement activation. Total Credited Hours = max(4, Active Hours); activated dates count once (DEC-96/97) | backup, reserve |
+| **Standby Activation** | A Standby taking a direct Job or joining a Crew from a specified Job; count once per Technician/date regardless of repeated duties (DEC-96/97) | call-up |
+| **Hours Edit** | Manager correction to Active Hours for a date, with reason and old/new values. Total Credited Hours remain derived with the Standby minimum (DEC-96) | timesheet |
+| **Workload** | Total Credited Hours summed over the week/month, used for the 40 h target/highlight; distinct from Active Hours used for rotation (DEC-96) | load, utilisation |
 | **Travel Allowance** | Fixed 0.5 h added to each Job's hours (DEC-31) | travel time |
 | **Planned Hours** | A Job's duration + Travel Allowance (DEC-31, DEC-78) | — |
 | **Overtime** | Workload strictly above 40 h in a Planning Week (DEC-04, DEC-86) | OT |
-| **Job Rejection Request** | A Crew member's request to take a Job off their Crew, after a warning; the Manager approves or refuses it (R10, DEC-42) | decline, cancel, rejection (alone) |
+| **Job Rejection Request** | An attributed Staff member's request to unassign a Crew or direct Job; the Manager decides (DEC-42, DEC-97) | decline, cancel, rejection (alone) |
 | **Audit Log** | Who did what, when and why, for account changes, CSV uploads, roster overrides and Hours Edits; kept 12 months (DEC-89) | history |
 | **Notification** | A message to a recipient's Landing Page, with a handled state; Staff Notifications are also sent by email and SMS (FR-39, FR-40, DEC-88) | alert, message |
 | **Landing Page** | The first page after login, specific to each role (FR-43) | home, dashboard |
 
-The M1 terms and meanings follow the submitted M1 report (Table 1.3); M2 changes follow DEC-73 to DEC-95. Retired terms (do not use in M2 artefacts): Leave Request, Late Availability Change Request, Job Preference, Workshop Servicing, Actual Hours, Linked Jobs, Short notice, Needs attention (DEC-73, DEC-79, DEC-83, DEC-90).
+The M1 terms and meanings follow the submitted M1 report (Table 1.3); M2 changes follow DEC-73 to DEC-98. Retired terms (do not use in M2 artefacts): Leave Request, Late Availability Change Request, Job Preference, Workshop Servicing, Actual Hours, Linked Jobs, Short notice, Needs attention (DEC-73, DEC-79, DEC-83, DEC-90).
 
 When a new term is needed, add it here in the same commit and cite its source.
+
+**Additional M2 terms (DEC-96/97):**
+
+| Term | Meaning |
+|---|---|
+| **Active Hours** | Attributed Planned Hours including direct/replacement duties, corrected by any Hours Edit; unused Standby credit is excluded |
+| **Total Credited Hours** | Active Hours on ordinary days; max(4, Active Hours) on a rostered Standby date, with no unused credit for full-day Leave |
+| **Replacement** | Recorded outgoing/incoming Technician, Crew, starting Job/effective time, Manager, reason and timestamp; earlier Job Staff remain unchanged |
 
 ### Sequence analysis classes (DEC-53)
 

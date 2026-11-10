@@ -10,7 +10,7 @@ skinparam rectangleBorderColor black
 skinparam componentStyle rectangle
 skinparam packageBackgroundColor white
 title ARCH-layered: Layered (3-tier) Architecture with MVC in the Web Tier (M2)
-' Traces: DEC-93; NFR-11; NFR-13; CD-final; CMP-system.
+' Traces: DEC-93; DEC-96-98; NFR-11; NFR-13; CD-final; CMP-system.
 ' Each layer only calls the layer directly below it. ECB mapping: boundary = View, control = Controller/service, entity = Model.
 top to bottom direction
 
@@ -26,7 +26,7 @@ package "Application layer (Controller) — on-site server" as A {
 }
 
 package "Data layer (Model) — on-site server" as D {
- rectangle "<<entity>> domain model\nUser, Account, Technician, Certification, Availability,\nStandbyPreference, LeaveRecord, VanAvailability, Job,\nWeeklyRoster, Crew, Assignment, Standby, HoursEdit,\nJobRejectionRequest, Notification, AuditLog, ..." as Model
+ rectangle "<<entity>> domain model\nUser, Account, Technician, Certification, Availability,\nStandbyPreference, LeaveRecord, VanAvailability, Job,\nWeeklyRoster, Crew, Assignment, Replacement, Standby, HoursEdit,\nJobRejectionRequest, Notification, AuditLog, ..." as Model
  database "Workload database\n(on-site)" as DB
 }
 

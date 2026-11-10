@@ -1,6 +1,6 @@
 # M2 Design Notes (report §1.3, §2, §3)
 
-> **Status: Draft v1.0 (2026-11-06).** Working text for the report, built from SRS v4.0 and the M2 diagrams (DEC-93). Diagrams are PlantUML sources in [diagrams/](../diagrams/). Render them **locally** only (see diagrams/README.md).
+> **Status: Draft v1.1 (2026-11-07).** Working text for the report, built from SRS v4.1 and the M2 diagrams (DEC-93). Diagrams are PlantUML sources in [diagrams/](../diagrams/). Render them **locally** only (see diagrams/README.md).
 
 | Report section | Diagram |
 |---|---|
@@ -20,13 +20,13 @@
 |---|---|---|
 | Van, Workshop Servicing | Removed; **VanAvailability** (date, vansAvailable) added | Van details and servicing are the vendor's concern (DEC-85) |
 | Leave Request, Late Availability Change Request | Removed; **LeaveRecord** (date, type) added | Leave comes read-only from the HR CSV; late changes happen outside the system (DEC-74, DEC-83) |
-| Job Preference | Replaced by **StandbyPreference** (weekStart, chosenDay, brandSlot) | A preference the system can guarantee (DEC-79) |
+| Job Preference | Replaced by **StandbyPreference** (weekStart, chosenDay, brandSlot) | Provisional request; guaranteed initial placement only after capacity confirmation (DEC-98) |
 | Certification | `number` removed | Not used by any decision (DEC-75) |
 | Job | `actualStart`/`actualEnd`, completion and linking removed; `zone` added | Planned hours only; zones (DEC-76, DEC-77) |
-| Crew | `needsAttention` removed; `vanNumber`, `zone` added | DEC-85, DEC-77, DEC-90 |
-| Standby | `source`, `activated` added; `effectiveZone()`, `hours()` | Activation and 4 h Standby hours (DEC-78, DEC-81) |
+| Crew | `needsAttention` removed; `vanNumber`, coverage `zones` added; effective per-Job membership | DEC-85, DEC-77, DEC-90 |
+| Standby | `source`, `activated` added; `effectiveZone()`, `hours()`; retain record and count activated dates once | Activation and 4 h Standby hours (DEC-78, DEC-81) |
 | Technician | `homeZone` added; hours and activation count are **methods** | DEC-77, DEC-87 |
-| — | **PasswordResetToken**, **CsvImport**, **HoursEdit** added | FR-47, FR-52, FR-53, FR-54, FR-57 |
+| — | **PasswordResetToken**, **CsvImport**, **HoursEdit**, **Replacement** added | FR-47, FR-52, FR-53, FR-54, FR-57; DEC-96/97 |
 | — | **CrewFormingService**, **StandbyActivationService**, **CsvImportController**, **HoursController**, **StandbyPreferenceController**, **RetentionJob** added | FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58 |
 | VanController, CompletionController; VanPage, JobCompletionPage | Removed | UC-06 and UC-14 withdrawn |
 | — | «interface» **TechnicianRanking**, **CsvRowMapper**, **NotificationChannel** | Template asks for «interface» classes; the Strategy pattern; CSV adapters; Email/SMS channels |
@@ -38,11 +38,11 @@ Every stored value has an owning class and a method that changes it (SRS §3 "Me
 | Lecturer's point | Class and method |
 |---|---|
 | Forgotten password | `PasswordResetToken.generate()`, `validate()`, `invalidateAll()` via `AuthController.resetPassword()` (FR-47) |
-| Keeping past records / 12-month tracking | `RetentionJob.runDaily()` → `purgeOlderThan(12)` (FR-58). `Technician.activationCount(asOf)` counts activated Standby records within 12 months (DEC-87) |
+| Keeping past records / 12-month tracking | `RetentionJob.runDaily()` → `purgeOlderThan(12)` (FR-58). `Technician.activationCount(asOf)` counts distinct activated Standby dates within 12 months (DEC-87) |
 | Notifications | `NotificationService.notify()` → `Notification` + `NotificationChannel.send()` (FR-39) |
-| Standby and replacement end to end | `CrewFormingService` names Standby (FR-55) → `StandbyActivationService.listStandbysForJob()` (FR-56) → `HoursController.recordReplacement()` and `editHours()` (FR-57) |
-| Hours on planned time | `Staff.hoursOn(date)` uses `Job.plannedHours()`, 4 h Standby or an `HoursEdit` (FR-35); no actual times are stored |
-| Zones | `Job.deriveZone()` via `Zone.fromPostalCode()`; `Crew.setZone()`; `Technician.homeZone`; `Zone.distanceTo()` |
+| Standby and replacement end to end | `CrewFormingService` names Standby (FR-55) → `StandbyActivationService.listStandbysForJob()` (FR-56) → `HoursController.activateForJob()` / `recordReplacement()` and `editHours()` (FR-57) |
+| Hours on planned time | `Staff.activeHoursOn(date)` sums attributed `Job.plannedHours()` or the latest Active Hours Edit; `hoursOn(date)` applies the once-daily max(4, Active Hours) Standby floor (DEC-96) |
+| Zones | `Job.deriveZone()` via `Zone.fromPostalCode()`; `Crew.setZones()`; `Technician.homeZone`; `Zone.distanceTo()` |
 
 ---
 
@@ -55,11 +55,11 @@ The class diagram's packages correspond **one to one** with the components. Ever
 | **Web UI** | All «boundary» pages | Role-specific pages in the browser (NFR-11) | — | IAuthentication, IAccountAdmin, IStaffInputs, ICsvImport, IJobManagement, IScheduling, IRoster |
 | **Authentication** | AuthController | Login, new-device check, logout, password reset | IAuthentication | IDomainModel, INotify |
 | **Account Management** | AccountController | Accounts, roles, lockouts, Technician profiles, Audit Log search | IAccountAdmin | IDomainModel, INotify, IRoster (remove future roster places) |
-| **Staff Inputs** | AvailabilityController, StandbyPreferenceController, RequestController | Availability, Standby picks, Job Rejection Requests | IStaffInputs | IDomainModel, IScheduling (rule checks), INotify |
+| **Staff Inputs** | AvailabilityController, StandbyPreferenceController, RequestController | Availability, provisional picks and post-deadline confirmation, Job Rejection Requests | IStaffInputs | IDomainModel, IScheduling (rule checks), INotify |
 | **CSV Import** | CsvImportController, CsvRowMapper, HrLeaveCsvMapper, VanAvailabilityCsvMapper | Validates and commits HR and van CSV files | ICsvImport | IDomainModel |
 | **Job Management** | JobController | Create, edit and delete Jobs; Unassigned list | IJobManagement | IDomainModel, INotify |
 | **Scheduling Engine** | CrewFormingService, StandbyActivationService, RuleValidator, TechnicianRanking (+2) | Suggested Roster, Standby ordering, all block and warn rules | IScheduling | IDomainModel |
-| **Roster & Hours** | RosterController, HoursController, DashboardController | Allocation, Crew and Standby edits, publish, timeline, replacements, Hours Edits, dashboards | IRoster | IScheduling, IDomainModel, INotify |
+| **Roster & Hours** | RosterController, HoursController, DashboardController | Prepare confirmations/suggestion, allocate Crew/direct duties, publish, replacements, Active Hours edits, dashboards | IRoster | IStaffInputs, IScheduling, IDomainModel, INotify |
 | **Notification** | NotificationService, NotificationChannel, EmailChannel, SmsChannel | Stores and delivers notifications | INotify | IDomainModel, IEmailGateway, ISmsGateway |
 | **Audit & Retention** | RetentionJob | Daily 12-month purge (Clock) | — | IDomainModel |
 | **Domain Model** | All «entity» classes and enumerations | Business data and derived values (hours, activation count) | IDomainModel | IPersistence |
@@ -69,7 +69,7 @@ The class diagram's packages correspond **one to one** with the components. Ever
 **Design rationale.**
 - The Scheduling Engine is a separate component, so the algorithm and its rules can change without touching the pages or the roster storage. Roster & Hours and Staff Inputs reach it only through IScheduling.
 - Notification is the only component that talks to the outside world, through one interface per gateway.
-- All dependencies point downwards (Web UI → application → Domain Model → database), matching the layered architecture.
+- Cross-layer dependencies point downwards (Web UI → application → Domain Model → database). Application components may collaborate through their required interfaces; Roster & Hours calls IStaffInputs for confirmation.
 
 ---
 
@@ -86,7 +86,7 @@ The class diagram's packages correspond **one to one** with the components. Ever
 **How the layers interact:** each layer calls only the one below it. A page calls a controller. The controller calls services (for example `RuleValidator`, `CrewFormingService`) and entities. Entities are persisted in the database. Results flow back up as page data.
 
 **Why this architecture:**
-1. **It matches our analysis model.** The M1 Entity–Boundary–Control (ECB) classes map directly to View, Controller and Model, so the M1 sequence diagrams stay valid.
+1. **It matches our analysis model.** The M1 Entity–Boundary–Control (ECB) classes map directly to View, Controller and Model, while the historical M1 sequence diagrams must be checked before reuse because scheduling behaviour changed.
 2. **It separates the algorithm from the UI.** The crew-forming rules (DEC-80) are the part the client is most likely to change. They sit in one application component behind IScheduling.
 3. **It fits a single on-site server** (NFR-13). The client asked for on-site storage. A small team of 17 Staff and 1–2 Managers needs no distributed design, so a monolith in three layers is enough.
 4. **It supports the requirements.**
@@ -94,15 +94,15 @@ The class diagram's packages correspond **one to one** with the components. Ever
    - The 12-month purge (FR-58) and backups (NFR-04) touch only the data layer.
    - Browser-only access (NFR-11) is the presentation layer.
 
-**Use-case example (UC-07):** `JobAllocationPage.suggestRoster()` → `CrewFormingService.suggestRoster(week)` → reads `Availability`, `LeaveRecord`, `VanAvailability` and `StandbyPreference`, and writes `Crew` and `Standby` → the page shows the Draft roster.
+**Use-case example (UC-07):** `JobAllocationPage.suggestRoster()` → `RosterController.prepareSuggestion(week)` → `StandbyPreferenceController.confirmWeek(week)` → `CrewFormingService.suggestRoster(week)` → reads `Availability`, `LeaveRecord`, `VanAvailability` and `StandbyPreference`, and writes `Crew` and `Standby` → the page shows the Draft roster.
 
 ---
 
 ## 4. Design pattern (report §3.2): Strategy
 
 **Design problem.** The system ranks Technicians in two places, with two different fairness rules:
-- **Crew forming (FR-55):** last week's Workload, then projected hours, then staff ID.
-- **Standby activation (FR-56):** fewest activations in 12 months, then zone distance, then staff ID.
+- **Crew forming (FR-55):** last week's Active Hours, then projected Active Hours, then staff ID.
+- **Standby activation (FR-56):** fewest distinct activated dates in 12 months, then zone distance, then staff ID.
 
 The client has already changed these rules once (M2-Brief §4), and they are the most likely to change again. If the rules were coded inside `CrewFormingService` and `StandbyActivationService`, every change would mean editing and re-testing the algorithms themselves.
 
@@ -136,3 +136,15 @@ Context ──────────────> «interface» Strategy
 **Alternatives considered:**
 - *Observer* for notifications: it would decouple Roster & Hours from Notification, but the system has a single subscriber (NotificationService), so the benefit is small.
 - *Adapter* for CSV files: `CsvRowMapper` is kept in the class diagram as an «interface», but it is not written up as the pattern.
+
+## 5. Scheduling clarification model (DEC-96–98)
+
+- **Two derived hour totals:** Active Hours come from per-Job attributed Staff or a reasoned correction. Workload/Total Credited Hours retain the 4 h daily minimum for all rostered Standby dates, including short activations. HoursEdit stores old/new Active Hours; it cannot override the credit floor. The 40 h demotion uses projected Credited Hours; tie-breaking/dual rotation use Active Hours.
+- **Assignment owns participation:** store dutyDate and attributed Staff. A Crew Assignment copies Crew.membersFor(job); a direct duty has no Crew and exactly one certified Technician. The WeeklyRoster owns both kinds. Person-level schedule validation applies across both routes.
+- **Replacement preserves history:** one new entity records Crew, outgoing/incoming Technician, fromJobId, effectiveFrom, Manager/reason/time. Only affected unstarted Assignment snapshots change. Earlier Jobs and the initial Crew stay intact. The stable Job identifier and effective time retain the boundary if a later unstarted Job is unassigned. A later Job uses effective members after all applicable replacements.
+- **Retained Standby:** a unique Technician/date record persists after activation for entitlement and distinct-date counting. A second non-overlapping direct duty reuses that record. A replacement commits the Technician to that Crew; it cannot create a second Crew commitment. Full-day Leave without duties has no Standby minimum; a mid-day departure retains earlier credited duties.
+- **Preference state:** Provisional requests reserve slots before the deadline. After locked inputs/CSVs, confirmWeek checks >=3 valid initial Crews plus Full Standby cover and resolves requests in submittedAt/staff-ID order. Persist decision reason/time; confirmation is idempotent and binding. Roster & Hours requires IStaffInputs. Outcome notifications bypass Draft Assignment suppression without exposing Jobs.
+- **Capacity and zones:** use the same small feasible-arrangement check for confirmation and greedy fallback. Three is a minimum; direct duties do not count as initial Van Crews. Crew.zones is a set of the existing five Zones. All Standby candidates use home Zone, not a forced Central location. Transport stays outside the application.
+- **Fairness limit:** low counts are recommendations among eligible people, not evidence of laziness or a guarantee against refusal. Failed-call outcomes can use the existing Audit Log; no penalty engine is introduced.
+
+The current M2 diagrams are updated; the submitted M1 diagrams and source interviews are historical evidence and remain unchanged.

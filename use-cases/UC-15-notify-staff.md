@@ -1,6 +1,6 @@
 # UC-15: Notify Staff
 
-> **Status: M2 v1.0 (2026-11-06).** Delivery goes through the «system» actors Email Service and SMS Gateway via the NotificationChannel interface (DEC-88, DEC-91).
+> **Status: M2 v1.1 (2026-11-07).** Delivery goes through the «system» actors Email Service and SMS Gateway via the NotificationChannel interface (DEC-88, DEC-91).
 
 | Field | Value |
 |---|---|
@@ -21,7 +21,7 @@
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | — | `NotificationService.notify(event, recipients)` skips Staff events for a Draft week (DEC-64). |
+| 1 | — | `NotificationService.notify(event, recipients)` skips Draft Assignment events (DEC-64). Preference decisions made during UC-07 are an explicit exception: notify Confirmed/NotConfirmed once, without exposing Draft Jobs (DEC-98). |
 | 2 | — | Creates one `Notification` per recipient with what changed, the date and a link (FR-39). |
 | 3 | Email Service, SMS Gateway | Each `NotificationChannel.send()` delivers it, and `Notification.markSent(channel)` records the delivery. |
 
@@ -30,3 +30,5 @@
 ### E1: A channel fails
 
 1. `Notification.markFailed(channel)`; the message stays on the Landing Page and is retried under NFR-06.
+
+**v1.1 basis:** DEC-96–98; SRS v4.1. Historical M1 sequence sources require review before reuse.
