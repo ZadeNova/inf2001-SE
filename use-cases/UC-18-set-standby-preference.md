@@ -11,7 +11,7 @@
 | **Description** | Request one provisional day/Brand slot per Planning Week and view its capacity-checked outcome. A confirmed pick guarantees initial Standby placement. |
 | **Trigger** | A Technician opens an unlocked week. |
 | **Linked requirements** | FR-15, FR-51, FR-55, NFR-12 |
-| **Source** | Brief R9; DEC-79, DEC-98 (including member-reported professor feedback on work-life balance) |
+| **Source** | Brief R9; DEC-79, DEC-108, DEC-98 (including member-reported professor feedback on work-life balance) |
 | **Classes** | StandbyPreferencePage, StandbyPreferenceController, StandbyPreference, RuleValidator, Technician, Certification, Availability, LeaveRecord, VanAvailability, NotificationService |
 | **Wireframe** | W-14; confirmation status also W-06/W-08/W-11 |
 | **Status** | Agreed |
@@ -29,7 +29,7 @@ The Technician is logged in; requests/changes are before the Availability Deadli
 | 4 | — | Show "Provisional — awaiting staffing check", never "Guaranteed" at this stage. |
 
 ## Later confirmation (UC-07, FR-51)
-1. After the deadline and receipt of HR/Van CSVs, confirmWeek() processes each day's Provisional picks by submittedAt, then staff ID.
+1. After the deadline, committed complete HR coverage for the Planning Week (including zero-row coverage) and explicit Van counts for each working date (DEC-108), confirmWeek() processes each day's Provisional picks by submittedAt, then staff ID.
 2. Recheck eligibility. findMinimumCoverage() tests whether reserving this pick and earlier Confirmed picks permits at least three valid Crews **and Full Standby cover**. Use all eligible non-confirmed-pick Technicians, including Algorithm/Leftover Standby; do not mistake rotation preference for unavailability.
 3. Save Confirmed or NotConfirmed with decidedAt and reason. Resolve a day's decisions atomically; unchanged decisions are idempotent on retry.
 4. Notify the Technician via UC-15 even while the roster is Draft; expose only the preference decision, not unpublished Assignments.
@@ -46,7 +46,7 @@ The Technician is logged in; requests/changes are before the Availability Deadli
 
 - Slot taken concurrently: refuse and refresh; no double booking.
 - Deadline reached: refuse request/change/withdrawal.
-- Missing CSV/input prerequisites: defer confirmation, keep Provisional and explain why.
+- Missing committed complete HR week coverage, Van counts or locked-input prerequisites: defer confirmation, keep Provisional and explain why.
 - Save failure: preserve the previous state and send no outcome notification.
 
 ## Postconditions

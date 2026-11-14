@@ -15,7 +15,7 @@ skinparam nodeBackgroundColor white
 skinparam databaseBackgroundColor white
 skinparam linetype polyline
 title CMP-system: Component Diagram (M2)
-' Traces: SRS v4.1.1; CD-final packages map 1:1 to the components below (DEC-93/104).
+' Traces: SRS v4.2; CD-final packages map 1:1 to the components below (DEC-93/104/108/109).
 ' Provided interface: component -- ()interface. Required interface: component ..> interface <<use>>.
 ' Sources: M2-Brief §6.5; DEC-74; DEC-80; DEC-81; DEC-88; DEC-89; NFR-13; DEC-96 to DEC-98.
 left to right direction
@@ -120,15 +120,16 @@ legend bottom
 IAuthentication: logIn, confirmDevice, logOut, requestReset, resetPassword (AuthController).
 IAccountAdmin: createAccount, manageAccess, updateTechnicianProfile, searchAuditLog (AccountController).
 IStaffInputs: Availability, provisional picks/confirmWeek, Job Rejection submit and Manager-only decide (AvailabilityController, StandbyPreferenceController, RequestController).
-ICsvImport: upload(file, type) (CsvImportController; CsvRowMapper adapters inside).
+ICsvImport: upload(file, type, week, completeExportConfirmed) (CsvImportController; CsvRowMapper adapters inside).
 IJobManagement: create/edit/delete Job, listUnassigned (JobController).
 IScheduling: suggestRoster, eligible Standby ordering, minimum-coverage feasibility, check* rules (CrewFormingService, StandbyActivationService, RuleValidator).
-IRoster: prepare suggestion/confirmation, Crew/direct allocation, unassignment/future-roster removal, publish, timeline, compare, replacements, Active Hours edits, dashboards (RosterController, HoursController, DashboardController).
+IRoster: check committed HR week coverage and per-date Van counts, prepare suggestion/confirmation, Crew/direct allocation, unassignment/future-roster removal, publish, timeline, compare, replacements, Active Hours edits, dashboards (RosterController, HoursController, DashboardController).
 Job Allocation calls IRoster.prepareSuggestion: confirmWeek runs before suggestRoster (FR-55); there is no direct UI suggestion path.
 Roster & Hours uses IStaffInputs for confirmation; Staff Inputs uses IRoster for approved unassignment.
 These distinct application-layer operations explain the two-way component dependency (DEC-104).
 INotify: notify(event, recipients) (NotificationService). IEmailGateway / ISmsGateway are realised through NotificationChannel.
 IDomainModel: the entity classes, including AuditLog.record(). IPersistence: storage on the on-site server (NFR-13).
+Web UI includes LandingPage (View) and browser OfflineAssignmentController (Controller); its online today read uses existing IRoster (DEC-109).
 Audit & Retention: RetentionJob, started daily by the Clock (FR-58).
 endlegend
 @enduml

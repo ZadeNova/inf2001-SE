@@ -1,6 +1,6 @@
 # M2 Test Design (report §4)
 
-> **Status: Draft v1.1.1 (2026-11-10).** Built from SRS v4.1.1 and CD-final (DEC-94/104). The black-box and white-box sections use **different methods**, as the template requires.
+> **Status: Draft v1.2 (2026-11-14).** Built from SRS v4.2 and CD-final (DEC-94/104/108). The original BB/WB/CFG/basis-path cases are retained; weekly HR snapshot cases supplement them. The black-box and white-box sections use **different methods**, as the template requires.
 > Example dates: Planning Week 19–24 October 2026; Availability Deadline 7 October 2026, 18:00. Test fixtures are synthetic and independent.
 
 ---
@@ -245,3 +245,19 @@ Resolve provisional requests in submittedAt/staff-ID order, saving each day's re
 Check the 32 unique black-box combinations/reduced-rule outcomes; the CFG's 19 edges and seven basis paths; class/method/FR/UC links; scenario arithmetic and minimum-coverage examples; and locally render the six current M2 diagram sources. These verify the design and examples, not production scheduling code or completed wireframe screens.
 
 **Verification performed (2026-11-07):** checked all 32 unique submission combinations and their 16/8/4/2/1/1 reduced-rule counts; checked CFG/source edge equality, seven valid paths and full edge coverage (V=7); independently calculated minimum-coverage examples SC-07–12 and the hours/attribution examples; checked SRS method references against CD-final. All six current M2 sources rendered locally to SVG/PNG with PlantUML 1.2026.8 and were visually inspected; CFG node labels were enclosed to avoid crossing edges. Full class/component views are large and should be used as zoomable SVGs or laid out for the report by their owners. This does not claim application execution or completed wireframes.
+
+
+## Supplemental CSV snapshot design cases (DEC-108, SRS v4.2)
+
+These cases supplement FR-52/54 and UC-07/16/18; they are **designed, not executed against a production implementation**. Each starts from independent fixtures. Keep the selected week's existing Leave, another week's Leave, prior committed coverage, preferences and earlier Assignment attribution for before/after comparison.
+
+| Case | Input / trigger | Expected outcome |
+|---|---|---|
+| CSV-01 | Complete confirmed HR snapshot, valid headers/rows all in selected Mon–Sat week; duplicate included | Commit unique rows; selected-week records exactly match snapshot; week/uploader/time/outcome and success Audit Log commit together; other week unchanged |
+| CSV-02 | Required HR headers and zero data rows, complete-export confirmed; no existing Leave | Commit zero Leave Records and successful week coverage; UC-07/18 HR-ready despite no records; still require each Van count and locked Availability |
+| CSV-03 | Header-only complete snapshot replacing a week with existing Leave; first cancel, then confirm | Explicit warning identifies week and clearing effect; cancel preserves rows/coverage; confirmation clears only selected-week Leave and commits coverage/log; preserve preference history and earlier Job Staff |
+| CSV-04 | Wholly blank file, missing header, mixed valid/invalid rows, Sunday, unknown Staff/type, or one row outside selected week (independent variants) | Reject entire import; list relevant errors; business rows and previous successful coverage unchanged |
+| CSV-05 | Selected week but complete-export confirmation absent, or export declared partial/delta | Refuse commitment as complete snapshot; week selection alone does not establish completeness; no replacement |
+| CSV-06 | Valid confirmed replacement but transaction fails after business changes are staged; earlier successful coverage exists | Roll back selected-week rows, committed metadata and success Audit Log together; preserve previous successful coverage; retain failed attempt outcome; planning still uses prior committed coverage |
+| CSV-07 | Van file has headers/no rows; then a valid explicit count of 0 for one date | Empty van file rejected; explicit zero accepted as zero capacity for that date only; do not infer missing dates' capacity or HR coverage |
+| CSV-08 | Valid no-Leave week coverage; Staff has no Availability entry; later snapshot adds Leave over a confirmed placement | Staff remains unavailable without Availability. Later Leave makes Staff ineligible and raises the existing Manager-repair alert; preserve confirmation history and earlier Job attribution; no silent roster rewrite |

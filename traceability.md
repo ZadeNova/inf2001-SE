@@ -1,6 +1,6 @@
 # Traceability Matrix
 
-> **M2 working baseline v4.1.2 (2026-11-10):** SRS v4.1.2 (DEC-99/102–105), use-case list v3.1, [CD-final](diagrams/CD-final.puml), [CMP-system](diagrams/CMP-system.puml), [m2/testing.md](m2/testing.md) and [m2/wireframes.md](m2/wireframes.md) (DEC-73 to DEC-98).
+> **M2 working baseline v4.2 (2026-11-14):** SRS v4.2 (DEC-99/102–109), use-case list v3.1, [CD-final](diagrams/CD-final.puml), [CMP-system](diagrams/CMP-system.puml), [m2/testing.md](m2/testing.md) and [m2/wireframes.md](m2/wireframes.md) (DEC-73 to DEC-98).
 > Builds on the M1 report baseline (DEC-72): SRS v3.5, 43-class analysis model and 21 sequence diagrams SD-01–SD-21, whose matrix is in git history. M1 diagram status after the M2 changes is in §5; the draft SD-18 Allocate Job was already archived before M2.
 > Component names match the CD-final packages. W-nn = wireframe screen. BB/WB = black-box and white-box test cases.
 
@@ -29,7 +29,7 @@
 | FR-08 | DEC-12; DEC-31; DEC-97 | UC-07, UC-17 | Assignment, RuleValidator | Roster & Hours | SC-14 | W-06, W-09 |
 | FR-31 | Brief R4, R5; DEC-77; DEC-79 | UC-08 | RosterController, Technician, StandbyPreference | Roster & Hours | SRS note | W-07 |
 | FR-32 | DEC-19; DEC-85; DEC-97, DEC-98 | UC-07, UC-17 | RuleValidator | Scheduling Engine | SC-12–15 | W-06, W-09 |
-| FR-33 | Brief R6; DEC-19; DEC-77; DEC-81 | UC-07 | RuleValidator, RosterController, AuditLog | Scheduling Engine | SRS note | W-06 |
+| FR-33 | Brief R6; DEC-19; DEC-74; DEC-77; DEC-98; DEC-107; DEC-108 | UC-07, UC-16 | RuleValidator, RosterController, AuditLog | Scheduling Engine, Roster & Hours | SRS note; missing CSV returns to UC-16 | W-06 |
 | FR-34 | INT-MGR [Conflicts Q1] | UC-05, UC-07, UC-09, UC-10 | JobController, Job | Job Management | SRS note | W-03, W-06 |
 | FR-09 | Brief R3; DEC-16; DEC-80; DEC-98 | UC-07 | WeeklyRoster, RosterController, StandbyPreferenceController, NotificationService | Roster & Hours | SC-12, SC-15 | W-06 |
 | FR-10 | DEC-16; DEC-88; DEC-97, DEC-98 | UC-07, UC-17 | RosterController, HoursController, Assignment, Replacement | Roster & Hours | SC-05, SC-15 | W-06, W-09 |
@@ -45,26 +45,26 @@
 | FR-49 | DEC-17; DEC-89 | UC-04 (view); all changing UCs | AuditLog, AccountController | Domain Model | SRS note | W-13 |
 | FR-50 | DEC-34; DEC-76 | UC-05 | JobController | Job Management | SRS note | W-04 |
 | FR-30 | DEC-81; DEC-96, DEC-97, DEC-98 | UC-07, UC-17 | Standby, RosterController, RuleValidator | Roster & Hours | SC-01–04, SC-15 | W-06, W-09 |
-| FR-51 | Brief R9; DEC-79; DEC-98; DEC-104 | UC-18; confirmation in UC-07 | StandbyPreferenceController, StandbyPreference, RuleValidator, NotificationService | Staff Inputs | BB-01–06 (six submission rules), BB-07 (R6 no-op); SC-06–09, SC-15 (confirmation) | W-06, W-14 |
-| FR-52 | DEC-74; DEC-104; DEC-106 | UC-16 | CsvImportController, CsvImport, HrLeaveCsvMapper, LeaveRecord | CSV Import | SRS note | W-05 |
+| FR-51 | Brief R9; DEC-79; DEC-98; DEC-104; DEC-108 | UC-18; confirmation in UC-07 | StandbyPreferenceController, StandbyPreference, RuleValidator, NotificationService | Staff Inputs | BB-01–06 (six submission rules), BB-07 (R6 no-op); SC-06–09, SC-15 (confirmation) | W-06, W-14 |
+| FR-52 | DEC-74; DEC-104; DEC-106; DEC-108 | UC-16 | CsvImportController, CsvImport, HrLeaveCsvMapper, LeaveRecord | CSV Import | SRS note | W-05 |
 | FR-53 | DEC-74; DEC-85 | UC-16 | CsvImportController, CsvImport, VanAvailabilityCsvMapper, VanAvailability | CSV Import | SRS note | W-05 |
-| FR-54 | DEC-74; DEC-104; DEC-106 | UC-16 | CsvImportController, CsvImport, CsvRowMapper | CSV Import | SRS note | W-05 |
-| FR-55 | Brief R3; DEC-80; DEC-96, DEC-98 | UC-07 | RosterController, StandbyPreferenceController, CrewFormingService, RuleValidator, TechnicianRanking, WorkloadRanking, Crew, Standby | Roster & Hours, Staff Inputs, Scheduling Engine | WB-01–07; SC-10–12 | W-06 |
+| FR-54 | DEC-74; DEC-104; DEC-106; DEC-108 | UC-16 | CsvImportController, CsvImport, CsvRowMapper | CSV Import | SRS note | W-05 |
+| FR-55 | Brief R3; DEC-80; DEC-96, DEC-98; DEC-108 | UC-07 | RosterController, StandbyPreferenceController, CrewFormingService, RuleValidator, TechnicianRanking, WorkloadRanking, Crew, Standby | Roster & Hours, Staff Inputs, Scheduling Engine | WB-01–07; SC-10–12 | W-06 |
 | FR-56 | DEC-81; DEC-96, DEC-97 | UC-17 | StandbyActivationService, RuleValidator, ActivationRanking, Standby | Scheduling Engine | SC-13, SC-14 | W-10 |
 | FR-57 | DEC-78; DEC-81; DEC-96, DEC-97 | UC-17 | HoursController, HoursEdit, Standby, Assignment, Replacement | Roster & Hours | SC-01–05, SC-14 | W-09 |
 | FR-58 | DEC-89 | — (Clock) | RetentionJob | Audit & Retention | SRS note | — |
 | NFR-01 | INT-ITA [Q: Response time] | All | — | All | Load test | — |
 | NFR-02 | INT-ITA [Q: Concurrency] | All | — | All | Load test | — |
 | NFR-03, NFR-04 | INT-ITA [Q: Outage], [Q: Restore] | — | RetentionJob | Database | Ops check | — |
-| NFR-05 | INT-DCT [Questionnaire C18/C19]; DEC-102/105 | UC-01, UC-13 | LandingPage | Web UI | Successful-online-load refresh; local unlock/wrong-password/no-repeat checks; offline scope, per-user isolation, logout and date expiry | W-11 |
+| NFR-05 | INT-DCT [Questionnaire C18/C19]; DEC-102/105; DEC-109 | UC-01, UC-13 | LandingPage, OfflineAssignmentController | Web UI | Successful-online-load refresh; local unlock/wrong-password/no-repeat checks; offline scope, per-user isolation, logout and date expiry | W-11 |
 | NFR-06 | INT-ITA [Q: Connection failure] | All | — | Web UI | SRS note | — |
 | NFR-07 | DEC-41 | UC-01 | Account | Authentication | SRS note | W-01 |
-| NFR-08 | INT-ITA [Q: Safeguards]; DEC-105 | UC-01–UC-03, UC-13 | Account, PasswordResetToken, LandingPage | Database, Web UI | DB/browser storage inspection; no readable persisted decryption key; offline correct/incorrect password unlock | W-11 |
+| NFR-08 | INT-ITA [Q: Safeguards]; DEC-105; DEC-109 | UC-01–UC-03, UC-13 | Account, PasswordResetToken, LandingPage, OfflineAssignmentController | Database, Web UI | DB/browser storage inspection; no readable persisted decryption key; offline correct/incorrect password unlock | W-11 |
 | NFR-09 | DEC-17; DEC-18 | All | all controllers | Application layer | Permission matrix | — |
 | NFR-10 | DEC-34; DEC-89 | — | RetentionJob | Audit & Retention | SRS note | — |
 | NFR-11 | Brief R1 | All | all boundaries | Web UI | Browser matrix | All |
 | NFR-12 | INT-MGR [Closing] | UC-11, UC-12, UC-18 | — | Web UI | Walkthrough | W-12, W-14, W-15 |
-| NFR-13 | DEC-89; DEC-102 | UC-13 (offline exception) | LandingPage | Database, Web UI | On-site authoritative-store check; NFR-05 cache-scope/lifecycle checks | W-11 |
+| NFR-13 | DEC-89; DEC-102; DEC-109 | UC-13 (offline exception) | LandingPage, OfflineAssignmentController | Database, Web UI | On-site authoritative-store check; NFR-05 cache-scope/lifecycle checks | W-11 |
 | NFR-14 | DEC-87 | — | all entities | Domain Model | Attribute review | — |
 
 Withdrawn requirements (SRS §3.15, §4.1) have no row here.
@@ -145,7 +145,8 @@ Withdrawn requirements (SRS §3.15, §4.1) have no row here.
 | CL-SmsChannel | class | Notification | FR-39 | **New** |
 | CL-RetentionJob | control | Audit & Retention | FR-58, NFR-10 | **New** |
 | CL-LoginPage | boundary | Web UI | FR-43, FR-47 | Kept |
-| CL-LandingPage | boundary | Web UI | FR-14, FR-40, FR-41, NFR-05, NFR-08, NFR-13 | Kept |
+| CL-LandingPage | boundary | Web UI | FR-14, FR-40, FR-41 | Kept; rendering/input only (DEC-109) |
+| CL-OfflineAssignmentController | control | Web UI (browser) | NFR-05, NFR-08, NFR-13; DEC-109 | New; approved local-copy processing |
 | CL-AccountAdminPage | boundary | Web UI | FR-44, FR-45, FR-46, FR-22 | Kept |
 | CL-AuditLogPage | boundary | Web UI | FR-49 | **New** (split from AccountAdminPage) |
 | CL-JobPage | boundary | Web UI | FR-01, FR-04 | Kept |
@@ -248,7 +249,7 @@ The v4.1.1 baseline includes uncommitted corrections on codex/m2-review-fixes ab
 |---|---|---|
 | DEC-105: NFR-08 covers the offline copy; approved Option A local password unlock and successful-online-load refresh | NFR-05/08; LandingPage cache/unlock methods and note; ARCH-layered; UC-13; W-11; design notes | Planned inspection of persisted encrypted data/key protection; successful online refresh; offline reopened locked state, wrong password stays locked, correct password reveals only today Published data, no repeated prompt while unlocked. Prototype demonstrates sample states only; encryption and key lifecycle remain to be implemented/verified |
 
-Current baseline: SRS v4.1.2, incorporating the reviewed corrections recorded in DEC-99 and DEC-102–106. Earlier baseline sections remain historical. Existing-session key lifecycle, password change/reset handling and DEC-61 authentication details remain follow-ups; no additional offline attempt limit or session policy is inferred.
+Current baseline: SRS v4.1.3, incorporating the reviewed corrections recorded in DEC-99 and DEC-102–107. Earlier baseline sections remain historical. Existing-session key lifecycle, password change/reset handling and DEC-61 authentication details remain follow-ups; no additional offline attempt limit or session policy is inferred.
 
 
 ## 10. 2026-11-11 review representation corrections
@@ -258,3 +259,18 @@ Current baseline: SRS v4.1.2, incorporating the reviewed corrections recorded in
 | DEC-106: D1–D4 editorial/design clarification; no behavioural decision change | SRS §11; FR-52/54 mechanisms; UC-16; CD-final CsvImport note; design and wireframe prose; report | Source/report parity; one transaction includes file-date replacement, Committed status and successful-upload AuditLog; all requirement statements, IDs, class definitions/relationships, tests and prototype unchanged |
 
 The SRS remains v4.1.2. Historical decision/log entries remain unchanged; the correction does not resolve existing source gaps or add a workflow.
+
+
+## 11. Targeted report and representation corrections (DEC-107)
+
+SRS v4.1.3 expresses actor capabilities from the system perspective, preserving all IDs, permissions and established behaviour. FR-33 treats missing Van CSV as the FR-40 planning alert and follows UC-07's existing CSV precondition/return to UC-16; it is not a reasoned capacity override. W-14's Awaiting CSV display remains Provisional and locked. The applied Strategy view explicitly elaborates ranking-to-Technician read dependencies from existing operations; CD-final still has 75 definitions and 96 explicit relationships. Component contracts are mapped to their provider operations in the design notes/report without adding class-level interfaces. The report retains the DEC-104/106 requirement-quality limitations.
+
+
+## Current v4.2 changes (2026-11-14)
+
+| Decision | Affected trace | Verification design |
+|---|---|---|
+| DEC-108 complete weekly HR snapshot | FR-33/51/52/54/55; UC-16, UC-07/18; CsvImport.coversWeek and metadata; RosterController.checkCsvReadiness; W-05/06/14 | CSV-01–08: header-only coverage, replacement/other-week isolation, invalid/partial input, failed-save prior coverage and Availability independence |
+| DEC-109 browser controller allocation | NFR-05/08/13; LandingPage and OfflineAssignmentController; CD-final/CMP/ARCH; UC-13; W-11 | Same approved offline lifecycle design checks; explicit View/client Controller/server deployment distinction |
+
+Current baseline: SRS v4.2. CD-final: 76 definitions and 99 explicit relationships. Earlier baseline counts/entries above describe their historical revisions. Core BB/WB tables and all seven basis paths remain. Prototype sample states are not evidence of production transaction, encryption or authentication execution.

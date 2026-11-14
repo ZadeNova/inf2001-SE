@@ -11,10 +11,13 @@ skinparam noteBackgroundColor white
 skinparam noteBorderColor black
 hide circle
 hide empty members
-title DP-strategy-ranking: Strategy Pattern for Technician Ranking (excerpt of CD-final)
+title DP-strategy-ranking: Strategy for Technician Ranking (applied view)
 ' Traces: FR-55, FR-56; DEC-80, DEC-81, DEC-93, DEC-96, DEC-97. Report §3.2.
 ' Roles: Context = CrewFormingService, StandbyActivationService; Strategy = TechnicianRanking;
 ' ConcreteStrategy = WorkloadRanking, ActivationRanking.
+' DEC-107: class participants and context/realisation links follow CD-final.
+' The two ranking-to-Technician read dependencies elaborate the existing
+' order(candidates, context) operations; CD-final does not list them explicitly.
 
 class CrewFormingService <<control>> {
  +suggestRoster(week): WeeklyRoster
@@ -46,8 +49,8 @@ CrewFormingService "1" o-- "1" TechnicianRanking : <<Context>> ranks with
 StandbyActivationService "1" o-- "1" TechnicianRanking : <<Context>> orders with
 TechnicianRanking <|.. WorkloadRanking : <<ConcreteStrategy>>
 TechnicianRanking <|.. ActivationRanking : <<ConcreteStrategy>>
-WorkloadRanking ..> Technician
-ActivationRanking ..> Technician
+WorkloadRanking ..> Technician : reads ranking values
+ActivationRanking ..> Technician : reads ranking values
 
 note top of TechnicianRanking
  Application construction supplies WorkloadRanking to CrewFormingService

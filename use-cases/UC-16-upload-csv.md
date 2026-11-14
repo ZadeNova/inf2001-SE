@@ -1,46 +1,44 @@
 # UC-16: Upload CSV
 
-> **Status: M2 v1.1.1 (2026-11-10).** SRS v4.1.1; controller/mapper hand-off clarified by DEC-104. The existing successful-import transaction is made explicit by the 2026-11-11 editorial correction (DEC-106); behaviour is unchanged. New in M2 (DEC-74, DEC-91).
+> **Status: M2 v1.2 (2026-11-14).** SRS v4.2; complete weekly HR snapshots and committed coverage (DEC-108). Van CSV retains per-date replacement.
 
 | Field | Value |
 |---|---|
 | **ID** | UC-16 |
 | **Name** | Upload CSV |
 | **Primary actor** | Manager |
-| **Secondary actors** | None. HR and the van vendor are not actors: the Manager downloads their files outside the system (M2-Brief §2) |
-| **Description** | The Manager uploads the HR leave CSV or the van availability CSV. The system validates the whole file before saving anything. |
-| **Trigger** | Before planning starts on Thursday (assumption A4), or when an updated file arrives. |
+| **Secondary actors** | None. HR and the van vendor export files outside the system (M2-Brief §2) |
+| **Description** | Import a complete HR snapshot for one selected Planning Week, or Van Availability counts for the file dates; validate the whole file before business changes. |
+| **Trigger** | Before Thursday planning (A4), or an updated complete export arrives. |
 | **Linked requirements** | FR-52, FR-53, FR-54, FR-49 |
-| **Source** | M2-Brief §2, §3.2, §7; DEC-74; DEC-85; DEC-104; DEC-106 |
+| **Source** | M2-Brief §2, §3.2, §7; DEC-74; DEC-85; DEC-104; DEC-106; DEC-108 |
 | **Classes** | CsvUploadPage, CsvImportController, CsvImport, CsvRowMapper, HrLeaveCsvMapper, VanAvailabilityCsvMapper, LeaveRecord, VanAvailability, AuditLog |
-| **Wireframe** | W-05 CSV upload |
+| **Wireframe** | W-05 |
 | **Status** | Agreed |
 
 ## Preconditions
 
-1. The Manager is logged in and has the exported file.
+The Manager is logged in and has the export. HR import requires one selected Monday–Saturday Planning Week and confirmation that the export is complete, including any no-Leave export. A partial/delta file cannot be presented as a complete snapshot.
 
-## Main flow (basic path)
+## Main flow
 
 | Step | Actor | System |
 |---|---|---|
-| 1 | Opens CSV Upload, picks the file type (HR leave or van availability) and chooses the file. | Shows the expected columns for that type (`CsvRowMapper.requiredColumns()`). |
-| 2 | Uploads. | `CsvImportController.upload()` creates a `CsvImport`; `CsvImport.parse(file)` returns rows. The controller uses its matching `CsvRowMapper` to check required columns and every row, collects whole-file errors and calls `CsvImport.recordValidation(errors)` (FR-54; DEC-104). |
-| 3 | — | No errors: the controller maps the validated rows and, in one transaction, replaces the Leave Records or Van Availability for the dates in the file, calls `CsvImport.commit()` to mark the import `Committed`, and writes the successful-upload `AuditLog` entry (FR-52, FR-53, FR-54, FR-49; DEC-106). |
-| 4 | — | Shows a summary: rows saved, dates covered, duplicates merged. |
+| 1 | Chooses HR or van CSV and a file. For HR, selects the Planning Week and confirms complete weekly export. | Show expected headers. Explain HR whole-week replacement, no-Leave header-only exports, and separate per-date van counts. |
+| 2 | Uploads for validation. | `CsvImportController.upload(file, type, week, completeExportConfirmed)` parses rows and validates required headers/each row through `CsvRowMapper`, whole-file errors and HR week membership/completeness. Correct-header zero-data-row HR is valid; wholly blank/missing-header files and empty van files are invalid. Exact duplicates are mapped once. |
+| 3 | Reviews and confirms replacement. | Show selected HR coverage week, current/new Leave counts and replacement effect. Explicitly warn if a zero-row snapshot will clear existing Leave. Van replacement remains scoped to file dates. |
+| 4 | Confirms. | In one transaction replace **all** selected-week Leave Records for HR (including omitted/cancelled Leave), or Van Availability for file dates; mark `CsvImport` Committed with uploader/time/outcome and HR week/completeness metadata, and write the successful `AuditLog`. Other HR weeks remain unchanged. |
+| 5 | — | Show committed coverage week/counts/uploader/time for HR, or dates/counts for van. A zero-row HR result says no Leave Records and HR ready; it does not say Staff are Available. |
 
-## Exception flows
+## Exceptions and cancellation
 
-### E1: The file has errors (step 2)
+- Invalid row, unknown Staff/type, bad/Sunday date, missing headers, blank file or an HR row outside the selected week: reject the whole file and list errors. Save no business rows.
+- Missing complete-export confirmation or declared partial/delta export: refuse HR commitment; obtain a complete weekly export.
+- Cancel replacement: preserve records and previous committed coverage.
+- Save/transaction failure: roll back business rows, committed coverage metadata and the successful Audit Log entry together. A rejected/failed later attempt does not invalidate earlier successful coverage. Upload attempts still retain their outcome under FR-54.
 
-1. `status = Rejected`. Nothing is saved, and every row error is listed (missing column, unknown staff ID, bad date or type, negative Van count, empty file).
-2. The Manager fixes the file and uploads again.
+## Postconditions and readiness
 
-## Postconditions
+Success: selected-week Leave Records exactly match the complete HR snapshot, even when empty, and `CsvImport.coversWeek(week)` is true for that committed import. Failure: previous records and successful coverage remain unchanged. UC-07/18 use committed complete coverage, never a nonzero Leave count; Van readiness still needs each working date's explicit count.
 
-- **Success:** Leave Records or Van Availability for the file's dates match the file, and the upload is logged.
-- **Failure:** Existing records are unchanged.
-
-## Business rules / notes
-
-- A Leave Record overrides Availability and any Standby pick for that day (FR-52). A later clash with an existing placement is flagged for Manager repair (A3, DEC-98); preserve confirmed-request history and earlier Job attribution. CSV readiness is required before provisional picks can be confirmed.
+A Leave Record overrides Availability/initial Standby. Later clashes are flagged for Manager repair; preserve confirmed-request history and earlier per-Job attribution (DEC-97/98). Removing Leave does not silently rewrite operational history. No Leave does not imply Available: no Availability entry remains unavailable (DEC-03/83).

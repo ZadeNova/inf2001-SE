@@ -2,56 +2,27 @@
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultFontName Arial
-skinparam defaultFontSize 13
+skinparam defaultFontSize 16
 skinparam dpi 150
 skinparam ArrowColor black
 skinparam rectangleBackgroundColor white
-skinparam rectangleBorderColor black
-skinparam componentStyle rectangle
 skinparam packageBackgroundColor white
-title ARCH-layered: Layered (3-tier) Architecture with MVC in the Web Tier (M2)
-' Traces: DEC-93; DEC-96-99; DEC-102; DEC-104; DEC-105; NFR-05; NFR-08; NFR-11; NFR-13; CD-final; CMP-system.
-' Each layer only calls the layer directly below it. ECB mapping: boundary = View, control = Controller/service, entity = Model.
+skinparam ranksep 28
 top to bottom direction
-
-actor "Manager / Staff /\nIT Administrator" as Users
-
-package "Presentation layer (View) — web browser" as P {
- rectangle "<<boundary>> pages\nLoginPage, LandingPage, JobAllocationPage,\nUpdateRosterPage, StandbyListView, CsvUploadPage,\nAvailabilityPage, StandbyPreferencePage, RequestPage,\nRequestReviewPage, JobPage, AccountAdminPage, AuditLogPage" as Views
-}
-
-package "Application layer (Controller) — on-site server" as A {
- rectangle "<<control>> controllers\nAuthController, AccountController, JobController,\nAvailabilityController, StandbyPreferenceController,\nRequestController, CsvImportController,\nRosterController, HoursController, DashboardController" as Controllers
- rectangle "<<control>> services\nCrewFormingService, StandbyActivationService,\nRuleValidator, NotificationService, RetentionJob\n+ <<interface>> TechnicianRanking, CsvRowMapper,\nNotificationChannel" as Services
-}
-
-package "Data layer (Model) — on-site server" as D {
- rectangle "<<entity>> domain model\nUser, Account, Technician, Certification, Availability,\nStandbyPreference, LeaveRecord, VanAvailability, Job,\nWeeklyRoster, Crew, Assignment, Replacement, Standby, HoursEdit,\nJobRejectionRequest, Notification, AuditLog, ..." as Model
- database "Workload database\n(on-site)" as DB
-}
-
-rectangle "<<system>>\nEmail Service" as Email
-rectangle "<<system>>\nSMS Gateway" as SMS
-
-Users --> Views : HTTPS
-Views --> Controllers : requests / page data
-Views --> Services : eligible Standby list (read)
-Controllers --> Services : scheduling, validation,\nnotification
-Controllers --> Model : read / change entities
-Services --> Model : read / change entities
+title ARCH-layered: Layered Architecture with MVC Responsibilities
+' Sources: DEC-93/102/105/108/109; CD-final; CMP-system; NFR-05/08/11/13.
+actor "Manager / Staff / IT Administrator" as Users
+rectangle "<b>Presentation / client tier — browser</b>\n\nView: LandingPage · JobAllocationPage · CsvUploadPage\nRender results and forward input (other pages: Table 2.1).\n\nClient Controller: OfflineAssignmentController\nLandingPage → loadToday / local unlock / logout clear\nOwns the bounded encrypted today-only Assignment copy." as Browser
+rectangle "<b>Application tier — on-site server</b>\n\nUC-07: RosterController.checkCsvReadiness / prepareSuggestion\n→ StandbyPreferenceController.confirmWeek\n→ CrewFormingService.suggestRoster → RuleValidator\n\nUC-16: CsvImportController.upload / validateWeek\n→ CsvRowMapper adapters → atomic snapshot and audit\n\nUC-13: OfflineAssignmentController → DashboardController.loadStaffHome\n→ successful online result refreshes the client copy\n\nOther controllers: Table 2.1. NotificationService → Email/SMS gateways." as Application
+rectangle "<b>Data / Model tier — on-site server</b>\n\nCsvImport.coversWeek · LeaveRecord · VanAvailability\nAvailability · StandbyPreference · Crew · Assignment\nStaff.activeHoursOn / hoursOn · AuditLog.record\n(and remaining entities / enumerations)" as Model
+database "Workload database — on-site\nAuthoritative records and logs" as DB
+Users --> Browser : role-specific interaction
+Browser --> Application : use-case requests / returned page data
+Application --> Model : read/change entities and derive values
 Model --> DB : persist
-Services --> Email : NotificationChannel
-Services --> SMS : NotificationChannel
-
-note left of Views
- NFR-05/08/13; DEC-102/105:
- today's Published Assignments only, per user;
- encrypted, with no readable persisted decryption key.
- Refresh after successful online today-data load.
- Reopen offline: local password unlock, no connection
- or server login; no repeated prompt while unlocked.
- Clear at logout; expire when its date passes.
- Key-lifecycle details remain to be specified.
- Authoritative records and logs stay on-site.
-end note
+legend bottom
+MVC roles differ from physical tiers: the browser has a View and client Controller.
+Offline scope/lifecycle remain DEC-102/105; cryptography and key lifecycle need verification.
+Adapted Data/Model grouping retains entity behaviour; use-case coordination stays Application.
+endlegend
 @enduml

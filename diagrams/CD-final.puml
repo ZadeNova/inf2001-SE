@@ -18,8 +18,8 @@ skinparam ranksep 45
 hide circle
 hide empty members
 title CD-final: Final Class Diagram (M2)
-' Traces: SRS v4.1.2 FR-01, FR-02, FR-04, FR-05, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-22, FR-26, FR-27, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58; NFR-05, NFR-08, NFR-13, NFR-14; DEC-105; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
-' Sources: DEC-73 to DEC-99; DEC-102 to DEC-105; DEC-106; M2-Brief §5. Packages match the components in CMP-system.
+' Traces: SRS v4.2 FR-01, FR-02, FR-04, FR-05, FR-07, FR-08, FR-09, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-22, FR-26, FR-27, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, FR-37, FR-38, FR-39, FR-40, FR-41, FR-42, FR-43, FR-44, FR-45, FR-46, FR-47, FR-48, FR-49, FR-50, FR-51, FR-52, FR-53, FR-54, FR-55, FR-56, FR-57, FR-58; NFR-05, NFR-08, NFR-13, NFR-14; DEC-105; UC-01 to UC-05, UC-07 to UC-13, UC-15 to UC-18.
+' Sources: DEC-73 to DEC-99; DEC-102 to DEC-105; DEC-106; DEC-108; DEC-109; M2-Brief §5. Packages match the components in CMP-system.
 ' ECB stereotypes: <<boundary>> = View, <<control>> = Controller/service, <<entity>> = Model (DEC-93).
 ' Derived values (Active/Credited hours and activated-day count) are methods, not attributes (DEC-87).
 ' Design pattern (report §3.2): Strategy = TechnicianRanking + WorkloadRanking/ActivationRanking (DEC-93).
@@ -37,11 +37,14 @@ package "Web UI (Presentation layer)" {
   +selectWeek(week)
   +selectAssignment(assignment)
   +markHandled(alert)
+  +logOut()
+ }
+ class OfflineAssignmentController <<control>> {
+  +loadToday(staff)
   +cacheToday(staff, assignments)
   +loadCachedToday()
   +unlockCachedToday(password)
   +clearCachedToday()
-  +logOut()
  }
  class AccountAdminPage <<boundary>> {
   +createAccount(details)
@@ -59,6 +62,9 @@ package "Web UI (Presentation layer)" {
  }
  class CsvUploadPage <<boundary>> {
   +chooseFile(file, type: CsvType)
+  +selectPlanningWeek(week)
+  +confirmCompleteExport()
+  +confirmReplacement()
   +upload()
   +showErrors(errors)
  }
@@ -146,7 +152,9 @@ package "Staff Inputs" {
 }
 package "CSV Import" {
  class CsvImportController <<control>> {
-  +upload(file, type: CsvType): CsvImport
+  +upload(file, type: CsvType, week, completeExportConfirmed): CsvImport
+  +validateWeek(rows, week)
+  +confirmReplacement(import)
  }
  interface CsvRowMapper <<interface>> {
   +requiredColumns(): List<String>
@@ -202,6 +210,7 @@ package "Roster & Hours" {
  class RosterController <<control>> {
   +loadWeek(week)
   +prepareSuggestion(week)
+  +checkCsvReadiness(week)
   +allocateJob(job, crew, startTime)
   +moveJob(assignment, crew, startTime)
   +unassignJob(assignment)
@@ -340,12 +349,16 @@ package "Domain Model (Data layer)" {
  }
  class CsvImport <<entity>> {
   -type: CsvType
+  -coverageWeekStart: Date [0..1]
+  -completeExportConfirmed: Boolean
   -uploadedAt: DateTime
+  -committedAt: DateTime [0..1]
   -status: ImportStatus
   -errors: List<String>
   +parse(file): List<Map<String, String>>
   +recordValidation(errors: List<String>)
   +commit()
+  +coversWeek(week): Boolean
  }
  class LeaveRecord <<entity>> {
   -date: Date
@@ -562,6 +575,8 @@ NotificationChannel <|.. SmsChannel
 ' ======================= Boundary -> control =======================
 LoginPage ..> AuthController
 LandingPage ..> DashboardController
+LandingPage ..> OfflineAssignmentController
+OfflineAssignmentController ..> DashboardController : today Published page data
 AccountAdminPage ..> AccountController
 AuditLogPage ..> AccountController
 JobPage ..> JobController
@@ -602,6 +617,7 @@ CrewFormingService ..> VanAvailability
 CrewFormingService ..> StandbyPreference
 StandbyActivationService ..> Standby
 StandbyActivationService ..> RuleValidator
+RosterController ..> CsvImport : committed HR week coverage
 RosterController ..> RuleValidator
 RosterController ..> StandbyPreferenceController
 RosterController ..> CrewFormingService
@@ -620,8 +636,11 @@ NotificationService "1" o-- "1..*" NotificationChannel : sends through
 NotificationService ..> Notification
 RetentionJob ..> AuditLog
 
-note bottom of LandingPage
- NFR-05/08/13; DEC-102/105: per-user today Published Assignments only.
+note bottom of OfflineAssignmentController
+ NFR-05/08/13; DEC-102/105/109: browser-side Controller.
+ LandingPage renders and forwards input; it does not process the copy.
+ Existing server authentication/login remain unchanged.
+ Per-user scope: per-user today Published Assignments only.
  Each successful online load refreshes the encrypted read-only copy.
  Password-derived/protected key; no readable persisted decryption key.
  Stored device data must not reveal the copy without the Staff password.
@@ -634,14 +653,18 @@ note bottom of LandingPage
 end note
 
 note bottom of CsvImport
- FR-52-54; DEC-104/106: parse(file) returns rows only.
- CsvImportController uses its CsvRowMapper to check columns/rows,
- collects whole-file errors and calls recordValidation(errors).
- Errors => Rejected; save no LeaveRecord/VanAvailability.
- No errors => controller maps validated rows; in one transaction,
- replaces records for the file dates, calls commit() to mark Committed
- and writes the successful-upload AuditLog entry.
- The entity has no dependency on the application-layer mapper.
+ FR-52-54; DEC-104/106/108: parse(file) returns rows only.
+ Controller/mapper validate headers/rows; HR requires selected week,
+ complete-export confirmation and every row in that Mon-Sat week.
+ Correct headers with zero HR rows is a valid no-Leave snapshot.
+ Blank/missing-header/invalid files => Rejected; no business change.
+ After replacement confirmation, one transaction replaces ALL LeaveRecords
+ in selected HR week, commits coverage/uploader/time/outcome and AuditLog.
+ Other weeks unchanged; Van imports still replace file dates only.
+ Failure preserves business rows and prior successful HR coverage.
+ coversWeek(week) requires Committed, HR type, confirmed complete export
+ and matching coverageWeekStart, never a nonzero LeaveRecord count.
+ Later Leave clashes retain Manager repair/history safeguards.
 end note
 
 note bottom of Account

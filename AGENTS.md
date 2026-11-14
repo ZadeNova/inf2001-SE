@@ -74,7 +74,7 @@ Use these exact terms, capitalised, in requirements, use cases, class names and 
 | **Van** | Service vehicle. Not stored: only the number available per date, from the van CSV; Crews are numbered Van 1…n per day (DEC-85) | truck, team |
 | **Van Availability** | The number of Vans available on a date, imported from the van vendor CSV (DEC-74, DEC-85) | fleet |
 | **Leave Record** | A read-only record that a Staff member is on Leave, Emergency Leave or MC on a date, imported from the HR CSV (DEC-74) | leave request |
-| **CSV Import** | One Manager upload of an HR CSV or a van CSV, validated as a whole before saving (DEC-74) | sync |
+| **CSV Import** | One Manager upload validated as a whole: HR is a confirmed complete snapshot for one selected Planning Week, including valid header-only no-Leave coverage; van is per-date counts (DEC-74, DEC-108) | sync |
 | **Zone** | North, East, South, West or Central. Job zone comes from postal code; the Manager assigns one or more coverage Zones per Crew (DEC-77, DEC-97) | area, region |
 | **Home Zone** | A Technician's base Zone, used to order Standby Staff (DEC-77) | base |
 | **Crew** | Initial Driver plus 1–2 Technicians on one Van/date. Coverage may span Zones; per-Job Staff attribution preserves operational replacements (DEC-97) | team, van team |
@@ -112,6 +112,7 @@ When a new term is needed, add it here in the same commit and cite its source.
 
 | Term | Meaning |
 |---|---|
+| **OfflineAssignmentController** | Browser-side Controller owning the approved encrypted today-only Assignment copy; LandingPage renders/forwards input (DEC-109) |
 | **Active Hours** | Attributed Planned Hours including direct/replacement duties, corrected by any Hours Edit; unused Standby credit is excluded |
 | **Total Credited Hours** | Active Hours on ordinary days; max(4, Active Hours) on a rostered Standby date, with no unused credit for full-day Leave |
 | **Replacement** | Recorded outgoing/incoming Technician, Crew, starting Job/effective time, Manager, reason and timestamp; earlier Job Staff remain unchanged |

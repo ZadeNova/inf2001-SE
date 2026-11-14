@@ -2406,3 +2406,69 @@ When the app was closed and the copy is reopened offline, require a local passwo
 4. Replace the leftover report phrase “The draft preserves them” with “The SRS records them”.
 
 **Limits:** Retain SRS v4.1.2, all requirement statements/IDs, policies, test design, diagrams' classes/relationships and the prototype. D5's optional offline metadata clause, cancelled-Leave representation, security/session/reset details and administrative items are outside this correction. Existing follow-ups remain open. Historical decisions and AI log rows are preserved; no commit, push or sharing change is authorised.
+
+
+---
+
+### DEC-107: Targeted M2 submission and cross-artefact corrections
+
+| Category | Editorial / representation alignment | Ask whom | Requesting team member / file owners | Status | **Recorded correction** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity not confirmed), 2026-11-14, expressly authorised targeted corrections to the M2 report and repository following the supplied audit and revised review, with close template following, a short AI Usage paragraph, and contributions/declarations left for members. This records that request, not ratification by all six members.
+
+**Corrections:**
+1. SRS v4.1.3 expresses the existing actor capabilities as system obligations, including FR-01/07/12/38/44 and comparable rows. Roles, permissions, conditions, stable IDs and behavioural meaning are retained. No human is grammatically required to perform a system function; required inputs remain required.
+2. FR-33 separates missing Van CSV from reasoned-overridable warnings. It is the existing FR-40 planning alert: show missing dates and return to UC-16, following UC-07's precondition that the week's HR and Van CSVs are present. No unknown Van count, manual capacity fallback or new per-date/whole-week policy is introduced. FR-32 and DEC-74/98 remain binding.
+3. Label DP-strategy-ranking as an applied view. Its WorkloadRanking/ActivationRanking-to-Technician read dependencies elaborate the existing order(candidates, context) operations and ranking-value methods; they are not listed as extra explicit CD-final relationships. CD-final's 75 definitions and 96 explicit relationships are retained. Make the component-contract → provider-class → operations mapping visible in the report using the existing CMP-system legend; do not invent twelve new interface classes.
+4. Correct only W-14's Awaiting CSV label in the revised prototype: Provisional request and Provisional (locked) held slot, with post-deadline editing locked. Preserve the supplied original HTML. Include Awaiting CSV and NotConfirmed/reason report evidence.
+5. Follow the supplied template's cover/front-matter order and heading hierarchy, retaining Times New Roman and DEC-95 body numbering; generate the contents from headings and add page numbering/deliberate page breaks. Replace the report's long AI history with a short accurate disclosure. Remove internal workflow/provenance prose while retaining meaningful sources and unresolved technical limitations. Contributions, declarations and submission date remain human fields; no acceptance, signature or actual contribution is inferred.
+6. Explain the adapted Domain Model/Data grouping in the layered design rather than redesigning it. Local lecture verification supports class/component provider/requirer correspondence (Component Diagram lecture, pp.37–38), the lecture's Business/Application placement of entities (Architectural Pattern lecture, p.30), and Strategy's interchangeable algorithms (Design Patterns lecture, p.19); it does not prescribe the two read-dependency edges.
+
+**Preserved:** 45 active FRs, 14 active NFRs, all IDs and established policies; DEC-104/106 partial indivisibility and unverified viability; the complete/reduced black-box tables, BB-07, CFG and seven basis paths, and SC-01–15. No production test execution, team declaration, commit, push or sharing change is authorised by this correction.
+
+
+---
+
+### DEC-108: Complete weekly HR CSV snapshot and committed coverage
+
+| Category | External data / planning readiness | Ask whom | Requesting team member / file owners | Status | **Adopted for the M2 working baseline** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member (identity unconfirmed), 2026-11-14, explicitly selected the complete weekly HR CSV snapshot approach and authorised its propagation through the report and repository. This records that instruction, not confirmation by all six members. Refines DEC-74/106 and SRS FR-52/54; Van CSV per-date counts remain unchanged.
+
+**Decision:**
+1. For HR import the Manager selects one Planning Week (Monday–Saturday) and confirms that the file is the complete HR export for that week, including an export with no Leave. A selected week alone does not make a partial/delta export complete; an unconfirmed or declared partial/delta export cannot be committed as a weekly snapshot.
+2. Required headers remain `staff_id, date, type`. A correct-header file with zero data rows is valid and means no Leave Records in that week. A wholly blank file, missing headers, invalid rows or a row outside the selected week rejects the entire import. Exact duplicate rows are saved once.
+3. Before replacement show the selected week and the replacement effect; require confirmation, with an explicit warning when zero rows would clear existing Leave Records. On success, one transaction replaces **all** Leave Records in the selected week (including removal of omitted/cancelled Leave), commits the import's week, completeness confirmation, uploader/time/outcome and successful Audit Log entry. Other weeks are unchanged. An import/save failure changes neither business records nor previous successful HR coverage.
+4. HR readiness for UC-07/18 is a committed complete snapshot covering the selected week, not the presence or count of Leave Records. Valid zero-row coverage is ready. A later rejected attempt cannot invalidate earlier committed coverage. Van readiness still requires an explicit imported count for each working date; do not infer capacity from absent rows.
+5. No Leave does not imply Available: Staff Availability is still required and no entry remains unavailable (DEC-03/83). Preserve existing later-clash alerts, Manager repair, confirmed-preference history and earlier per-Job attribution (DEC-97/98); importing/removing Leave does not silently rewrite operational history or revoke confirmed picks.
+
+**Propagation:** SRS v4.2 (stable IDs); UC-16, UC-07/18 readiness; CsvImport metadata/coversWeek and CsvImportController whole-week validation/replacement; W-05 and readiness descriptions; supplemental CSV design scenarios. This is an intentional policy change from replacement of only the file's dates. The prototype illustrates states; production persistence and transaction execution are not claimed.
+
+---
+
+### DEC-109: Browser controller for the approved offline Assignment copy
+
+| Category | Design responsibility allocation | Ask whom | Requesting team member / design owners | Status | **Recorded design correction** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member, 2026-11-14, authorised the validated architecture/View-responsibility correction; the orchestrating review accepted this minimal allocation. Local Architectural Pattern lecture p.38 states that the View does no processing. Existing offline behaviour remains DEC-102/105 and NFR-05/08/13.
+
+**Decision:** Add browser-side `OfflineAssignmentController` within Web UI. `LandingPage` renders page data and forwards local-unlock/logout input; the controller obtains today's Published Assignment page data through `DashboardController`, refreshes the bounded encrypted local copy only after a successful online load, and owns `cacheToday`, `loadCachedToday`, `unlockCachedToday` and `clearCachedToday`. The browser's Presentation/client tier therefore contains both a View and a supporting Controller; MVC responsibility is distinct from physical deployment. Existing server authentication and login remain unchanged.
+
+**Preserved:** Per-user today-only Published data, read-only offline access, local password unlock after reopening, no readable persisted decryption key, no repeated prompt while unlocked, logout clear and date expiry. Algorithm/library and existing-session/password-change/reset key lifecycle remain specification/verification follow-ups. No new cryptographic algorithm, offline attempt rule or production implementation is asserted.
+
+**Model effect:** CD-final has 76 class/interface/enumeration definitions and 99 explicit relationships: one new controller; LandingPage → OfflineAssignmentController and OfflineAssignmentController → DashboardController; RosterController → CsvImport for DEC-108 coverage. The 96 earlier relationships remain. Existing two Strategy ranking-value read dependencies are still applied-view elaborations outside that explicit final-model count. Component topology and twelve architectural service contracts are unchanged; Web UI's existing IRoster requirement carries the online read.
+
+
+---
+
+### DEC-110: Plain report typography and source notation
+
+| Category | Report presentation only | Ask whom | Requesting team member | Status | **Adopted presentation direction** |
+|---|---|---|---|---|---|
+
+**Source and authorisation:** Requesting team member, 2026-11-14, explicitly required consistent Times New Roman throughout report prose, tables, class/method references, pseudocode, headers and footers; bold/italic may provide emphasis. Replace prose role shorthand (`«E»`, `«B»`, `«C»` and ornamental role tags) with plain wording where needed, source `§` with “Section”, and dagger threshold markers with “(team-set target)” while retaining the provenance explanation.
+
+**Scope:** Report text and styles only. Formal UML notation and mathematical/CFG symbols retain their technical meaning in diagrams; captured UI remains the illustrated interface. Canonical repository mechanisms and source citation notation are unchanged. SRS remains v4.2; report/source parity checks normalise these intentional presentation adaptations.

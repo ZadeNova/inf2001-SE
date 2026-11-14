@@ -1,6 +1,6 @@
 # UC-07: Allocate Jobs / Set Weekly Schedule
 
-> **Status: M2 v1.1 (2026-11-07).** SRS v4.1; DEC-96–98. Confirm provisional preferences after capacity checks, then suggest the roster.
+> **Status: M2 v1.1 (2026-11-07).** SRS v4.2; DEC-96–98/108. Confirm provisional preferences after capacity checks, then suggest the roster.
 
 | Field | Value |
 |---|---|
@@ -12,7 +12,7 @@
 | **Trigger** | Thursday planning after the Availability Deadline. |
 | **Extension point** | Compare Staff: optional during steps 3–5 (UC-08). |
 | **Linked requirements** | FR-07–FR-11, FR-26, FR-27, FR-30–FR-36, FR-51, FR-55 |
-| **Source** | Brief R3–R6; DEC-16, DEC-19, DEC-80, DEC-82, DEC-84, DEC-85, DEC-96–98 |
+| **Source** | Brief R3–R6; DEC-16, DEC-19, DEC-80, DEC-82, DEC-84, DEC-85, DEC-96–98; DEC-108 |
 | **Classes** | JobAllocationPage, RosterController, StandbyPreferenceController, CrewFormingService, RuleValidator, TechnicianRanking, WorkloadRanking, NotificationService, WeeklyRoster, Crew, Standby, Assignment, Replacement, Job, VanAvailability, LeaveRecord, StandbyPreference, AuditLog |
 | **Wireframe** | W-06; W-07 |
 | **Status** | Agreed |
@@ -20,14 +20,14 @@
 ## Preconditions
 
 1. The Manager is logged in; the Planning Week is Draft and its Availability Deadline has passed.
-2. The week's HR and Van CSVs are present (UC-16). No suggestion or preference confirmation uses an unknown Van count.
+2. A committed complete HR snapshot covers the Planning Week (UC-16), including valid zero-row coverage, and explicit Van counts exist for every working date. Readiness does not depend on Leave Record count; a rejected later import cannot erase earlier committed coverage. No suggestion or confirmation uses unknown Van capacity (DEC-108).
 
 ## Main flow
 
 | Step | Actor | System |
 |---|---|---|
 | 1 | Opens the Planning Week. | Shows CSV readiness, provisional/decided preferences, Crews, Standby and Unassigned Jobs. |
-| 2 | Chooses Suggest roster. | RosterController.prepareSuggestion() calls StandbyPreferenceController.confirmWeek(): resolve provisional requests in submission order using current eligibility and feasible >=3 Crews plus Full Standby cover. Persist decisions/reasons and notify once (FR-51). CrewFormingService.suggestRoster() then reserves confirmed picks and follows FR-55. |
+| 2 | Chooses Suggest roster. | RosterController.prepareSuggestion() first calls checkCsvReadiness(week), using CsvImport.coversWeek(week) and per-date Van counts, then calls StandbyPreferenceController.confirmWeek(): resolve provisional requests in submission order using current eligibility and feasible >=3 Crews plus Full Standby cover. Persist decisions/reasons and notify once (FR-51). CrewFormingService.suggestRoster() then reserves confirmed picks and follows FR-55. |
 | 3 | Reviews Crew members, Standby and coverage zones. | Set one or more existing Zones per Crew. Permit valid edits with audit reasons; block changes to confirmed initial Standby placements (FR-26, FR-32). |
 | 4 | Allocates an Unassigned Job to a Crew and sets its time. | Check Brand, availability and time/travel rules. Copy the effective Crew members into the Assignment's attributed Staff (FR-07/08/27). |
 | 5 | Optionally compares Staff and repeats allocation. | Show Active Hours separately from Total Credited Workload; apply the 40 h highlight to the latter (FR-31/35/36). |
@@ -53,7 +53,7 @@ For today/future dates, change only unstarted Jobs/initial future placements wit
 
 ## Exceptions
 
-- Missing CSV: show missing dates and return to UC-16; do not guess capacity.
+- Missing HR coverage or Van counts: show the uncovered HR week/missing Van dates and return to UC-16; do not guess capacity.
 - Invalid edit or attempt to override a confirmed pick: refuse even if a reason is supplied.
 - Later Leave/account change: show shortage and require repair while preserving confirmed-request history and earlier Job attribution.
 - Save failure: NFR-06; no partial roster/confirmation state or premature notification.

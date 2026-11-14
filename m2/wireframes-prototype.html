@@ -617,55 +617,62 @@ init(root){
     $('[data-x]',m).onclick=()=>closeModal(root); $('[data-ok]',m).onclick=()=>{closeModal(root);toast(root,'J-1060 deleted. 3 Staff notified.');};};
 }});
 
-/* ---------- W-05 CSV upload ---------- */
+/* ---------- W-05 CSV upload: DEC-108 illustrative states ---------- */
 S.push({id:'W-05', name:'CSV upload', role:'Manager', cls:'CsvUploadPage', uc:'UC-16', fr:'FR-52, FR-53, FR-54', group:'Manager',
-purpose:'The Manager imports leave from the HR system and Van counts from the van vendor. The whole file is checked before anything is saved.',
-notes:['Choose the file type; the expected columns are shown before upload (FR-52, FR-53).','Any bad row rejects the whole file and lists every row error; nothing is saved (FR-54).','Exact duplicate rows are saved once.','Every upload is recorded with who, when, type and outcome (Audit Log).'],
+purpose:'Import a complete HR snapshot for one selected Planning Week, including no-Leave exports, or separate per-date Van counts. These are sample states, not a production importer.',
+notes:['For HR, select the Monday–Saturday week and confirm the export is complete. A partial/delta file cannot be used as a complete snapshot (DEC-108).','Correct headers with zero data rows is valid HR coverage; blank/missing-header/invalid files are rejected. Every HR row must be in the selected week.','Preview and confirm replacement of all Leave Records in that week. Zero-row clearing gets an explicit warning. Other weeks stay unchanged.','Business rows, committed coverage metadata and successful Audit Log save together. Failure preserves earlier rows and coverage. No Leave does not imply Available. Van counts remain per date.'],
 render(){
-  const body = `
-  <div class="ph"><h3>CSV upload</h3><span class="muted">Upload before planning starts on Thursday</span>
-    <div class="r small muted">Preview state: <div class="seg" id="w5-state"><button class="on" data-s="ok">Accepted</button><button data-s="bad">Rejected</button></div></div></div>
-  <div class="grid" style="grid-template-columns:420px 1fr">
-    <div class="card"><div class="hd">1 · Choose file type ${P(1)}</div><div class="bd grid ann" style="gap:10px">
-      <label class="radio"><input type="radio" name="w5t" value="hr" checked> <div><b>HR leave CSV</b><div class="small muted">Who is on Leave, Emergency Leave or MC</div></div></label>
-      <label class="radio"><input type="radio" name="w5t" value="van"> <div><b>Van availability CSV</b><div class="small muted">Vans available per date</div></div></label>
-      <div class="field"><label>Expected columns</label><div class="inp ro mono" id="w5-cols"></div><span class="hint" id="w5-hint"></span></div>
-      <div class="drop" style="padding:22px">Drop a .csv file here or <button class="link">browse</button></div>
-      <div class="row"><span class="small mono">hr_leave_2026-11-05.csv · 2 KB</span><span class="spacer"></span><button class="btn pri" id="w5-up">Upload and check</button></div>
-    </div></div>
-    <div class="grid" style="align-content:start">
-      <div class="card"><div class="hd">2 · Result</div><div class="bd" id="w5-res"></div></div>
-      <div class="card"><div class="hd">Recent uploads ${P(4)}</div><div class="bd" style="padding:0">
-        <table class="t"><tr><th>When</th><th>Type</th><th>By</th><th>File</th><th>Outcome</th></tr>
-        <tr><td>Thu 5 Nov 08:45</td><td>HR leave</td><td>Sarah Tan</td><td class="mono">hr_leave_2026-11-05.csv</td><td><span class="chip ok">Committed · 6 rows (later MC added)</span></td></tr>
-        <tr><td>Wed 4 Nov 17:20</td><td>HR leave</td><td>Sarah Tan</td><td class="mono">hr_leave_2026-11-04.csv</td><td><span class="chip ok">Committed · 5 rows (before MC)</span></td></tr>
-        <tr><td>Wed 4 Nov 17:12</td><td>HR leave</td><td>Sarah Tan</td><td class="mono">hr_leave_2026-11-04.csv</td><td><span class="chip block">Rejected · 2 errors</span></td></tr>
-        <tr><td>Tue 3 Nov 10:05</td><td>Van availability</td><td>Sarah Tan</td><td class="mono">vans_nov.csv</td><td><span class="chip ok">Committed · 17 rows</span></td></tr>
-        </table></div></div>
-    </div>
-  </div>`;
-  return mgr('manager/csv-upload','CSV upload',body);
+ const body=`
+ <div class="ph"><h3>CSV upload</h3><span class="muted">Complete HR week snapshot or per-date Van counts</span></div>
+ <div class="row wrap small" style="margin-bottom:12px">Independent illustrative state (starts from 6 existing Leave Records):
+ <div class="seg" id="w5-state"><button class="on" data-s="ok">Committed</button><button data-s="zero">No Leave</button><button data-s="replace">Replace with zero</button><button data-s="bad">Rejected</button><button data-s="fail">Save failed</button></div></div>
+ <div class="grid" style="grid-template-columns:390px 1fr">
+ <div class="card"><div class="hd">1 · Select and validate ${P(1)}</div><div class="bd grid ann" style="gap:10px">
+ <label class="radio"><input type="radio" name="w5t" value="hr" checked><div><b>HR Leave CSV</b><div class="small muted">Complete snapshot of one Planning Week</div></div></label>
+ <label class="radio"><input type="radio" name="w5t" value="van"><div><b>Van Availability CSV</b><div class="small muted">Explicit counts per date</div></div></label>
+ <div id="w5-hr"><div class="field"><label>Planning Week (Monday–Saturday)</label><select class="inp" id="w5-week"><option>16–21 Nov 2026</option></select></div>
+ <label class="radio small" style="margin-top:8px"><input id="w5-complete" type="checkbox" checked><span>Completed example: I confirm this is the complete HR export for this week, including no Leave. It is not a partial/delta export.</span></label></div>
+ <div class="field"><label>Required headers</label><div class="inp ro mono" id="w5-cols"></div><span class="hint" id="w5-hint"></span></div>
+ <div class="drop" style="padding:14px">Drop a .csv file here or <button class="link">browse</button></div>
+ <div class="small mono">hr_week_2026-11-16.csv · sample file</div><button class="btn pri" id="w5-up">Validate and preview replacement</button>
+ </div></div>
+ <div class="grid" style="align-content:start">
+ <div class="card"><div class="hd">2 · Review result / confirm replacement</div><div class="bd" id="w5-res"></div></div>
+ <div class="card"><div class="hd">Current committed coverage ${P(4)}</div><div class="bd small" id="w5-coverage"><b>HR ready · 16–21 Nov 2026</b><br>Complete snapshot · 6 Leave Records · Sarah Tan · Thu 5 Nov 08:45<br>Van counts: 16–21 Nov explicitly imported.<br><span class="muted">Rejected later attempts do not remove successful coverage.</span></div></div>
+ <div class="card"><div class="hd">Recent uploads</div><div class="bd" style="padding:0"><table class="t"><tr><th>When / by</th><th>Type / coverage</th><th>Outcome</th></tr>
+ <tr><td>5 Nov 08:45<br>Sarah Tan</td><td>HR · 16–21 Nov</td><td>Committed · 6 unique rows</td></tr>
+ <tr><td>4 Nov 17:20<br>Sarah Tan</td><td>HR · 16–21 Nov</td><td>Committed · 5 rows</td></tr>
+ <tr><td>4 Nov 17:12<br>Sarah Tan</td><td>HR · 16–21 Nov</td><td>Rejected · 2 errors</td></tr>
+ <tr><td>3 Nov 10:05<br>Sarah Tan</td><td>Van · file dates</td><td>Committed · 17 dates</td></tr></table></div></div>
+ </div></div>`;
+ return mgr('manager/csv-upload','CSV upload',body);
 },
 init(root){
-  const cols=()=>{const v=$('input[name=w5t]:checked',root).value;
-    $('#w5-cols',root).textContent = v==='hr'?'staff_id, date, type':'date, vans_available';
-    $('#w5-hint',root).textContent = v==='hr'?'type is Leave, Emergency Leave or MC. Dates are Mon–Sat. A newer file replaces records for the same dates.':'vans_available is a whole number, 0 or more. Caps the Crews on that date.';};
-  $$('input[name=w5t]',root).forEach(r=>r.onchange=cols); cols();
-  const res=s=>{$('#w5-res',root).innerHTML = s==='ok'
-    ? `<div class="banner ok"><span class="ico">✓</span><div><b>File accepted. 6 Leave Records saved.</b><br>Dates 9–20 Nov · 1 exact duplicate row saved once.</div></div>
-       <table class="t" style="margin-top:10px"><tr><th>Staff</th><th>Date</th><th>Type</th></tr>
-       <tr><td>T07 Gopal</td><td>Mon 16 Nov</td><td>Leave</td></tr><tr><td>T10 Jason</td><td>Wed 18 Nov</td><td>MC</td></tr>
-       <tr><td>T03 Chen</td><td>Fri 20 Nov</td><td>Leave</td></tr><tr><td>T08 Hui Min</td><td>Fri 20 Nov</td><td>Leave</td></tr>
-       <tr><td colspan="3" class="muted small">+ 2 more · <button class="link">View all</button></td></tr></table>
-       <p class="hint">Confirmation ran Thu 5 Nov 08:30 using the prior CSV; this 08:45 upload adds T10’s later MC. His Confirmed history remains, while Leave overrides placement. T08 Hui Min asked for Dicon Standby on Fri 20 Nov; the Leave Record takes precedence and the request cannot be Confirmed.</p>`
-    : `<div class="banner block ann"><span class="ico">!</span><div><b>File rejected. Nothing was saved. ${P(2)}</b><br>Fix these rows and upload the whole file again.</div></div>
-       <table class="t" style="margin-top:10px"><tr><th>Row</th><th>Problem</th><th>Value</th></tr>
-       <tr><td>4</td><td>Unknown staff ID</td><td class="mono">T99</td></tr>
-       <tr><td>9</td><td>Date is a Sunday</td><td class="mono">2026-11-22</td></tr>
-       <tr><td>12</td><td>Unknown type (use Leave, Emergency Leave or MC)</td><td class="mono">Annual</td></tr></table>`;};
-  res('ok');
-  $$('#w5-state button',root).forEach(b=>b.onclick=()=>{$$('#w5-state button',root).forEach(x=>x.classList.toggle('on',x===b));res(b.dataset.s);});
-  $('#w5-up',root).onclick=()=>toast(root,'Checking the whole file before saving…');
+ let mode='ok', committedCount=6;
+ const res=s=>{
+  mode=s; if(s==='zero') committedCount=0; const week=$('#w5-week',root).value; const hr=$('input[name=w5t]:checked',root).value==='hr';
+  $('#w5-res',root).innerHTML = !hr
+   ? `<div class="banner ok"><span class="ico">✓</span><div><b>Van sample: 17 explicit date counts committed.</b><br>Only file dates are replaced. An explicit 0 means no capacity; a missing date remains unknown. A header-only Van file is rejected.</div></div>`
+   : s==='ok'
+   ? `<div class="banner ok"><span class="ico">✓</span><div><b>Complete HR snapshot committed · ${week}</b><br>6 unique Leave Records · 1 exact duplicate merged.<br>Sarah Tan · Thu 5 Nov 08:45 · outcome Committed.</div></div><p class="small">All Leave Records in this week were replaced atomically with coverage and the successful Audit Log. Other weeks are unchanged.</p><p class="hint">T10’s later MC overrides placement; confirmed preference history and earlier Job Staff remain. Manager repair is still required for clashes.</p>`
+   : s==='zero'
+   ? `<div class="banner ok"><span class="ico">✓</span><div><b>HR ready · ${week} · no Leave Records</b><br>Valid required headers, 0 data rows; complete export confirmed.<br>Sarah Tan · Thu 5 Nov 09:00 · outcome Committed.</div></div><p class="small">Committed coverage makes this week HR-ready even with zero rows. No Leave does not imply Available; missing Availability remains unavailable. Other weeks and operational history are unchanged.</p>`
+   : s==='replace'
+   ? `<div class="banner warn"><span class="ico">!</span><div><b>Replace ${committedCount} Leave Records for ${week} with zero?</b><br>This complete snapshot has valid headers and 0 data rows. Confirming removes every existing Leave Record in this week. Other weeks stay unchanged.</div></div><p class="small">No replacement has been saved. Previous successful coverage is still active. Preserve preference history and earlier Job attribution.</p><div class="row"><button class="btn" id="w5-cancel">Cancel</button><button class="btn danger" id="w5-confirm">Confirm complete-week replacement</button></div>`
+   : s==='fail'
+   ? `<div class="banner block"><span class="ico">!</span><div><b>Save failed. Replacement rolled back.</b><br>Previous ${committedCount} Leave Records and committed HR coverage remain. No successful-upload Audit Log was committed for this failed attempt.</div></div><p class="small">The failed attempt outcome is recorded. Retry the complete export; no partial business or coverage changes were saved.</p>`
+   : s==='incomplete'
+   ? `<div class="banner block"><span class="ico">!</span><div><b>Complete weekly export confirmation required.</b><br>Do not upload a partial/delta file as a complete snapshot. Selecting a week alone does not establish completeness. Nothing replaced; prior coverage remains.</div></div>`
+   : `<div class="banner block ann"><span class="ico">!</span><div><b>File rejected. No business changes. ${P(2)}</b><br>Prior committed coverage and Leave Records remain.</div></div><table class="t" style="margin-top:10px"><tr><th>Row</th><th>Problem</th><th>Value</th></tr><tr><td>4</td><td>Unknown Staff ID</td><td>T99</td></tr><tr><td>9</td><td>Outside selected week / Sunday</td><td>22 Nov 2026</td></tr></table><p class="hint">Wholly blank files, missing headers and invalid rows are rejected. Header-only complete HR exports are valid.</p>`;
+  $('#w5-coverage',root).innerHTML=`<b>HR ready · ${week}</b><br>Complete snapshot · ${committedCount} Leave Records · Sarah Tan · Thu 5 Nov ${committedCount===0?'09:00':'08:45'}<br>Van counts: 16–21 Nov explicitly imported.<br><span class="muted">Rejected later attempts do not remove successful coverage. No Leave does not imply Available.</span>`;
+  $('#w5-confirm',root)?.addEventListener('click',()=>res($('#w5-complete',root).checked?'zero':'incomplete'));
+  $('#w5-cancel',root)?.addEventListener('click',()=>res(committedCount===0?'zero':'ok'));
+ };
+ const cols=()=>{const hr=$('input[name=w5t]:checked',root).value==='hr';$('#w5-hr',root).style.display=hr?'block':'none';$('#w5-cols',root).textContent=hr?'staff_id, date, type':'date, vans_available';$('#w5-hint',root).textContent=hr?'Leave, Emergency Leave or MC. All rows must be in the selected week. Correct headers and 0 rows is a valid no-Leave export.':'Whole number 0 or more per date. Missing dates are not zero; empty Van files are rejected.';res(mode);};
+ $$('input[name=w5t]',root).forEach(x=>x.onchange=cols);
+ $('#w5-week',root).onchange=()=>res(mode);
+ $$('[data-s]',root).forEach(x=>x.onclick=()=>{ $$('#w5-state button',root).forEach(b=>b.classList.remove('on'));x.classList.add('on');committedCount=6;res(x.dataset.s);});
+ $('#w5-up',root).onclick=()=>res($('#w5-complete',root).checked?'replace':'incomplete');cols();
 }});
 
 /* ---------- W-06 Job Allocation ---------- */
@@ -677,7 +684,7 @@ render(){
   const body = `
   <div class="ph"><h3>Job Allocation</h3><span class="chip">Planning Week · Mon 16 – Sat 21 Nov</span><span class="status-chip" id="w6-status">Draft</span><span class="small muted">after Manager edits</span>
     <div class="r ann"><span class="small muted">Suggested Thu 5 Nov 09:02</span>${P(1)}<button class="btn" id="w6-suggest">Suggest roster</button><button class="btn ghost" data-go="W-07">Compare Staff</button><button class="btn pri" id="w6-pub">Publish week</button></div></div>
-  <details class="card ann" style="margin-bottom:12px" open><summary class="hd" style="cursor:pointer">Standby Preferences resolved ${P(2)}<span class="r">7 Confirmed · 1 NotConfirmed · inputs locked Wed 4 Nov 18:00, HR and Van CSV received</span></summary>
+  <details class="card ann" style="margin-bottom:12px" open><summary class="hd" style="cursor:pointer">Standby Preferences resolved ${P(2)}<span class="r">7 Confirmed · 1 NotConfirmed · inputs locked Wed 4 Nov 18:00; committed complete HR week coverage + per-date Van counts</span></summary>
     <div class="bd" style="padding:0"><table class="t"><tr><th>#</th><th>Technician</th><th>Day · slot</th><th>Result</th><th>Reason</th></tr>
     ${PREFS.map(p=>`<tr><td class="mono">${p.n}</td><td>${nm(p.t)}</td><td>${p.day} · ${brand(p.b)}</td><td><span class="chip ${p.st==='Confirmed'?'ok':'block'}">${p.st==='Confirmed'?'Confirmed':'NotConfirmed'}</span></td><td class="small">${p.st==='Confirmed'?(p.note||'Eligible, and 3+ valid Crews and Full Standby cover still hold. Reserved as initial Standby.'):p.why}</td></tr>`).join('')}
     </table><p class="hint" style="padding:0 14px 10px;margin:0">Processed by submission order (staff ID breaks ties). The Manager cannot favour a request or move it to another day.</p></div></details>
@@ -1206,7 +1213,7 @@ init(root){
     const pickedDate=days.find(d=>d[0]===pick)?.[1]||'';
     const status = !pick ? `<div class="small">No request this week. Tap a free slot.</div>`
       : v==='prov' ? `<div><div class="small muted">Your request ${P(3)}</div><b>${pick} · ${BR.ME}</b> <span class="chip warn">Provisional</span><div class="small muted" style="margin-top:2px">Submitted ${W14.stamp} · #${W14.order} in the week’s submission order</div></div><span class="spacer"></span><button class="btn sm danger" id="w14-wd">Withdraw</button>`
-      : v==='csv' ? `<div><div class="small muted">Your request ${P(4)}</div><b>${pick} · ${BR.ME}</b> <span class="chip warn">Provisional</span><div class="small" style="margin-top:4px">The deadline has passed but the HR or van CSV is not uploaded yet. Your request stays Provisional until the checks can run.</div></div>`
+      : v==='csv' ? `<div><div class="small muted">Your request ${P(4)}</div><b>${pick} · ${BR.ME}</b> <span class="chip warn">Provisional</span><div class="small" style="margin-top:4px">The deadline has passed but complete HR coverage for this Planning Week or per-date Van counts are missing. Valid no-Leave HR coverage may have zero rows. Your request stays Provisional until checks can run.</div></div>`
       : v==='conf' ? `<div><div class="small muted">Your request ${P(5)}</div><b>${pick} · ${BR.ME}</b> <span class="chip ok">Confirmed</span><div class="small" style="margin-top:4px">You start ${pick} ${pickedDate} as Standby. You can still be called in.</div></div>`
       : `<div><div class="small muted">Your request ${P(5)}</div><b>${pick} · ${BR.ME}</b> <span class="chip block">NotConfirmed</span><div class="small" style="margin-top:4px"><b>Reason:</b> Keeping it with earlier Confirmed picks would leave fewer than 3 valid Crews on ${pick} ${pickedDate}. No other day can be substituted after the deadline.</div></div>`;
     $('#w14',root).innerHTML = `
@@ -1219,7 +1226,7 @@ init(root){
         const me = d===pick?'you':(s.ME&&s.ME!=='you'?'taken':'free');
         const slot=(b,state)=>{
           if(b==='DC') return `<button class="slot off" disabled>Dicon<small>${state==='taken'?'Taken':'Not certified'}</small></button>`;
-          if(state==='you') return `<button class="slot you">M Electric<small>${locked?(v==='conf'?'Confirmed':'NotConfirmed'):'Held for you (provisional)'}</small></button>`;
+          if(state==='you') return `<button class="slot you" ${locked?'disabled':''}>M Electric<small>${v==='csv'?'Provisional (locked)':locked?(v==='conf'?'Confirmed':'NotConfirmed'):'Held for you (provisional)'}</small></button>`;
           if(state==='taken') return `<button class="slot off" disabled>M Electric<small>Taken</small></button>`;
           return `<button class="slot ${locked?'off':''}" ${locked?'disabled':`data-p="${d}"`}>M Electric<small>${locked?'Closed':'Free · tap to request'}</small></button>`;};
         const allOff = me==='taken';

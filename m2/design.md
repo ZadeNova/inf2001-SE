@@ -1,6 +1,6 @@
 # M2 Design Notes (report §1.3, §2, §3)
 
-> **Status: Draft v1.1.2 (2026-11-10).** Working text for the report, built from SRS v4.1.2 and the M2 diagrams (DEC-93/99/102–105). Diagrams are PlantUML sources in [diagrams/](../diagrams/). Render them **locally** only (see diagrams/README.md).
+> **Status: Draft v1.2 (2026-11-14).** Working text for the report, built from SRS v4.2 and the M2 diagrams (DEC-93/99/102–109). Diagrams are PlantUML sources in [diagrams/](../diagrams/). Render them **locally** only (see diagrams/README.md).
 
 | Report section | Diagram |
 |---|---|
@@ -45,7 +45,7 @@ Every stored value has an owning class and a method that changes it (SRS §3 "Me
 | Hours on planned time | `Staff.activeHoursOn(date)` sums attributed `Job.plannedHours()` or the latest Active Hours Edit; `hoursOn(date)` applies the once-daily max(4, Active Hours) Standby floor (DEC-96) |
 | Zones | `Job.deriveZone()` via `Zone.fromPostalCode()`; `Crew.setZones()`; `Technician.homeZone`; `Zone.distanceTo()` |
 
-Consistency corrections (DEC-99) make existing requirements explicit: `Account.firstFailedAt` anchors FR-48's 15-minute window; `knownDevices` maps device IDs to last-used timestamps for NFR-07; `Notification.deliveryState` retains email/SMS outcomes independently of Landing Page handling (FR-39/40). `AccountController` delegates future-roster removal and `RequestController` delegates approved unassignment to `RosterController`; `CsvImportController` owns the application-layer mapper (FR-05/45/46/52–54). `CsvImport.parse(file)` returns rows only. The controller checks columns/rows through `CsvRowMapper`, collects whole-file errors and calls `CsvImport.recordValidation(errors)`. Errors mark the import Rejected and save no business rows; otherwise the controller maps the validated rows and, in one transaction, replaces the Leave Records or Van Availability for the dates in the file, calls `CsvImport.commit()` to mark the import `Committed`, and writes the successful-upload `AuditLog` entry. The entity does not call upward into its mapper (DEC-104/106).
+Consistency corrections (DEC-99) make existing requirements explicit: `Account.firstFailedAt` anchors FR-48's 15-minute window; `knownDevices` maps device IDs to last-used timestamps for NFR-07; `Notification.deliveryState` retains email/SMS outcomes independently of Landing Page handling (FR-39/40). `AccountController` delegates future-roster removal and `RequestController` delegates approved unassignment to `RosterController`; `CsvImportController` owns the application-layer mapper (FR-05/45/46/52–54). `CsvImport.parse(file)` returns rows only. The controller/mapper validate the whole file. HR requires one selected Planning Week and the Manager's complete-export confirmation; every row must be in that week. Correct headers with no data rows is a valid no-Leave snapshot. Before replacement show the week/effect and explicitly warn when zero rows clear existing Leave. One transaction replaces all selected-week Leave Records, commits coverage/uploader/time/outcome metadata and the successful Audit Log. Other weeks are unchanged; failed validation/save preserves previous business records and successful coverage. `CsvImport.coversWeek(week)` checks Committed complete HR coverage, never a nonzero Leave count. Van CSV retains per-file-date counts. No Leave does not imply Available, and later-clash/history safeguards remain (DEC-108).
 
 ---
 
@@ -55,7 +55,7 @@ The class diagram's packages correspond **one to one** with the components. Ever
 
 | Component | Classes (CD-final package) | Responsibility | Provides | Requires |
 |---|---|---|---|---|
-| **Web UI** | All «boundary» pages | Role-specific pages in the browser (NFR-11) | — | IAuthentication, IAccountAdmin, IStaffInputs, ICsvImport, IJobManagement, IScheduling (eligible Standby list only), IRoster |
+| **Web UI** | All «boundary» pages; OfflineAssignmentController | Role pages and local-copy controller in the browser (NFR-11) | — | IAuthentication, IAccountAdmin, IStaffInputs, ICsvImport, IJobManagement, IScheduling (eligible Standby list only), IRoster |
 | **Authentication** | AuthController | Login, new-device check, logout, password reset | IAuthentication | IDomainModel, INotify |
 | **Account Management** | AccountController | Accounts, roles, lockouts, Technician profiles, Audit Log search | IAccountAdmin | IDomainModel, INotify, IRoster (remove future roster places) |
 | **Staff Inputs** | AvailabilityController, StandbyPreferenceController, RequestController | Availability, provisional picks and post-deadline confirmation, Job Rejection submission and Manager-only decisions | IStaffInputs | IDomainModel, IScheduling (rule checks), IRoster (approved unassignment), INotify |
@@ -68,6 +68,22 @@ The class diagram's packages correspond **one to one** with the components. Ever
 | **Domain Model** | All «entity» classes and enumerations | Business data and derived values (hours, activation count) | IDomainModel | IPersistence |
 | **Workload database** | — | On-site persistent storage (NFR-13) | IPersistence | — |
 | Email Service «system», SMS Gateway «system» | External | Deliver email and SMS | IEmailGateway, ISmsGateway | — |
+
+The `I…` names are architectural service contracts rather than twelve additional class-level interface definitions. Their providers are the classes in the table above; the following operation mapping makes that correspondence explicit without adding classes (CMP-system legend; DEC-93/107).
+
+| Contract | Provider operations |
+|---|---|
+| IAuthentication | `AuthController.logIn()`, `confirmDevice()`, `logOut()`, `requestReset()`, `resetPassword()` |
+| IAccountAdmin | `AccountController.createAccount()`, `manageAccess()`, `updateTechnicianProfile()`, `searchAuditLog()` |
+| IStaffInputs | `AvailabilityController.save()`; `StandbyPreferenceController.submitPick()`, `withdrawPick()`, `confirmWeek()`; `RequestController.submitRejection()`, `decideJobRejection()` |
+| ICsvImport | `CsvImportController.upload(file, type, week, completeExportConfirmed)` using its `CsvRowMapper` implementations |
+| IJobManagement | `JobController.createJob()`, `editJob()`, `deleteJob()`, `listUnassigned()` |
+| IScheduling | `CrewFormingService.suggestRoster()`; `StandbyActivationService.listStandbysForJob()`; `RuleValidator.findMinimumCoverage()` and `check*()` rules |
+| IRoster | `RosterController.prepareSuggestion()`, allocation/unassignment, `removeFromFutureRoster()`, publication, timeline and comparison; `HoursController` direct/replacement duties and Hours Edits; `DashboardController` Landing Pages |
+| INotify | `NotificationService.notify(event, recipients)` |
+| IEmailGateway / ISmsGateway | `EmailChannel.send()` / `SmsChannel.send()` through `NotificationChannel` |
+| IDomainModel | Entity operations, including `AuditLog.record()`, and derived values |
+| IPersistence | On-site database storage; no separate persistence class is prescribed |
 
 **Design rationale.**
 - The Scheduling Engine is a separate component, so the algorithm and its rules can change without touching the pages or roster storage. Roster & Hours, Staff Inputs and Job Management use IScheduling. The Web UI uses it only for the eligible Standby list; suggestion always goes through `RosterController.prepareSuggestion()` so confirmation runs first (FR-55).
@@ -82,11 +98,13 @@ The class diagram's packages correspond **one to one** with the components. Ever
 
 | Layer | MVC role | Classes | Responsibility |
 |---|---|---|---|
-| Presentation | View | «boundary» pages | Show data, collect input, show warnings and confirmations. No business rules |
+| Presentation / browser | View and client Controller | «boundary» pages; OfflineAssignmentController | Pages render/forward input; the controller coordinates today-data loading and the approved encrypted local copy |
 | Application | Controller | «control» controllers and services | Carry out use cases, run the Suggested Roster, check rules, send notifications, purge records |
 | Data | Model | «entity» classes + on-site database | Hold the state and derive hours and counts; persist on the on-site server |
 
-**How the layers interact:** each layer calls only the one below it. A page calls an application controller; `StandbyListView` calls the eligible-list service for a read. Controllers call services (for example `RuleValidator`, `CrewFormingService`) and entities. Entities are persisted in the database. Results flow back up as page data. Suggestion always follows the controller preparation/confirmation route.
+This is an adapted logical grouping: Domain Model entities are grouped with persistence in Data/Model to preserve the ECB-to-MVC correspondence; their derived hours and count operations remain domain behaviour. The lecture places business entities in Business/Application and data access/persistence in Data (Architectural Pattern lecture, p.30). This grouping choice does not move scheduling or use-case coordination out of the Application layer (DEC-93/107).
+
+**How the layers interact:** requests cross downward from the browser to application services and the Domain Model. Within the browser, LandingPage forwards offline-copy input to OfflineAssignmentController; the controller obtains today-data through DashboardController. Presentation is a deployment tier, not an assertion that every browser class is a View. A page calls an application controller; `StandbyListView` calls the eligible-list service for a read. Controllers call services (for example `RuleValidator`, `CrewFormingService`) and entities. Entities are persisted in the database. Results flow back up as page data. Suggestion always follows the controller preparation/confirmation route.
 
 **Why this architecture:**
 1. **It matches our analysis model.** The M1 Entity–Boundary–Control (ECB) classes map directly to View, Controller and Model, while the historical M1 sequence diagrams must be checked before reuse because scheduling behaviour changed.
@@ -99,7 +117,7 @@ The class diagram's packages correspond **one to one** with the components. Ever
 
 **Use-case example (UC-07):** `JobAllocationPage.suggestRoster()` → `RosterController.prepareSuggestion(week)` → `StandbyPreferenceController.confirmWeek(week)` → `CrewFormingService.suggestRoster(week)` → reads `Availability`, `LeaveRecord`, `VanAvailability` and `StandbyPreference`, and writes `Crew` and `Standby` → the page shows the Draft roster.
 
-DEC-102 resolves the NFR-05/13 boundary: the browser may keep a per-user read-only copy containing only the signed-in Staff member's Published Assignments for today. Clear it at logout and expire it when its date passes; authoritative database records and logs remain on-site. `LandingPage.cacheToday(staff, assignments)` refreshes the encrypted copy after each successful online load of today's Published Assignments, without requiring a fresh login in an existing authenticated session. `loadCachedToday()` checks Staff/date and locked state; `unlockCachedToday(password)` performs local password unlocking after app closure/reopening offline, with no connection or server login. Wrong passwords keep the copy locked; no repeated prompt is needed while it remains unlocked. `clearCachedToday()` clears it at logout. NFR-08 applies to this browser copy as well as on-site storage: a password-derived or password-protected key must prevent reading the persisted copy without the Staff member's password, with no readable persisted decryption key (DEC-105). This goal concerns stored data; it does not claim protection of an already unlocked view. Algorithm/library and key derivation/protection technique remain implementation choices. Existing-session key lifecycle, password changes/resets and broader authentication details still need specification/verification under DEC-61/105; no offline attempt limit or new session policy is adopted. Date expiry prevents later viewing when the app next checks the date; it does not promise deletion from a device while the app is closed. DEC-103 resolves FR-04/39: deleting an Assigned Draft Job sends no Staff notice; the Published deletion notice and existing preference-outcome exception remain. Historical DEC-100/101 entries are retained, with these later resolutions.
+DEC-109 assigns processing to browser-side `OfflineAssignmentController`; `LandingPage` only renders and forwards input. Existing server authentication/login are unchanged. DEC-102 resolves the NFR-05/13 boundary: the browser may keep a per-user read-only copy containing only the signed-in Staff member's Published Assignments for today. Clear it at logout and expire it when its date passes; authoritative database records and logs remain on-site. `OfflineAssignmentController.cacheToday(staff, assignments)` refreshes the encrypted copy after each successful online load of today's Published Assignments, without requiring a fresh login in an existing authenticated session. `OfflineAssignmentController.loadCachedToday()` checks Staff/date and locked state; `OfflineAssignmentController.unlockCachedToday(password)` performs local password unlocking after app closure/reopening offline, with no connection or server login. Wrong passwords keep the copy locked; no repeated prompt is needed while it remains unlocked. `OfflineAssignmentController.clearCachedToday()` clears it at logout. NFR-08 applies to this browser copy as well as on-site storage: a password-derived or password-protected key must prevent reading the persisted copy without the Staff member's password, with no readable persisted decryption key (DEC-105). This goal concerns stored data; it does not claim protection of an already unlocked view. Algorithm/library and key derivation/protection technique remain implementation choices. Existing-session key lifecycle, password changes/resets and broader authentication details still need specification/verification under DEC-61/105; no offline attempt limit or new session policy is adopted. Date expiry prevents later viewing when the app next checks the date; it does not promise deletion from a device while the app is closed. DEC-103 resolves FR-04/39: deleting an Assigned Draft Job sends no Staff notice; the Published deletion notice and existing preference-outcome exception remain. Historical DEC-100/101 entries are retained, with these later resolutions.
 
 ---
 
@@ -124,6 +142,8 @@ Context ──────────────> «interface» Strategy
 ```
 
 **Applied in our design** ([DP-strategy-ranking](../diagrams/DP-strategy-ranking.puml)):
+
+This applied view uses the final model's participants and context/realisation relationships. It also elaborates the two `WorkloadRanking`/`ActivationRanking` → `Technician` read dependencies implied by `order(candidates, context)` and the existing ranking-value methods. Those read dependencies are not separately listed among CD-final's 99 explicit relationships; they add no classes or behaviour (DEC-93/107).
 
 | Pattern role | Our class |
 |---|---|
@@ -156,3 +176,8 @@ At application construction, configure `CrewFormingService` with a `WorkloadRank
 - **Fairness limit:** low counts are recommendations among eligible people, not evidence of laziness or a guarantee against refusal. Failed-call outcomes can use the existing Audit Log; no penalty engine is introduced.
 
 The current M2 diagrams are updated; the submitted M1 diagrams and source interviews are historical evidence and remain unchanged.
+
+
+## 5. Revision scope (DEC-108/109)
+
+The final model now has 76 definitions and 99 explicit relationships. One browser controller and its two client data/input dependencies were added; RosterController also reads CsvImport for committed HR week coverage. The component topology is unchanged. UC-07 preparation and UC-18 confirmation require that coverage plus explicit Van counts for each working date. The two Strategy read dependencies remain applied-view elaborations, separate from the final-model relationship count. CSV-01–08 are supplemental design cases; they do not replace the complete black-box or basis-path tests and are not production execution results.

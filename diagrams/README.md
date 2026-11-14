@@ -41,7 +41,7 @@ All UML diagrams are kept as PlantUML source here, **one diagram per file**. The
 | `CD-final.puml` | §1.3 | Final class diagram; packages = components; three «interface» classes; clarified hours, direct Assignment, Replacement and provisional preferences (DEC-93, DEC-96–98) |
 | `CMP-system.puml` | §2 | Components with provided (lollipop) and required («use») interfaces |
 | `ARCH-layered.puml` | §3.1 | Layered 3-tier with MVC in the web tier |
-| `DP-strategy-ranking.puml` | §3.2 | Strategy excerpt of CD-final |
+| `DP-strategy-ranking.puml` | §3.2 | Applied Strategy view of CD-final; explicitly elaborates the ranking-to-Technician read dependencies implied by existing operations (DEC-107) |
 | `DP-strategy-standard.puml` | §3.2 | Standard Strategy roles for comparison with the applied excerpt; explanatory roles only (DEC-93/99) |
 | `CFG-classify-technicians.puml` | §4.2 | CFG for `CrewFormingService.classifyTechnicians()` |
 
